@@ -428,14 +428,16 @@ const RANKS = [
   { name:'CUB',   min:          0 },
 ];
 
-// PERSPECTIVE CONSTANTS
+// PERSPECTIVE — width clamped so lanes stay tight on any aspect ratio.
 const LANES = 3;
 const HORIZON_RATIO = 0.20;
-const ROAD_W_TOP = 0.10;
-const ROAD_W_BOT = 1.05;
 const COLLISION_Z_MIN = 0.86;
-const COLLISION_Z_MAX = 1.05;
+const COLLISION_Z_MAX = 1.02;
 const Z_PER_TICK = 1 / 200;
+// Effective game width capped so on landscape the lanes don't spread across the whole screen.
+function gameW()    { return Math.min(W * 0.96, H * 0.62, 720); }
+function roadTopW() { return gameW() * 0.16; }
+function roadBotW() { return gameW(); }
 
 // TUNING
 const BASE_SPEED = 1.0;
@@ -463,8 +465,8 @@ resize();
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', resize);
 
-function laneXTop(lane) { const w = W * ROAD_W_TOP; return W/2 - w/2 + w * (lane + 0.5) / LANES; }
-function laneXBot(lane) { const w = W * ROAD_W_BOT; return W/2 - w/2 + w * (lane + 0.5) / LANES; }
+function laneXTop(lane) { const w = roadTopW(); return W/2 - w/2 + w * (lane + 0.5) / LANES; }
+function laneXBot(lane) { const w = roadBotW(); return W/2 - w/2 + w * (lane + 0.5) / LANES; }
 function project(z, lane) {
   const t = Math.pow(Math.max(0, Math.min(1.05, z)), 1.7);
   const horizonY = H * HORIZON_RATIO;
@@ -667,10 +669,11 @@ function render() {
   ctx.fill();
 
   // Road trapezoid
-  const roadTopL = W/2 - W * ROAD_W_TOP / 2;
-  const roadTopR = W/2 + W * ROAD_W_TOP / 2;
-  const roadBotL = W/2 - W * ROAD_W_BOT / 2;
-  const roadBotR = W/2 + W * ROAD_W_BOT / 2;
+  const _topW = roadTopW(), _botW = roadBotW();
+  const roadTopL = W/2 - _topW / 2;
+  const roadTopR = W/2 + _topW / 2;
+  const roadBotL = W/2 - _botW / 2;
+  const roadBotR = W/2 + _botW / 2;
 
   const roadGrad = ctx.createLinearGradient(0, horizonY, 0, H);
   roadGrad.addColorStop(0, '#1a0a2e');
@@ -811,7 +814,8 @@ function drawHellcat(x, y, scale) {
     ctx.fillRect(x - 40 * scale, y - 25 * scale, 80 * scale, 50 * scale);
     return;
   }
-  const baseW = 280, baseH = 165;
+  const baseW = Math.min(280, (gameW() / LANES) * 1.35);
+  const baseH = baseW * (165 / 280);
   const w = baseW * scale, h = baseH * scale;
   ctx.fillStyle = 'rgba(0,0,0,.6)';
   ctx.beginPath();
@@ -824,48 +828,109 @@ function drawHellcat(x, y, scale) {
   ctx.restore();
 }
 
+// FIRST-PERSON: no wolf sprite in gameplay (player IS the wolf, sees what he sees).
+// Render: skateboard nose at bottom + lane indicator dots + camera tilt + invuln flash.
 function drawPlayer() {
-  const x = state.player.x;
-  const y = H * 0.84;
-  const w = 320, h = 360;
+  const cx = W / 2;
+  const tilt = Math.max(-1, Math.min(1, (state.player.targetX - state.player.x) * 0.012));
 
+  // Camera tilt is applied to the WHOLE render via the shake transform; here we add
+  // an additional skateboard horizontal offset suggesting steering.
+  const boardX = state.player.x + tilt * 12;
+  const boardY = H * 0.93;
+  const boardW = Math.min(W * 0.7, 460);
+  const boardH = boardW * 0.13;
+
+  // Glow under board
   ctx.save();
-  const pulse = 0.85 + Math.sin(state.tick * 0.1) * 0.18;
-  ctx.globalAlpha = 0.55 * pulse;
-  const auraColor = state.chaosTriggered ? 'rgba(255,138,61,.85)' : 'rgba(168,85,247,.85)';
-  const g = ctx.createRadialGradient(x, y - h * 0.05, 0, x, y - h * 0.05, 200);
-  g.addColorStop(0, auraColor);
-  g.addColorStop(0.5, state.chaosTriggered ? 'rgba(255,138,61,.4)' : 'rgba(124,58,237,.4)');
+  const gColor = state.chaosTriggered ? 'rgba(255,138,61,.7)' : 'rgba(168,85,247,.7)';
+  const g = ctx.createRadialGradient(boardX, boardY - 10, 0, boardX, boardY - 10, boardW * 0.7);
+  g.addColorStop(0, gColor);
   g.addColorStop(1, 'rgba(168,85,247,0)');
   ctx.fillStyle = g;
-  ctx.fillRect(x - 220, y - 220, 440, 440);
+  ctx.fillRect(boardX - boardW, boardY - boardW, boardW * 2, boardW * 1.5);
   ctx.restore();
 
-  const tilt = Math.max(-0.18, Math.min(0.18, (state.player.targetX - state.player.x) * 0.0025));
-
-  // Speed lines
+  // Skateboard deck — angled trapezoid suggesting POV
   ctx.save();
-  ctx.strokeStyle = state.chaosTriggered ? 'rgba(255,138,61,.7)' : 'rgba(168,85,247,.6)';
+  ctx.translate(boardX, boardY);
+  ctx.rotate(tilt * 0.18);
+  const deckGrad = ctx.createLinearGradient(0, -boardH, 0, boardH);
+  deckGrad.addColorStop(0, '#3b1f5e');
+  deckGrad.addColorStop(0.5, '#7c3aed');
+  deckGrad.addColorStop(1, '#1a0a2e');
+  ctx.fillStyle = deckGrad;
+  ctx.beginPath();
+  ctx.moveTo(-boardW / 2, -boardH / 2);
+  ctx.lineTo( boardW / 2, -boardH / 2);
+  ctx.lineTo( boardW * 0.6,  boardH / 2);
+  ctx.lineTo(-boardW * 0.6,  boardH / 2);
+  ctx.closePath();
+  ctx.shadowColor = gColor; ctx.shadowBlur = 24;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  // Deck edge highlight
+  ctx.strokeStyle = state.chaosTriggered ? '#ff8a3d' : '#a855f7';
   ctx.lineWidth = 2;
-  for (let i = 0; i < 8; i++) {
-    const sx = x - 90 + (i * 26);
-    const sy = y + h * 0.34 + ((state.tick * 12 + i * 18) % 70);
-    ctx.beginPath();
-    ctx.moveTo(sx, sy);
-    ctx.lineTo(sx + tilt * 30, sy + 22);
-    ctx.stroke();
-  }
+  ctx.stroke();
+  // MONWOLF emblem on deck
+  ctx.fillStyle = state.chaosTriggered ? '#ff8a3d' : '#a855f7';
+  ctx.beginPath();
+  ctx.moveTo(0, -boardH * 0.18);
+  ctx.lineTo(boardH * 0.4, 0);
+  ctx.lineTo(0, boardH * 0.18);
+  ctx.lineTo(-boardH * 0.4, 0);
+  ctx.closePath();
+  ctx.fill();
+  // Trucks
+  ctx.fillStyle = '#0a0a14';
+  ctx.fillRect(-boardW * 0.32, boardH * 0.42, boardW * 0.18, boardH * 0.28);
+  ctx.fillRect( boardW * 0.14, boardH * 0.42, boardW * 0.18, boardH * 0.28);
+  // Wheels
+  ctx.fillStyle = '#fef3c7';
+  ctx.shadowColor = '#f5c242'; ctx.shadowBlur = 12;
+  ctx.beginPath(); ctx.ellipse(-boardW * 0.36, boardH * 0.65, boardW * 0.05, boardH * 0.25, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(-boardW * 0.10, boardH * 0.65, boardW * 0.05, boardH * 0.25, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse( boardW * 0.10, boardH * 0.65, boardW * 0.05, boardH * 0.25, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse( boardW * 0.36, boardH * 0.65, boardW * 0.05, boardH * 0.25, 0, 0, Math.PI*2); ctx.fill();
+  ctx.shadowBlur = 0;
   ctx.restore();
 
+  // Sparks under board
   ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(tilt);
-  ctx.shadowColor = state.chaosTriggered ? 'rgba(255,138,61,.85)' : 'rgba(168,85,247,.85)';
-  ctx.shadowBlur = 36;
-  if (state.tick < state.invulnUntil && Math.floor(state.tick / 4) % 2 === 0) ctx.globalAlpha = 0.5;
-  if (ASSETS.player) ctx.drawImage(ASSETS.player, -w/2, -h/2, w, h);
-  else { ctx.fillStyle = '#ff8a3d'; ctx.beginPath(); ctx.arc(0, 0, 70, 0, Math.PI * 2); ctx.fill(); }
+  ctx.fillStyle = state.chaosTriggered ? '#ff8a3d' : '#a855f7';
+  for (let i = 0; i < 14; i++) {
+    const sx = boardX - boardW * 0.5 + ((state.tick * 9 + i * 22) % boardW);
+    const sy = boardY + boardH * 0.7 + ((state.tick * 5 + i * 7) % 18);
+    ctx.globalAlpha = 0.5 + Math.random() * 0.4;
+    ctx.fillRect(sx, sy, 2, 5);
+  }
+  ctx.globalAlpha = 1;
   ctx.restore();
+
+  // Lane indicator — 3 dots above the board
+  const dotY = boardY - boardH - 18;
+  for (let l = 0; l < LANES; l++) {
+    const dx = cx + (l - 1) * 22;
+    const active = l === state.player.lane;
+    ctx.fillStyle = active
+      ? (state.chaosTriggered ? '#ff8a3d' : '#a855f7')
+      : 'rgba(255,255,255,.25)';
+    if (active) { ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 10; }
+    ctx.beginPath(); ctx.arc(dx, dotY, active ? 5 : 3.5, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  // Invuln flash — full-screen red overlay pulse
+  if (state.tick < state.invulnUntil) {
+    const phase = (state.tick / 6) % 2 < 1;
+    if (phase) {
+      ctx.save();
+      ctx.fillStyle = 'rgba(239,68,68,.18)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    }
+  }
 }
 
 function updateHUD() {

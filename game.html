@@ -557,7 +557,7 @@ function spawnItem() {
   }
 }
 
-function roadW() { return Math.min(W * 0.94, H * 0.55, 560); }
+function roadW() { return Math.min(W * 0.94, H * 0.78, 720); }
 
 function burst(x, y, color) {
   for (let i = 0; i < 20; i++) {
@@ -780,10 +780,7 @@ function drawHellcat(x, y) {
   ctx.save();
   ctx.shadowColor = 'rgba(168,85,247,.85)';
   ctx.shadowBlur = 22;
-  // Flip vertically because cars FALL nose-first toward player
-  ctx.translate(x, y);
-  ctx.scale(1, -1);
-  ctx.drawImage(ASSETS.hellcat, -w/2, -h/2, w, h);
+  ctx.drawImage(ASSETS.hellcat, x - w/2, y - h/2, w, h);
   ctx.restore();
 }
 
@@ -862,8 +859,11 @@ function gameOver() {
 let draggingX = null;
 function moveTo(clientX) {
   if (!state.running || state.paused) return;
-  const pad = playerW() / 2;
-  state.player.targetX = Math.max(pad, Math.min(W - pad, clientX));
+  // Lock player inside the road strip (where items actually spawn)
+  const road = roadW();
+  const minX = (W - road) / 2 + playerW() * 0.3;
+  const maxX = (W + road) / 2 - playerW() * 0.3;
+  state.player.targetX = Math.max(minX, Math.min(maxX, clientX));
 }
 cv.addEventListener('touchstart', e => {
   if (e.touches[0]) { draggingX = e.touches[0].clientX; moveTo(draggingX); }

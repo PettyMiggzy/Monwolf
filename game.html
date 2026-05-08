@@ -792,17 +792,16 @@ function drawPlayer() {
   const y = playerY();
   const w = playerW(), h = playerH();
 
-  // Aura
+  // Subtle ground glow (under feet only, not behind whole body — sprite has no bg)
   ctx.save();
   const pulse = 0.85 + Math.sin(state.tick * 0.1) * 0.18;
-  ctx.globalAlpha = 0.5 * pulse;
-  const auraColor = state.chaosTriggered ? 'rgba(255,138,61,.85)' : 'rgba(168,85,247,.85)';
-  const g = ctx.createRadialGradient(x, y, 0, x, y, w * 0.85);
+  ctx.globalAlpha = 0.45 * pulse;
+  const auraColor = state.chaosTriggered ? 'rgba(255,138,61,.9)' : 'rgba(168,85,247,.9)';
+  const g = ctx.createRadialGradient(x, y + h * 0.4, 0, x, y + h * 0.4, w * 0.55);
   g.addColorStop(0, auraColor);
-  g.addColorStop(0.5, state.chaosTriggered ? 'rgba(255,138,61,.35)' : 'rgba(124,58,237,.35)');
   g.addColorStop(1, 'rgba(168,85,247,0)');
   ctx.fillStyle = g;
-  ctx.fillRect(x - w, y - w, w * 2, w * 2);
+  ctx.fillRect(x - w * 0.7, y + h * 0.15, w * 1.4, h * 0.5);
   ctx.restore();
 
   // Sprite

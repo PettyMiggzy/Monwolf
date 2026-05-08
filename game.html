@@ -3,36 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0a0010">
-<title>MONWOLF: Downhill Chaos</title>
+<meta name="theme-color" content="#08000f">
+<title>MONWOLF · Downhill Chaos</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 :root {
-  --bg:#0a0010;
+  --bg:#08000f;
   --panel:#160a26;
+  --panel-2:#1c0e30;
   --border:#3a1f5e;
   --text:#fff;
   --text-2:#c8b6e6;
   --text-3:#7e6d96;
   --purple:#a855f7;
-  --purple-2:#7c3aed;
+  --pink:#ec4899;
   --orange:#ff8a3d;
   --gold:#f5c242;
+  --green:#22c55e;
+  --red:#ef4444;
   --grad:linear-gradient(135deg, #a855f7 0%, #ff8a3d 100%);
   --grad-text:linear-gradient(135deg, #ff8a3d 0%, #a855f7 100%);
-  --danger:#ef4444;
   --safe-top: env(safe-area-inset-top, 0);
   --safe-bottom: env(safe-area-inset-bottom, 0);
 }
 html, body {
   width:100%; height:100%; overflow:hidden;
   background:var(--bg); color:var(--text);
-  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-family:'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing:antialiased;
   -webkit-tap-highlight-color:transparent;
   touch-action:none;
@@ -42,58 +44,74 @@ html, body {
 body { position:fixed; inset:0; }
 a { color:inherit; text-decoration:none; }
 
-/* CANVAS */
-#game {
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  display:block;
-  background:#000;
-}
+#game { position:absolute; inset:0; width:100%; height:100%; display:block; background:#000; }
 
-/* HUD (in-game) */
 .hud {
   position:absolute; top:0; left:0; right:0;
   padding: calc(.6rem + var(--safe-top)) .8rem .6rem;
   display:flex; justify-content:space-between; align-items:flex-start;
-  pointer-events:none;
   z-index:10;
-  background:linear-gradient(to bottom, rgba(0,0,0,.55) 0%, transparent 100%);
+  background:linear-gradient(to bottom, rgba(0,0,0,.65) 0%, transparent 100%);
+  pointer-events:none;
 }
-.hud-left { display:flex; flex-direction:column; gap:.3rem; }
-.hud-right { display:flex; flex-direction:column; gap:.3rem; align-items:flex-end; }
+.hud-left, .hud-right { display:flex; flex-direction:column; gap:.3rem; }
+.hud-right { align-items:flex-end; }
+.hud-left { padding-left:48px; }
+.hud-right { padding-right:48px; }
 .stat {
   font-family:'Russo One', sans-serif;
-  font-size:1.1rem; line-height:1;
-  text-shadow:0 0 8px rgba(168,85,247,.6), 0 1px 2px #000;
+  font-size:1.15rem; line-height:1;
+  text-shadow:0 0 10px rgba(168,85,247,.7), 0 1px 2px #000;
   letter-spacing:.5px;
 }
-.stat .lbl { font-size:.62rem; color:var(--text-3); font-family:'Inter'; font-weight:600; letter-spacing:.15em; text-transform:uppercase; display:block; margin-bottom:.15rem; text-shadow:none; }
-.lives { display:flex; gap:.25rem; }
-.life { width:14px; height:14px; border-radius:50%; background:radial-gradient(circle, #ff4d6d, #b91c1c); box-shadow:0 0 8px rgba(239,68,68,.7); }
+.stat .lbl { font-size:.62rem; color:var(--text-3); font-family:'Inter'; font-weight:700; letter-spacing:.18em; text-transform:uppercase; display:block; margin-bottom:.18rem; text-shadow:none; }
+.lives { display:flex; gap:.3rem; }
+.life { width:14px; height:14px; border-radius:50%; background:radial-gradient(circle, #ff4d6d, #b91c1c); box-shadow:0 0 10px rgba(239,68,68,.8); }
 .life.gone { background:#2a1a3a; box-shadow:none; }
+
+.corner-btn {
+  position:absolute;
+  display:flex; align-items:center; justify-content:center;
+  width:38px; height:38px;
+  background:rgba(0,0,0,.55);
+  border:1px solid var(--border);
+  border-radius:10px;
+  z-index:11;
+  pointer-events:auto;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  color:var(--text);
+  text-decoration:none;
+}
+.corner-btn:hover { border-color:var(--purple); background:rgba(168,85,247,.2); }
+.corner-btn svg { width:14px; height:14px; }
+
+#hubBtn  { top: calc(.6rem + var(--safe-top)); left:.8rem; display:none; }
+#pauseBtn { top: calc(.6rem + var(--safe-top)); right:.8rem; display:none; }
+#hubBtn.show, #pauseBtn.show { display:flex; }
 
 #chaosBanner {
   position:absolute; top:36%; left:50%;
   transform:translate(-50%, -50%) scale(.5);
-  font-family:'Russo One',sans-serif;
+  font-family:'Russo One', sans-serif;
   font-size:clamp(2.2rem, 12vw, 4rem);
   background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 30px rgba(168,85,247,.8);
+  text-shadow:0 0 40px rgba(255,138,61,.7);
   pointer-events:none;
   opacity:0;
   z-index:9;
-  letter-spacing:2px;
+  letter-spacing:3px;
   white-space:nowrap;
+  font-weight:900;
 }
-#chaosBanner.show { animation: chaos 1.6s ease-out forwards; }
+#chaosBanner.show { animation: chaos 1.8s ease-out forwards; }
 @keyframes chaos {
-  0% { opacity:0; transform:translate(-50%, -50%) scale(.5); }
-  20% { opacity:1; transform:translate(-50%, -50%) scale(1.1); }
+  0% { opacity:0; transform:translate(-50%, -50%) scale(.4); }
+  18% { opacity:1; transform:translate(-50%, -50%) scale(1.2); }
   60% { opacity:1; transform:translate(-50%, -50%) scale(1); }
-  100% { opacity:0; transform:translate(-50%, -50%) scale(1.4); }
+  100% { opacity:0; transform:translate(-50%, -50%) scale(1.5); }
 }
 
-/* SCREENS */
 .screen {
   position:absolute; inset:0;
   display:none;
@@ -106,96 +124,102 @@ a { color:inherit; text-decoration:none; }
 .screen.fade { animation: fadein .35s ease both; }
 @keyframes fadein { from { opacity:0; } to { opacity:1; } }
 
-/* TITLE */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
+  padding:.95rem 1.4rem;
+  border-radius:12px; border:none;
+  font-family:'Russo One', sans-serif;
+  font-size:1rem; letter-spacing:.05em;
+  cursor:pointer;
+  transition:transform .12s, box-shadow .15s;
+  width:100%; max-width:320px;
+  text-decoration:none;
+  text-transform:uppercase;
+  color:var(--text);
+}
+.btn:active { transform:scale(.97); }
+.btn-primary { background:var(--grad); color:#000; box-shadow:0 8px 30px -8px rgba(168,85,247,.7); }
+.btn-ghost { background:rgba(168,85,247,.08); color:var(--text); border:1px solid var(--border); backdrop-filter:blur(8px); }
+.btn-ghost:hover { border-color:var(--purple); background:rgba(168,85,247,.18); }
+.btn-row { display:flex; flex-direction:column; gap:.6rem; align-items:center; }
+
 #screenTitle {
   background:
-    linear-gradient(to bottom, rgba(10,0,16,.5) 0%, rgba(10,0,16,.92) 70%, var(--bg) 100%),
+    linear-gradient(to bottom, rgba(8,0,15,.55) 0%, rgba(8,0,15,.92) 70%, var(--bg) 100%),
     url('title.jpg') center/cover no-repeat;
-  padding: calc(2rem + var(--safe-top)) 1.5rem calc(1.5rem + var(--safe-bottom));
+  padding: calc(2rem + var(--safe-top)) 1.3rem calc(1.5rem + var(--safe-bottom));
   justify-content:flex-end;
   text-align:center;
-}
-#screenTitle .top-fade {
-  position:absolute; top:0; left:0; right:0; height:50%;
-  background:linear-gradient(to bottom, rgba(10,0,16,.0), rgba(10,0,16,0));
-  pointer-events:none;
 }
 .title-stack { padding-bottom:1rem; }
 .eyebrow {
   display:inline-block;
-  padding:.3rem .8rem;
+  padding:.3rem .85rem;
   background:rgba(168,85,247,.15);
   border:1px solid rgba(168,85,247,.4);
   border-radius:9999px;
   font-size:.7rem; letter-spacing:.18em; font-weight:700;
   color:var(--purple); text-transform:uppercase;
-  margin-bottom:.9rem;
+  margin-bottom:1rem;
 }
 .title-h1 {
-  font-family:'Russo One',sans-serif;
+  font-family:'Russo One', sans-serif;
   font-size:clamp(2.4rem, 9vw, 3.8rem);
   line-height:.95;
   letter-spacing:-.5px;
-  text-shadow:0 4px 18px rgba(168,85,247,.8), 0 2px 0 #000;
-  margin-bottom:.4rem;
+  text-shadow:0 4px 20px rgba(168,85,247,.85), 0 2px 0 #000;
+  margin-bottom:.5rem;
 }
 .title-h1 .grad { background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
 .title-sub {
   color:var(--text-2);
-  font-size:.95rem; max-width:340px; margin:0 auto 1.6rem;
-  line-height:1.45;
+  font-size:.92rem; max-width:340px; margin:0 auto 1.6rem;
 }
-
-.btn {
-  display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
-  padding:.95rem 1.4rem;
-  border-radius:12px; border:none;
-  font-family:'Russo One',sans-serif;
-  font-size:1rem; letter-spacing:.05em;
-  cursor:pointer;
-  transition:transform .12s, box-shadow .15s;
-  width:100%; max-width:320px;
-}
-.btn:active { transform:scale(.97); }
-.btn-primary { background:var(--grad); color:#000; box-shadow:0 8px 30px -8px rgba(168,85,247,.7); }
-.btn-ghost { background:rgba(255,255,255,.06); color:var(--text); border:1px solid var(--border); backdrop-filter:blur(10px); }
-.btn-ghost:hover, .btn-ghost:active { background:rgba(168,85,247,.18); border-color:var(--purple); }
-.btn-row { display:flex; flex-direction:column; gap:.6rem; align-items:center; }
-
-.credits-bar {
-  margin-top:1.5rem;
-  display:flex; align-items:center; gap:.7rem;
-  justify-content:center;
-  font-size:.8rem; color:var(--text-3);
-}
-.credits-bar a { color:var(--purple); font-weight:600; }
-.credits-bar a:hover { color:var(--orange); }
-.credits-bar img { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); }
-
-/* WALLET / PILL */
 .wallet-pill {
   display:inline-flex; align-items:center; gap:.4rem;
-  padding:.4rem .7rem;
+  padding:.4rem .85rem;
   background:rgba(0,0,0,.5);
   border:1px solid var(--border);
   border-radius:9999px;
   font-size:.78rem; font-weight:600;
   color:var(--text-2);
-  pointer-events:auto; cursor:pointer;
+  cursor:pointer;
+  pointer-events:auto;
   backdrop-filter:blur(10px);
 }
-.wallet-pill .dot { width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 6px #22c55e; }
-.wallet-pill.disconnected .dot { background:#71727f; box-shadow:none; }
-.wallet-pill .rank { color:var(--gold); font-weight:700; margin-right:.3rem; font-family:'Russo One'; font-size:.75rem; letter-spacing:1px; }
+.wallet-pill .dot { width:7px; height:7px; border-radius:50%; background:#71727f; }
+.wallet-pill.connected .dot { background:var(--green); box-shadow:0 0 6px var(--green); }
+.wallet-pill .rank { color:var(--gold); font-weight:700; font-family:'Russo One'; font-size:.7rem; letter-spacing:.1em; }
+.back-link {
+  margin-top:.6rem;
+  font-size:.78rem; letter-spacing:.1em; font-weight:700;
+  color:var(--text-3);
+}
+.back-link:hover { color:var(--purple); }
+.credits-bar {
+  margin-top:1.4rem;
+  display:flex; align-items:center; gap:.7rem;
+  justify-content:center;
+  font-size:.78rem; color:var(--text-3);
+}
+.credits-bar img { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); }
+.credits-bar a { color:var(--purple); font-weight:600; }
+.tap-hint {
+  position:absolute; bottom:30%; left:0; right:0;
+  text-align:center;
+  color:rgba(255,255,255,.5); font-size:.8rem; letter-spacing:.2em;
+  font-weight:700; text-transform:uppercase;
+  animation:pulse 1.5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes pulse { 0%, 100% { opacity:.4; } 50% { opacity:1; } }
 
-/* GAME OVER */
 #screenOver {
-  background:
-    linear-gradient(to bottom, rgba(10,0,16,.85) 0%, rgba(10,0,16,.95) 100%),
-    url('standing.jpg') center 30%/cover no-repeat;
+  background:linear-gradient(to bottom, rgba(8,0,15,.85) 0%, rgba(8,0,15,.97) 100%);
   padding: calc(2rem + var(--safe-top)) 1.2rem calc(1.5rem + var(--safe-bottom));
   justify-content:center;
   text-align:center;
+  align-items:center;
 }
 .over-card {
   background:rgba(22,10,38,.85);
@@ -204,12 +228,14 @@ a { color:inherit; text-decoration:none; }
   padding:1.6rem 1.4rem;
   max-width:400px; margin:0 auto;
   backdrop-filter:blur(14px);
+  width:100%;
 }
+.over-img { width:160px; height:auto; margin:0 auto 1rem; display:block; opacity:.95; filter:drop-shadow(0 8px 30px rgba(168,85,247,.5)); }
 .over-h {
   font-family:'Russo One', sans-serif;
   font-size:1.7rem;
   background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent;
-  margin-bottom:.6rem;
+  margin-bottom:.5rem;
   letter-spacing:1px;
 }
 .score-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:.6rem; margin: 1rem 0 1.4rem; }
@@ -221,17 +247,14 @@ a { color:inherit; text-decoration:none; }
 }
 .score-cell .v { font-family:'Russo One'; font-size:1.4rem; line-height:1; background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
 .score-cell .l { font-size:.62rem; color:var(--text-3); letter-spacing:.12em; text-transform:uppercase; margin-top:.3rem; font-weight:700; }
-.best-line { color:var(--text-3); font-size:.82rem; margin:-.3rem 0 1rem; }
+.best-line { color:var(--text-3); font-size:.82rem; margin:-.2rem 0 1rem; }
 .best-line b { color:var(--gold); }
 
-/* LEADERBOARD */
 #screenBoard {
   background:linear-gradient(180deg, var(--bg) 0%, #190a2e 100%);
   padding: calc(1.4rem + var(--safe-top)) 1rem calc(1.5rem + var(--safe-bottom));
 }
-.board-head {
-  text-align:center; margin-bottom:1.2rem;
-}
+.board-head { text-align:center; margin-bottom:1.2rem; }
 .board-h {
   font-family:'Russo One', sans-serif;
   font-size:1.6rem; letter-spacing:1px;
@@ -256,7 +279,7 @@ a { color:inherit; text-decoration:none; }
 .board-row.silver .pos { color:#cbd5e1; font-size:1.15rem; }
 .board-row.bronze .pos { color:#d97706; font-size:1.1rem; }
 .board-row .who { display:flex; flex-direction:column; }
-.board-row .addr { font-family:'SF Mono','Menlo',monospace; font-size:.78rem; color:var(--text-2); }
+.board-row .addr { font-family:'JetBrains Mono'; font-size:.78rem; color:var(--text-2); }
 .board-row .badge { font-family:'Russo One'; font-size:.62rem; color:var(--purple); letter-spacing:.1em; }
 .board-row .score { font-family:'Russo One'; font-size:1.1rem; background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
 .board-row .meta { font-size:.62rem; color:var(--text-3); text-align:right; min-width:60px; }
@@ -265,7 +288,6 @@ a { color:inherit; text-decoration:none; }
 .spinner { display:inline-block; width:24px; height:24px; border:3px solid var(--border); border-top-color:var(--purple); border-radius:50%; animation:spin 1s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* TOAST */
 .toast {
   position:fixed; bottom: calc(1.5rem + var(--safe-bottom)); left:50%;
   transform:translateX(-50%) translateY(20px);
@@ -279,38 +301,11 @@ a { color:inherit; text-decoration:none; }
   max-width:320px; text-align:center;
 }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-.toast.err { background:#ef4444; color:#fff; }
+.toast.err { background:var(--red); color:#fff; }
 
-/* TAP HINT */
-.tap-hint {
-  position:absolute; bottom:25%; left:0; right:0;
-  text-align:center;
-  color:rgba(255,255,255,.5); font-size:.8rem; letter-spacing:.2em;
-  font-weight:700; text-transform:uppercase;
-  animation:pulse 1.5s ease-in-out infinite;
-  pointer-events:none;
-}
-@keyframes pulse { 0%, 100% { opacity:.4; } 50% { opacity:1; } }
-
-/* PAUSE BUTTON */
-.pause-btn {
-  position:absolute; top: calc(.6rem + var(--safe-top)); right:.8rem;
-  width:38px; height:38px;
-  background:rgba(0,0,0,.5);
-  border:1px solid var(--border);
-  border-radius:10px;
-  display:none; align-items:center; justify-content:center;
-  z-index:11;
-  cursor:pointer;
-  backdrop-filter:blur(10px);
-}
-.pause-btn.show { display:flex; }
-.pause-btn svg { width:16px; height:16px; color:var(--text); }
-
-/* PAUSE OVERLAY */
 .pause-overlay {
   position:absolute; inset:0;
-  background:rgba(10,0,16,.85);
+  background:rgba(8,0,15,.85);
   display:none; flex-direction:column; align-items:center; justify-content:center;
   z-index:30;
   backdrop-filter:blur(20px);
@@ -325,7 +320,6 @@ a { color:inherit; text-decoration:none; }
 
 <canvas id="game"></canvas>
 
-<!-- HUD (during gameplay) -->
 <div class="hud" id="hud" style="display:none;">
   <div class="hud-left">
     <div class="stat"><span class="lbl">Score</span><span id="hudScore">0</span></div>
@@ -339,51 +333,49 @@ a { color:inherit; text-decoration:none; }
   </div>
 </div>
 
-<button class="pause-btn" id="pauseBtn" aria-label="Pause">
+<a class="corner-btn" id="hubBtn" href="index.html" title="Back to hub">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
+</a>
+<button class="corner-btn" id="pauseBtn" aria-label="Pause">
   <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
 </button>
 
 <div id="chaosBanner">CHAOS MODE</div>
 
-<!-- PAUSE OVERLAY -->
 <div class="pause-overlay" id="pauseOverlay">
   <h2>PAUSED</h2>
   <button class="btn btn-primary" id="btnResume">RESUME</button>
   <button class="btn btn-ghost" id="btnQuit">END RUN</button>
+  <a class="btn btn-ghost" href="index.html">BACK TO HUB</a>
 </div>
 
-<!-- TITLE SCREEN -->
 <div class="screen show fade" id="screenTitle">
   <div class="title-stack">
-    <span class="eyebrow">Monad-7 · The Future Is Ours</span>
-    <h1 class="title-h1">MONWOLF<br><span class="grad">DOWNHILL CHAOS</span></h1>
-    <p class="title-sub">No brakes. No limits. Three lanes. Infinite road. Don't get hit.</p>
+    <span class="eyebrow">Monad-7 · No Brakes</span>
+    <h1 class="title-h1">DOWNHILL<br><span class="grad">CHAOS</span></h1>
+    <p class="title-sub">3-lane endless skater. Dodge cars. Grab diamonds. Don't crash.</p>
     <div class="btn-row">
       <button class="btn btn-primary" id="btnPlay">PLAY</button>
       <button class="btn btn-ghost" id="btnLeaderboard">LEADERBOARD</button>
-      <button class="btn btn-ghost" id="btnConnect" style="display:none;">CONNECT WALLET</button>
-      <div class="wallet-pill disconnected" id="walletPill" style="display:none;">
+      <div class="wallet-pill" id="walletPill">
         <span class="dot"></span>
         <span class="rank" id="rankBadge"></span>
-        <span id="walletAddr">—</span>
+        <span id="walletText">CONNECT WALLET</span>
       </div>
-      <a href="index.html" style="color:var(--text-3); font-size:.78rem; margin-top:.4rem; text-decoration:none; letter-spacing:.1em; font-weight:700;">← BACK TO HUB</a>
+      <a href="index.html" class="back-link">← BACK TO HUB</a>
     </div>
     <div class="credits-bar">
-      <img src="winslowbankz.jpg" alt="WinslowBankz">
-      <div>
-        Art &amp; Vibes by <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">WinslowBankz</a><br>
-        <span style="font-size:.7rem;">Follow <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">@MonWolfMonad</a></span>
-      </div>
+      <img src="winslowbankz.jpg" alt="">
+      <div>Art by <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">WinslowBankz</a></div>
     </div>
   </div>
   <div class="tap-hint" id="tapHint" style="display:none;">Tap left / right to switch lanes</div>
 </div>
 
-<!-- GAME OVER SCREEN -->
 <div class="screen" id="screenOver">
   <div class="over-card">
-    <div class="over-h" id="overTitle">RUN ENDED</div>
+    <img class="over-img" src="standing.png" alt="">
+    <div class="over-h">RUN ENDED</div>
     <p class="best-line" id="bestLine"></p>
     <div class="score-grid">
       <div class="score-cell"><div class="v" id="finalScore">0</div><div class="l">Score</div></div>
@@ -393,12 +385,11 @@ a { color:inherit; text-decoration:none; }
     <div class="btn-row">
       <button class="btn btn-primary" id="btnRetry">RIDE AGAIN</button>
       <button class="btn btn-ghost" id="btnSubmit">SUBMIT TO LEADERBOARD</button>
-      <button class="btn btn-ghost" id="btnHome">HOME</button>
+      <a href="index.html" class="btn btn-ghost">BACK TO HUB</a>
     </div>
   </div>
 </div>
 
-<!-- LEADERBOARD SCREEN -->
 <div class="screen" id="screenBoard">
   <div class="board-head">
     <div class="board-h">TOP OF THE PACK</div>
@@ -407,8 +398,9 @@ a { color:inherit; text-decoration:none; }
   <div class="board-list" id="boardList">
     <div class="board-loader"><div class="spinner"></div><div style="margin-top:.5rem;">Loading...</div></div>
   </div>
-  <div style="text-align:center; margin-top:1.4rem;">
-    <button class="btn btn-ghost" id="btnBoardHome" style="max-width:260px;">BACK</button>
+  <div style="text-align:center; margin-top:1.4rem; display:flex; flex-direction:column; gap:.5rem; align-items:center;">
+    <button class="btn btn-ghost" id="btnBoardHome" style="max-width:260px;">BACK TO TITLE</button>
+    <a href="index.html" class="back-link">← BACK TO HUB</a>
   </div>
 </div>
 
@@ -418,51 +410,48 @@ a { color:inherit; text-decoration:none; }
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { EthereumProvider } from 'https://esm.sh/@walletconnect/ethereum-provider@2.17.0';
 
-// ============================================================================
-// CONFIG
-// ============================================================================
+// === CONFIG ===
 const SUPABASE_URL  = 'https://cuqhqcmrgpdjlhyqztnc.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1cWhxY21yZ3BkamxoeXF6dG5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjQ4NDAsImV4cCI6MjA5MjgwMDg0MH0.bsmuC_onaPutZmYZWTn9p1DvngKIA7Xx4J3YRajbf-8';
-
-// WalletConnect (Reown) project — gets QR + mobile-wallet deeplinks for non-injected browsers
 const WC_PROJECT_ID = '89d7a1882c0fa9a5bbe0a58accafc100';
 
-// $MONWOLF on Monad
 const MONWOLF_CONTRACT = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
-const MONAD_RPC        = 'https://rpc.monad.xyz';
-const MONAD_CHAIN_ID   = 143;        // Monad mainnet (decimal)
-const MONAD_CHAIN_HEX  = '0x8f';     // 143 in hex
+const MONAD_RPC = 'https://rpc.monad.xyz';
+const MONAD_CHAIN_ID = 143;
+const MONAD_CHAIN_HEX = '0x8f';
 
-// Pack ranks by $MONWOLF balance (whole tokens, 18 decimals assumed)
 const RANKS = [
-  { name:'ALPHA',  min: 10_000_000 },
-  { name:'BETA',   min:  1_000_000 },
-  { name:'SCOUT',  min:    100_000 },
-  { name:'PACK',   min:     10_000 },
-  { name:'CUB',    min:          0 },
+  { name:'ALPHA', min: 10_000_000 },
+  { name:'BETA',  min:  1_000_000 },
+  { name:'SCOUT', min:    100_000 },
+  { name:'PACK',  min:     10_000 },
+  { name:'CUB',   min:          0 },
 ];
 
-// Game tuning
+// PERSPECTIVE CONSTANTS
 const LANES = 3;
-const BASE_SPEED = 4.2;          // px per tick @ 60fps baseline
-const SPEED_RAMP = 0.0008;       // per tick
-const CHAOS_AT   = 30 * 60;      // ticks to enter chaos mode (~30s)
-const SPAWN_BASE = 70;           // ticks between spawns at start
-const SPAWN_MIN  = 24;
+const HORIZON_RATIO = 0.20;
+const ROAD_W_TOP = 0.10;
+const ROAD_W_BOT = 1.05;
+const COLLISION_Z_MIN = 0.86;
+const COLLISION_Z_MAX = 1.05;
+const Z_PER_TICK = 1 / 200;
+
+// TUNING
+const BASE_SPEED = 1.0;
+const SPEED_RAMP = 0.00018;
+const CHAOS_AT = 30 * 60;
+const SPAWN_BASE = 60;
+const SPAWN_MIN = 22;
 const COIN_VALUE = 10;
 const STARTING_LIVES = 3;
 
-// ============================================================================
-
-const supabase = (SUPABASE_URL.startsWith('http'))
-  ? createClient(SUPABASE_URL, SUPABASE_ANON)
-  : null;
-
+// === SETUP ===
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
 const $ = id => document.getElementById(id);
 const cv = $('game');
 const ctx = cv.getContext('2d');
-
-let W = 0, H = 0, DPR = window.devicePixelRatio || 1;
+let W = 0, H = 0, DPR = 1;
 function resize() {
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   W = window.innerWidth; H = window.innerHeight;
@@ -474,113 +463,67 @@ resize();
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', resize);
 
-// Asset loading — VIDEO SPRITES (drawn directly onto canvas via drawImage)
+function laneXTop(lane) { const w = W * ROAD_W_TOP; return W/2 - w/2 + w * (lane + 0.5) / LANES; }
+function laneXBot(lane) { const w = W * ROAD_W_BOT; return W/2 - w/2 + w * (lane + 0.5) / LANES; }
+function project(z, lane) {
+  const t = Math.pow(Math.max(0, Math.min(1.05, z)), 1.7);
+  const horizonY = H * HORIZON_RATIO;
+  const playerY = H * 0.84;
+  return {
+    x: laneXTop(lane) + (laneXBot(lane) - laneXTop(lane)) * t,
+    y: horizonY + (playerY - horizonY) * t,
+    scale: 0.04 + 0.96 * t,
+  };
+}
+
 const ASSETS = {};
 function loadImg(name, src) {
   return new Promise(r => {
     const img = new Image();
     img.onload = () => { ASSETS[name] = img; r(); };
-    img.onerror = () => { console.warn('failed img', src); r(); };
+    img.onerror = () => { console.warn('img fail', src); r(); };
     img.src = src;
   });
 }
-function loadVideo(name, src, fallbackImg) {
-  return new Promise(async r => {
-    const v = document.createElement('video');
-    v.src = src;
-    v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
-    v.crossOrigin = 'anonymous';
-    v.preload = 'auto';
-    v.style.position = 'fixed'; v.style.left = '-9999px'; v.style.top = '-9999px';
-    v.style.width = '1px'; v.style.height = '1px';
-    document.body.appendChild(v);
-    let resolved = false;
-    const finish = () => { if (!resolved) { resolved = true; ASSETS[name] = v; r(); } };
-    v.addEventListener('canplay', () => { v.play().catch(()=>{}); finish(); }, { once: true });
-    v.addEventListener('error', async () => {
-      console.warn('video failed, falling back to image', src);
-      if (fallbackImg) await loadImg(name, fallbackImg);
-      finish();
-    }, { once: true });
-    // safety timeout — fall back to image after 5s
-    setTimeout(async () => {
-      if (!resolved && fallbackImg) {
-        await loadImg(name, fallbackImg);
-        finish();
-      } else if (!resolved) {
-        finish();
-      }
-    }, 5000);
-  });
-}
 const loadAll = Promise.all([
-  loadVideo('player', 'media/skater.mp4', 'player.png'),
-  loadVideo('hellcat', 'media/hellcat.mp4', 'hellcat.png'),
+  loadImg('player', 'player.png'),
+  loadImg('hellcat', 'hellcat.png'),
 ]);
 
-// ============================================================================
-// STATE
-// ============================================================================
 const state = {
-  screen: 'title',
-  running: false,
-  paused: false,
-  player: { lane: 1, x: 0, targetX: 0 },
-  obstacles: [],
-  coins: [],
-  particles: [],
-  speed: BASE_SPEED,
-  tick: 0,
-  spawnTimer: 0,
-  spawnEvery: SPAWN_BASE,
-  score: 0,
-  distance: 0,
-  diamonds: 0,
-  lives: STARTING_LIVES,
-  chaosTriggered: false,
-  shake: 0,
-  invulnUntil: 0,
+  screen:'title', running:false, paused:false,
+  player:{ lane:1, x:0, targetX:0 },
+  obstacles:[], coins:[], particles:[],
+  speed:BASE_SPEED, tick:0,
+  spawnTimer:0, spawnEvery:SPAWN_BASE,
+  score:0, distance:0, diamonds:0,
+  lives:STARTING_LIVES,
+  chaosTriggered:false, invulnUntil:0, shake:0,
   bestLocal: parseInt(localStorage.getItem('mw_best') || '0', 10),
-  wallet: null,    // { address, balance, rank }
+  wallet:null, activeProvider:null,
 };
-
-function laneX(lane) {
-  return W * (0.2 + 0.3 * lane); // 3 lanes at 20%, 50%, 80%
-}
 
 function reset() {
   state.player.lane = 1;
-  state.player.x = laneX(1);
-  state.player.targetX = laneX(1);
-  state.obstacles = [];
-  state.coins = [];
-  state.particles = [];
+  state.player.x = laneXBot(1);
+  state.player.targetX = laneXBot(1);
+  state.obstacles = []; state.coins = []; state.particles = [];
   state.speed = BASE_SPEED;
   state.tick = 0;
-  state.spawnTimer = 0;
-  state.spawnEvery = SPAWN_BASE;
-  state.score = 0;
-  state.distance = 0;
-  state.diamonds = 0;
+  state.spawnTimer = 0; state.spawnEvery = SPAWN_BASE;
+  state.score = 0; state.distance = 0; state.diamonds = 0;
   state.lives = STARTING_LIVES;
-  state.chaosTriggered = false;
-  state.invulnUntil = 0;
+  state.chaosTriggered = false; state.invulnUntil = 0; state.shake = 0;
 }
 
-// ============================================================================
-// GAME LOOP
-// ============================================================================
 function tick() {
   if (!state.running || state.paused) return;
   state.tick++;
-  state.distance += state.speed * 0.4;
+  state.distance += state.speed * 1.6;
   state.score = Math.floor(state.distance) + state.diamonds * COIN_VALUE;
-  state.speed += SPEED_RAMP * (state.chaosTriggered ? 1.6 : 1);
-
-  // Smooth lane interp
+  state.speed += SPEED_RAMP * (state.chaosTriggered ? 1.7 : 1);
   state.player.x += (state.player.targetX - state.player.x) * 0.22;
 
-  // Chaos trigger
   if (!state.chaosTriggered && state.tick > CHAOS_AT) {
     state.chaosTriggered = true;
     const banner = $('chaosBanner');
@@ -588,331 +531,373 @@ function tick() {
     haptic(40);
   }
 
-  // Spawn
   state.spawnTimer++;
   if (state.spawnTimer >= state.spawnEvery) {
     state.spawnTimer = 0;
     spawnRow();
-    // ramp difficulty
-    state.spawnEvery = Math.max(SPAWN_MIN, state.spawnEvery - 0.5);
+    state.spawnEvery = Math.max(SPAWN_MIN, state.spawnEvery - 0.4);
   }
 
-  // Update obstacles
+  const dz = Z_PER_TICK * state.speed;
+
   for (let i = state.obstacles.length - 1; i >= 0; i--) {
     const o = state.obstacles[i];
-    o.y += state.speed * 1.6;
-    if (o.y > H + 200) state.obstacles.splice(i, 1);
-    // Collision
-    else if (!o.hit && state.tick > state.invulnUntil) {
-      const px = state.player.x;
-      const py = H * 0.78;
-      if (Math.abs(o.x - px) < 60 && Math.abs(o.y - py) < 60) {
-        o.hit = true;
-        state.lives--;
-        state.invulnUntil = state.tick + 90;
-        state.shake = 22;
-        haptic(150);
-        burst(px, py, '#ef4444');
-        if (state.lives <= 0) gameOver();
-      }
+    o.z += dz;
+    if (o.z > 1.15) { state.obstacles.splice(i, 1); continue; }
+    if (!o.hit && state.tick > state.invulnUntil
+        && o.z >= COLLISION_Z_MIN && o.z <= COLLISION_Z_MAX
+        && o.lane === state.player.lane) {
+      o.hit = true;
+      state.lives--;
+      state.invulnUntil = state.tick + 90;
+      state.shake = 22;
+      haptic(150);
+      const pp = project(1.0, state.player.lane);
+      burst(pp.x, pp.y, '#ef4444');
+      if (state.lives <= 0) gameOver();
     }
   }
-  // Update coins
   for (let i = state.coins.length - 1; i >= 0; i--) {
     const c = state.coins[i];
-    c.y += state.speed * 1.55;
+    c.z += dz;
     c.spin += 0.18;
-    if (c.y > H + 80) state.coins.splice(i, 1);
-    else if (!c.got) {
-      const px = state.player.x;
-      const py = H * 0.78;
-      if (Math.abs(c.x - px) < 50 && Math.abs(c.y - py) < 50) {
-        c.got = true;
-        state.diamonds++;
-        state.coins.splice(i, 1);
-        burst(c.x, c.y, '#a855f7');
-        haptic(20);
-      }
+    if (c.z > 1.15) { state.coins.splice(i, 1); continue; }
+    if (!c.got && c.z >= COLLISION_Z_MIN && c.z <= COLLISION_Z_MAX && c.lane === state.player.lane) {
+      c.got = true;
+      state.diamonds++;
+      const p = project(c.z, c.lane);
+      burst(p.x, p.y, '#a855f7');
+      state.coins.splice(i, 1);
+      haptic(20);
     }
   }
-  // Particles
   for (let i = state.particles.length - 1; i >= 0; i--) {
     const p = state.particles[i];
     p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life--;
     if (p.life <= 0) state.particles.splice(i, 1);
   }
-
   updateHUD();
 }
 
 function spawnRow() {
-  // 1-2 obstacle lanes + 0-1 coin lanes (don't overlap)
   const lanes = [0, 1, 2];
   shuffle(lanes);
-  const obstacleCount = Math.random() < .55 ? 1 : (Math.random() < .65 ? 2 : 0);
+  const obstacleCount = state.chaosTriggered
+    ? (Math.random() < .55 ? 1 : 2)
+    : (Math.random() < .8 ? 1 : 0);
   const obstacleLanes = lanes.slice(0, obstacleCount);
   for (const ln of obstacleLanes) {
-    state.obstacles.push({ lane: ln, x: laneX(ln), y: -120, hit: false });
+    state.obstacles.push({ lane: ln, z: 0, hit: false });
   }
-  // coin: random lane (free preferred but ok if same)
-  if (Math.random() < .8) {
-    const cLane = lanes[Math.floor(Math.random() * lanes.length)];
-    state.coins.push({ lane: cLane, x: laneX(cLane), y: -80 - Math.random() * 80, spin: 0, got: false });
+  const free = lanes.filter(l => !obstacleLanes.includes(l));
+  if (Math.random() < .85) {
+    const cLane = (free.length ? free : lanes)[Math.floor(Math.random() * (free.length ? free.length : lanes.length))];
+    state.coins.push({ lane: cLane, z: 0, spin: 0, got: false });
   }
 }
-
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = (Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } }
-
 function burst(x, y, color) {
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < 16; i++) {
     state.particles.push({
       x, y,
-      vx: (Math.random() - 0.5) * 7,
-      vy: (Math.random() - 0.5) * 6 - 2,
-      life: 24 + (Math.random() * 14)|0,
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 7 - 2,
+      life: 24 + ((Math.random() * 14)|0),
       color,
     });
   }
 }
+function haptic(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 
-function haptic(ms) {
-  if (navigator.vibrate) navigator.vibrate(ms);
-}
-
-// ============================================================================
-// RENDER
-// ============================================================================
+// === RENDER ===
 function render() {
-  // Screen shake
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   if (state.shake > 0.5) {
-    const dx = (Math.random() - 0.5) * state.shake;
-    const dy = (Math.random() - 0.5) * state.shake;
-    ctx.translate(dx, dy);
+    ctx.translate((Math.random() - 0.5) * state.shake, (Math.random() - 0.5) * state.shake);
     state.shake *= 0.85;
-  } else {
-    state.shake = 0;
-  }
-  // Sky/road background — vertical gradient
-  const grd = ctx.createLinearGradient(0, 0, 0, H);
+  } else state.shake = 0;
+
+  const horizonY = H * HORIZON_RATIO;
+
+  // Sky
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.55);
   if (state.chaosTriggered) {
-    grd.addColorStop(0, '#3b0764');
-    grd.addColorStop(0.5, '#581c87');
-    grd.addColorStop(1, '#1a0a2e');
+    skyGrad.addColorStop(0, '#1a0033');
+    skyGrad.addColorStop(0.4, '#581c87');
+    skyGrad.addColorStop(0.85, '#ff8a3d');
+    skyGrad.addColorStop(1, '#ff4d6d');
   } else {
-    grd.addColorStop(0, '#0a0010');
-    grd.addColorStop(0.5, '#1a0a2e');
-    grd.addColorStop(1, '#0a0010');
+    skyGrad.addColorStop(0, '#08000f');
+    skyGrad.addColorStop(0.4, '#1a0a2e');
+    skyGrad.addColorStop(0.8, '#3b0764');
+    skyGrad.addColorStop(1, '#ff8a3d');
   }
-  ctx.fillStyle = grd;
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, H * 0.55);
 
-  // Road sides — perspective triangles
-  const horizon = H * 0.18;
-  ctx.save();
-  ctx.fillStyle = '#0a0010';
+  // Sun glow
+  const sunGrad = ctx.createRadialGradient(W/2, horizonY + 20, 0, W/2, horizonY + 20, W * 0.6);
+  sunGrad.addColorStop(0, state.chaosTriggered ? 'rgba(255,255,255,.6)' : 'rgba(255,138,61,.45)');
+  sunGrad.addColorStop(0.3, 'rgba(255,138,61,.25)');
+  sunGrad.addColorStop(1, 'rgba(168,85,247,0)');
+  ctx.fillStyle = sunGrad;
+  ctx.fillRect(0, 0, W, H * 0.55);
+
+  // Stars
+  const starsT = state.tick * 0.02;
+  for (let i = 0; i < 40; i++) {
+    const x = ((i * 73) % W);
+    const y = ((i * 41) % (horizonY * 0.85));
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.2 + 0.4 * Math.sin(starsT + i)) + ')';
+    ctx.fillRect(x, y, 1.5, 1.5);
+  }
+
+  // Mountains
+  ctx.fillStyle = 'rgba(20,8,40,.85)';
   ctx.beginPath();
-  ctx.moveTo(0, H);
-  ctx.lineTo(0, horizon);
-  ctx.lineTo(W * 0.15, horizon);
-  ctx.lineTo(W * 0.05, H);
+  ctx.moveTo(0, horizonY);
+  let mx = 0;
+  while (mx <= W) {
+    const peak = horizonY - 25 - 20 * Math.abs(Math.sin(mx * 0.013));
+    ctx.lineTo(mx, peak);
+    mx += 60;
+  }
+  ctx.lineTo(W, horizonY);
   ctx.closePath();
   ctx.fill();
+
+  // Road trapezoid
+  const roadTopL = W/2 - W * ROAD_W_TOP / 2;
+  const roadTopR = W/2 + W * ROAD_W_TOP / 2;
+  const roadBotL = W/2 - W * ROAD_W_BOT / 2;
+  const roadBotR = W/2 + W * ROAD_W_BOT / 2;
+
+  const roadGrad = ctx.createLinearGradient(0, horizonY, 0, H);
+  roadGrad.addColorStop(0, '#1a0a2e');
+  roadGrad.addColorStop(0.5, '#0f0420');
+  roadGrad.addColorStop(1, '#000');
+  ctx.fillStyle = roadGrad;
   ctx.beginPath();
-  ctx.moveTo(W, H);
-  ctx.lineTo(W, horizon);
-  ctx.lineTo(W * 0.85, horizon);
-  ctx.lineTo(W * 0.95, H);
+  ctx.moveTo(roadTopL, horizonY);
+  ctx.lineTo(roadTopR, horizonY);
+  ctx.lineTo(roadBotR, H);
+  ctx.lineTo(roadBotL, H);
   ctx.closePath();
   ctx.fill();
-  ctx.restore();
 
-  // Lane stripes — animated based on distance
+  // Road edge glows
   ctx.save();
-  ctx.strokeStyle = 'rgba(168,85,247,.35)';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([28, 18]);
-  ctx.lineDashOffset = -state.distance * 1.5 % 46;
-  for (let i = 1; i < LANES; i++) {
-    const xTop = W * 0.15 + (W * 0.7) * (i / LANES);
-    const xBot = W * (i / LANES);
-    ctx.beginPath();
-    ctx.moveTo(xTop, horizon);
-    ctx.lineTo(xBot, H);
-    ctx.stroke();
-  }
+  ctx.shadowColor = state.chaosTriggered ? '#ff8a3d' : '#a855f7';
+  ctx.shadowBlur = 18;
+  ctx.strokeStyle = state.chaosTriggered ? 'rgba(255,138,61,.95)' : 'rgba(168,85,247,.95)';
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(roadTopL, horizonY); ctx.lineTo(roadBotL, H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(roadTopR, horizonY); ctx.lineTo(roadBotR, H); ctx.stroke();
   ctx.restore();
 
-  // Subtle horizon glow
-  const glow = ctx.createRadialGradient(W/2, horizon, 0, W/2, horizon, W*0.7);
-  glow.addColorStop(0, 'rgba(168,85,247,.18)');
-  glow.addColorStop(1, 'rgba(168,85,247,0)');
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, W, H);
-
-  // Coins (Monad diamonds)
-  for (const c of state.coins) {
-    drawDiamond(c.x, c.y, 22 + Math.sin(c.spin) * 3, c.spin);
-  }
-
-  // Obstacles (Hellcats) — animated video, scaled by approach distance for pseudo-3D
-  for (const o of state.obstacles) {
-    const depth = Math.max(0.4, Math.min(1, (o.y + 200) / H));
-    const w = 200 * depth, h = 130 * depth;
-    if (ASSETS.hellcat) {
-      ctx.save();
-      // ground shadow
-      ctx.fillStyle = 'rgba(0,0,0,.55)';
+  // Lane stripes
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,.55)';
+  const stripeOffset = (state.distance * 0.012) % 0.12;
+  for (let s = 0; s < 12; s++) {
+    const z0 = stripeOffset + s * 0.12;
+    const z1 = z0 + 0.05;
+    if (z0 > 1 || z1 < 0) continue;
+    for (let l = 1; l < LANES; l++) {
+      const t0 = Math.pow(Math.max(0, z0), 1.7);
+      const t1 = Math.pow(Math.min(1, z1), 1.7);
+      const tx0 = (laneXTop(l-1) + laneXTop(l))/2 + (((laneXBot(l-1)+laneXBot(l))/2) - ((laneXTop(l-1)+laneXTop(l))/2)) * t0;
+      const tx1 = (laneXTop(l-1) + laneXTop(l))/2 + (((laneXBot(l-1)+laneXBot(l))/2) - ((laneXTop(l-1)+laneXTop(l))/2)) * t1;
+      const ty0 = horizonY + (H * 0.84 - horizonY) * t0;
+      const ty1 = horizonY + (H * 0.84 - horizonY) * t1;
+      ctx.lineWidth = 1.2 + (z0 * 4);
       ctx.beginPath();
-      ctx.ellipse(o.x, o.y + h*0.42, w*0.5, h*0.18, 0, 0, Math.PI * 2);
-      ctx.fill();
-      // neon underglow
-      ctx.shadowColor = 'rgba(168,85,247,.85)'; ctx.shadowBlur = 40 * depth;
-      ctx.drawImage(ASSETS.hellcat, o.x - w/2, o.y - h/2, w, h);
-      ctx.restore();
-    } else {
-      ctx.fillStyle = '#7c3aed';
-      ctx.fillRect(o.x - w/2, o.y - h/2, w, h);
+      ctx.moveTo(tx0, ty0);
+      ctx.lineTo(tx1, ty1);
+      ctx.stroke();
     }
   }
+  ctx.restore();
 
-  // Player
+  // Side rails (zooming reflectors)
+  for (let i = 0; i < 14; i++) {
+    const rz = ((state.distance * 0.012) + i * 0.085) % 1;
+    if (rz <= 0) continue;
+    const t = Math.pow(rz, 1.7);
+    const ly = horizonY + (H * 0.92 - horizonY) * t;
+    const lxL = (roadTopL - W * 0.04) + ((roadBotL - W * 0.08) - (roadTopL - W * 0.04)) * t;
+    const lxR = (roadTopR + W * 0.04) + ((roadBotR + W * 0.08) - (roadTopR + W * 0.04)) * t;
+    const sz = 3 + 9 * t;
+    ctx.fillStyle = state.chaosTriggered ? 'rgba(255,200,80,.95)' : 'rgba(245,194,66,.95)';
+    ctx.shadowColor = '#f5c242';
+    ctx.shadowBlur = 14 * t;
+    ctx.fillRect(lxL - sz/2, ly - sz/2, sz, sz);
+    ctx.fillRect(lxR - sz/2, ly - sz/2, sz, sz);
+    ctx.shadowBlur = 0;
+  }
+
+  // Items by depth
+  const items = [
+    ...state.obstacles.map(o => ({ kind:'obs', z:o.z, lane:o.lane })),
+    ...state.coins.map(c => ({ kind:'coin', z:c.z, lane:c.lane, spin:c.spin })),
+  ].sort((a, b) => a.z - b.z);
+  for (const it of items) {
+    const p = project(it.z, it.lane);
+    if (it.kind === 'obs') drawHellcat(p.x, p.y, p.scale);
+    else drawDiamond(p.x, p.y, 16 + p.scale * 28, it.spin, p.scale);
+  }
+
   drawPlayer();
 
-  // Particles
+  if (state.chaosTriggered) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,138,61,.45)';
+    ctx.lineWidth = 1.5;
+    for (let i = 0; i < 20; i++) {
+      const ang = (i / 20) * Math.PI * 2 + state.tick * 0.02;
+      const r1 = 80 + ((state.tick * 8 + i * 30) % 200);
+      const r2 = r1 + 30;
+      ctx.beginPath();
+      ctx.moveTo(W/2 + Math.cos(ang) * r1, H * 0.55 + Math.sin(ang) * r1);
+      ctx.lineTo(W/2 + Math.cos(ang) * r2, H * 0.55 + Math.sin(ang) * r2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   for (const p of state.particles) {
     ctx.fillStyle = p.color;
     ctx.globalAlpha = p.life / 30;
-    ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
+    ctx.fillRect(p.x - 2.5, p.y - 2.5, 5, 5);
   }
   ctx.globalAlpha = 1;
+
+  // Horizon fog
+  const fogGrad = ctx.createLinearGradient(0, horizonY, 0, horizonY + 80);
+  fogGrad.addColorStop(0, 'rgba(168,85,247,.25)');
+  fogGrad.addColorStop(1, 'rgba(168,85,247,0)');
+  ctx.fillStyle = fogGrad;
+  ctx.fillRect(0, horizonY, W, 80);
 }
 
-function drawDiamond(x, y, size, rot) {
+function drawDiamond(x, y, size, rot, scale) {
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(rot);
-  // outer glow
-  const g = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 1.6);
-  g.addColorStop(0, 'rgba(168,85,247,.7)');
+  const g = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 1.8);
+  g.addColorStop(0, 'rgba(168,85,247,' + (0.4 + 0.4 * scale) + ')');
   g.addColorStop(1, 'rgba(168,85,247,0)');
   ctx.fillStyle = g;
-  ctx.fillRect(-size*1.6, -size*1.6, size*3.2, size*3.2);
-  // diamond shape
+  ctx.fillRect(-size * 1.8, -size * 1.8, size * 3.6, size * 3.6);
   ctx.fillStyle = '#a855f7';
   ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 1.5 + scale;
   ctx.beginPath();
-  ctx.moveTo(0, -size);
-  ctx.lineTo(size * 0.7, 0);
-  ctx.lineTo(0, size);
-  ctx.lineTo(-size * 0.7, 0);
+  ctx.moveTo(0, -size); ctx.lineTo(size * 0.7, 0); ctx.lineTo(0, size); ctx.lineTo(-size * 0.7, 0);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
-  // inner highlight
-  ctx.fillStyle = 'rgba(255,255,255,.3)';
+  ctx.fillStyle = 'rgba(255,255,255,.45)';
   ctx.beginPath();
-  ctx.moveTo(0, -size * 0.6);
-  ctx.lineTo(size * 0.4, 0);
-  ctx.lineTo(0, size * 0.2);
-  ctx.lineTo(-size * 0.4, 0);
+  ctx.moveTo(0, -size * 0.6); ctx.lineTo(size * 0.4, 0); ctx.lineTo(0, size * 0.2); ctx.lineTo(-size * 0.4, 0);
   ctx.closePath();
   ctx.fill();
+  ctx.restore();
+}
+
+function drawHellcat(x, y, scale) {
+  if (!ASSETS.hellcat) {
+    ctx.fillStyle = '#7c3aed';
+    ctx.fillRect(x - 40 * scale, y - 25 * scale, 80 * scale, 50 * scale);
+    return;
+  }
+  const baseW = 280, baseH = 165;
+  const w = baseW * scale, h = baseH * scale;
+  ctx.fillStyle = 'rgba(0,0,0,.6)';
+  ctx.beginPath();
+  ctx.ellipse(x, y + h * 0.42, w * 0.45, h * 0.18, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.save();
+  ctx.shadowColor = state.chaosTriggered ? 'rgba(255,138,61,.85)' : 'rgba(168,85,247,.95)';
+  ctx.shadowBlur = 22 * scale;
+  ctx.drawImage(ASSETS.hellcat, x - w/2, y - h/2, w, h);
   ctx.restore();
 }
 
 function drawPlayer() {
   const x = state.player.x;
-  const y = H * 0.78;
-  const w = 200, h = 240;
-  const tilt = (state.player.targetX - state.player.x) * 0.0015;
+  const y = H * 0.84;
+  const w = 320, h = 360;
 
-  // Outer aura — pulsing
   ctx.save();
-  const pulseT = Math.sin(state.tick * 0.08) * 0.15 + 1;
-  ctx.globalAlpha = 0.55 * pulseT;
-  const g = ctx.createRadialGradient(x, y + h*0.3, 0, x, y + h*0.3, 140);
-  g.addColorStop(0, state.chaosTriggered ? 'rgba(255,138,61,.7)' : 'rgba(168,85,247,.7)');
-  g.addColorStop(0.6, state.chaosTriggered ? 'rgba(168,85,247,.3)' : 'rgba(124,58,237,.3)');
+  const pulse = 0.85 + Math.sin(state.tick * 0.1) * 0.18;
+  ctx.globalAlpha = 0.55 * pulse;
+  const auraColor = state.chaosTriggered ? 'rgba(255,138,61,.85)' : 'rgba(168,85,247,.85)';
+  const g = ctx.createRadialGradient(x, y - h * 0.05, 0, x, y - h * 0.05, 200);
+  g.addColorStop(0, auraColor);
+  g.addColorStop(0.5, state.chaosTriggered ? 'rgba(255,138,61,.4)' : 'rgba(124,58,237,.4)');
   g.addColorStop(1, 'rgba(168,85,247,0)');
   ctx.fillStyle = g;
-  ctx.fillRect(x - 160, y - 100, 320, 320);
+  ctx.fillRect(x - 220, y - 220, 440, 440);
   ctx.restore();
 
-  // Speed lines / sparks below player
+  const tilt = Math.max(-0.18, Math.min(0.18, (state.player.targetX - state.player.x) * 0.0025));
+
+  // Speed lines
   ctx.save();
-  ctx.strokeStyle = state.chaosTriggered ? 'rgba(255,138,61,.55)' : 'rgba(168,85,247,.55)';
+  ctx.strokeStyle = state.chaosTriggered ? 'rgba(255,138,61,.7)' : 'rgba(168,85,247,.6)';
   ctx.lineWidth = 2;
-  for (let i = 0; i < 6; i++) {
-    const sx = x - 60 + (i * 24);
-    const sy = y + h*0.45 + ((state.tick * 8 + i * 30) % 60);
+  for (let i = 0; i < 8; i++) {
+    const sx = x - 90 + (i * 26);
+    const sy = y + h * 0.34 + ((state.tick * 12 + i * 18) % 70);
     ctx.beginPath();
     ctx.moveTo(sx, sy);
-    ctx.lineTo(sx, sy + 18);
+    ctx.lineTo(sx + tilt * 30, sy + 22);
     ctx.stroke();
   }
   ctx.restore();
 
-  if (ASSETS.player) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(tilt);
-    if (state.tick < state.invulnUntil && Math.floor(state.tick/4) % 2 === 0) {
-      ctx.globalAlpha = 0.45;
-    }
-    // Strong drop shadow under sprite
-    ctx.shadowColor = state.chaosTriggered ? 'rgba(255,138,61,.7)' : 'rgba(168,85,247,.7)';
-    ctx.shadowBlur = 30;
-    ctx.drawImage(ASSETS.player, -w/2, -h/2, w, h);
-    ctx.restore();
-  } else {
-    ctx.fillStyle = '#ff8a3d';
-    ctx.beginPath();
-    ctx.arc(x, y, 50, 0, Math.PI * 2);
-    ctx.fill();
-  }
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(tilt);
+  ctx.shadowColor = state.chaosTriggered ? 'rgba(255,138,61,.85)' : 'rgba(168,85,247,.85)';
+  ctx.shadowBlur = 36;
+  if (state.tick < state.invulnUntil && Math.floor(state.tick / 4) % 2 === 0) ctx.globalAlpha = 0.5;
+  if (ASSETS.player) ctx.drawImage(ASSETS.player, -w/2, -h/2, w, h);
+  else { ctx.fillStyle = '#ff8a3d'; ctx.beginPath(); ctx.arc(0, 0, 70, 0, Math.PI * 2); ctx.fill(); }
+  ctx.restore();
 }
 
-// ============================================================================
-// HUD
-// ============================================================================
 function updateHUD() {
   $('hudScore').textContent = state.score.toLocaleString();
   $('hudDist').textContent = Math.floor(state.distance) + 'm';
   $('hudDiamonds').textContent = state.diamonds;
   const lifeEls = $('hudLives').children;
-  for (let i = 0; i < lifeEls.length; i++) {
-    lifeEls[i].classList.toggle('gone', i >= state.lives);
-  }
+  for (let i = 0; i < lifeEls.length; i++) lifeEls[i].classList.toggle('gone', i >= state.lives);
 }
 
-// ============================================================================
-// SCREENS
-// ============================================================================
-function show(screenId) {
+function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('show', 'fade'));
-  $(screenId).classList.add('show', 'fade');
-  state.screen = screenId;
+  $(id).classList.add('show', 'fade');
+  state.screen = id;
 }
 
 function startGame() {
   reset();
-  show('screenTitle'); // hide screens momentarily
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
   $('hud').style.display = 'flex';
+  $('hubBtn').classList.add('show');
   $('pauseBtn').classList.add('show');
-  state.running = true;
-  state.paused = false;
+  state.running = true; state.paused = false;
   state.screen = 'playing';
   $('tapHint').style.display = 'block';
   setTimeout(() => { $('tapHint').style.display = 'none'; }, 2500);
   updateHUD();
 }
-
 function gameOver() {
   state.running = false;
   $('hud').style.display = 'none';
+  $('hubBtn').classList.remove('show');
   $('pauseBtn').classList.remove('show');
   if (state.score > state.bestLocal) {
     state.bestLocal = state.score;
@@ -922,67 +907,48 @@ function gameOver() {
   $('finalDist').textContent = Math.floor(state.distance) + 'm';
   $('finalDiamonds').textContent = state.diamonds;
   $('bestLine').innerHTML = state.score === state.bestLocal && state.score > 0
-    ? '🏆 New personal best!'
-    : 'Best: <b>' + state.bestLocal.toLocaleString() + '</b>';
+    ? '🏆 New personal best!' : 'Best: <b>' + state.bestLocal.toLocaleString() + '</b>';
   haptic([60, 40, 60]);
   show('screenOver');
 }
 
-// ============================================================================
 // INPUT
-// ============================================================================
 function handleTap(clientX) {
   if (!state.running || state.paused) return;
-  const half = W / 2;
-  if (clientX < half) {
-    state.player.lane = Math.max(0, state.player.lane - 1);
-  } else {
-    state.player.lane = Math.min(LANES - 1, state.player.lane + 1);
-  }
-  state.player.targetX = laneX(state.player.lane);
+  if (clientX < W / 2) state.player.lane = Math.max(0, state.player.lane - 1);
+  else state.player.lane = Math.min(LANES - 1, state.player.lane + 1);
+  state.player.targetX = laneXBot(state.player.lane);
 }
-
-cv.addEventListener('touchstart', e => {
-  if (e.touches[0]) handleTap(e.touches[0].clientX);
-}, { passive: true });
+cv.addEventListener('touchstart', e => { if (e.touches[0]) handleTap(e.touches[0].clientX); }, { passive:true });
 cv.addEventListener('mousedown', e => handleTap(e.clientX));
-
-// Swipe support
-let swipeStartX = null;
-cv.addEventListener('touchstart', e => { swipeStartX = e.touches[0].clientX; }, { passive: true });
+let swipeX = null;
+cv.addEventListener('touchstart', e => { swipeX = e.touches[0].clientX; }, { passive:true });
 cv.addEventListener('touchend', e => {
-  if (swipeStartX == null || !state.running || state.paused) return;
-  const dx = (e.changedTouches[0]?.clientX ?? swipeStartX) - swipeStartX;
+  if (swipeX == null || !state.running || state.paused) return;
+  const dx = (e.changedTouches[0]?.clientX ?? swipeX) - swipeX;
   if (Math.abs(dx) > 40) {
     if (dx < 0) state.player.lane = Math.max(0, state.player.lane - 1);
     else state.player.lane = Math.min(LANES - 1, state.player.lane + 1);
-    state.player.targetX = laneX(state.player.lane);
+    state.player.targetX = laneXBot(state.player.lane);
   }
-  swipeStartX = null;
+  swipeX = null;
 });
-
-// Keyboard for desktop
 document.addEventListener('keydown', e => {
   if (!state.running || state.paused) return;
   if (e.key === 'ArrowLeft' || e.key === 'a') {
     state.player.lane = Math.max(0, state.player.lane - 1);
-    state.player.targetX = laneX(state.player.lane);
+    state.player.targetX = laneXBot(state.player.lane);
   } else if (e.key === 'ArrowRight' || e.key === 'd') {
     state.player.lane = Math.min(LANES - 1, state.player.lane + 1);
-    state.player.targetX = laneX(state.player.lane);
-  } else if (e.key === 'Escape' || e.key === 'p') {
-    togglePause();
-  }
+    state.player.targetX = laneXBot(state.player.lane);
+  } else if (e.key === 'Escape' || e.key === 'p') togglePause();
 });
 
-// Buttons
 $('btnPlay').onclick = startGame;
 $('btnRetry').onclick = startGame;
-$('btnHome').onclick = () => show('screenTitle');
 $('btnLeaderboard').onclick = () => { show('screenBoard'); loadBoard(); };
 $('btnBoardHome').onclick = () => show('screenTitle');
 $('btnSubmit').onclick = submitScore;
-$('btnConnect').onclick = connectWallet;
 $('walletPill').onclick = connectWallet;
 $('pauseBtn').onclick = togglePause;
 $('btnResume').onclick = togglePause;
@@ -994,14 +960,8 @@ function togglePause() {
   $('pauseOverlay').classList.toggle('show', state.paused);
 }
 
-// ============================================================================
-// WALLET (Monad)
-// ============================================================================
-// Active provider — either window.ethereum (injected) or WalletConnect.
-// Both expose the same .request() interface so the rest of the code is provider-agnostic.
+// WALLET
 let wcProvider = null;
-state.activeProvider = null;
-
 async function getWCProvider() {
   if (wcProvider) return wcProvider;
   wcProvider = await EthereumProvider.init({
@@ -1010,163 +970,83 @@ async function getWCProvider() {
     optionalChains: [MONAD_CHAIN_ID],
     rpcMap: { [MONAD_CHAIN_ID]: MONAD_RPC },
     showQrModal: true,
-    qrModalOptions: {
-      themeMode: 'dark',
-      themeVariables: {
-        '--wcm-z-index': '300',
-        '--wcm-accent-color': '#a855f7',
-      },
-    },
+    qrModalOptions: { themeMode:'dark', themeVariables:{'--wcm-z-index':'300','--wcm-accent-color':'#a855f7'} },
     metadata: {
-      name: 'MONWOLF: Downhill Chaos',
-      description: 'No brakes. No limits. Race for $MONWOLF on Monad.',
-      url: window.location.origin,
-      icons: [window.location.origin + '/logo.png'],
+      name:'MONWOLF Downhill Chaos',
+      description:'Race for $MONWOLF on Monad',
+      url:window.location.origin,
+      icons:[window.location.origin + '/logo.png'],
     },
   });
-  // session restored / disconnected events
-  wcProvider.on('disconnect', () => {
-    state.wallet = null;
-    state.activeProvider = null;
-    renderWallet();
-    toast('Wallet disconnected');
-  });
-  wcProvider.on('chainChanged', (cid) => {
-    // ignore — we read balance from RPC directly
-  });
+  wcProvider.on('disconnect', () => { state.wallet = null; state.activeProvider = null; renderWallet(); });
   return wcProvider;
 }
-
 async function connectWallet() {
+  if (state.wallet) return;
   try {
     let provider, addr;
-
-    // Prefer injected (MetaMask extension, Trust browser, MM Mobile in-app browser)
     if (window.ethereum) {
       provider = window.ethereum;
-      const accounts = await provider.request({ method: 'eth_requestAccounts' });
-      addr = accounts[0];
-      // Try switch to Monad mainnet
-      try {
-        await provider.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: MONAD_CHAIN_HEX }],
-        });
-      } catch (err) {
+      const accs = await provider.request({ method:'eth_requestAccounts' });
+      addr = accs[0];
+      try { await provider.request({ method:'wallet_switchEthereumChain', params:[{chainId:MONAD_CHAIN_HEX}] }); }
+      catch (err) {
         if (err.code === 4902) {
-          // Chain not added — try to add it
           try {
             await provider.request({
-              method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: MONAD_CHAIN_HEX,
-                chainName: 'Monad',
-                nativeCurrency: { name: 'Monad', symbol: 'MON', decimals: 18 },
-                rpcUrls: [MONAD_RPC],
-                blockExplorerUrls: ['https://explorer.monad.xyz'],
-              }],
+              method:'wallet_addEthereumChain',
+              params:[{ chainId:MONAD_CHAIN_HEX, chainName:'Monad', nativeCurrency:{name:'Monad',symbol:'MON',decimals:18}, rpcUrls:[MONAD_RPC], blockExplorerUrls:['https://explorer.monad.xyz']}],
             });
-          } catch {
-            toast('Please add Monad to your wallet', true);
-          }
+          } catch {}
         }
       }
     } else {
-      // Mobile Safari / no injection — open WalletConnect modal
       toast('Opening wallet picker…');
       const wc = await getWCProvider();
-      if (!wc.session) {
-        await wc.connect();
-      } else {
-        await wc.enable();
-      }
-      provider = wc;
-      addr = wc.accounts?.[0];
+      if (!wc.session) await wc.connect();
+      provider = wc; addr = wc.accounts?.[0];
     }
-
-    if (!addr) {
-      toast('No account returned', true);
-      return;
-    }
-
+    if (!addr) return;
     state.activeProvider = provider;
     const balance = await readMonwolfBalance(addr);
     const rank = rankFor(balance);
     state.wallet = { address: addr, balance, rank };
+    sessionStorage.setItem('mw_wallet', JSON.stringify(state.wallet));
     renderWallet();
     toast('Connected · ' + rank);
   } catch (err) {
-    console.error(err);
-    toast(err?.message?.slice(0, 80) || 'Wallet connect failed', true);
+    toast(err?.message?.slice(0, 80) || 'Connect failed', true);
   }
 }
-
-async function disconnectWallet() {
-  try { if (wcProvider?.session) await wcProvider.disconnect(); } catch {}
-  state.wallet = null;
-  state.activeProvider = null;
-  renderWallet();
-}
-
 async function readMonwolfBalance(addr) {
   try {
-    // ERC-20 balanceOf(address)
     const data = '0x70a08231' + addr.slice(2).toLowerCase().padStart(64, '0');
-    const res = await fetch(MONAD_RPC, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc:'2.0', id:1, method:'eth_call',
-        params: [{ to: MONWOLF_CONTRACT, data }, 'latest'],
-      }),
+    const r = await fetch(MONAD_RPC, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ jsonrpc:'2.0', id:1, method:'eth_call', params:[{to:MONWOLF_CONTRACT,data},'latest'] }),
     });
-    const j = await res.json();
+    const j = await r.json();
     if (!j.result) return 0;
-    const raw = BigInt(j.result);
-    // Assume 18 decimals
-    return Number(raw / (10n ** 16n)) / 100;
-  } catch (e) {
-    console.error('balance read err', e);
-    return 0;
-  }
+    return Number(BigInt(j.result) / (10n ** 16n)) / 100;
+  } catch { return 0; }
 }
-
-function rankFor(balance) {
-  for (const r of RANKS) {
-    if (balance >= r.min) return r.name;
-  }
-  return 'CUB';
-}
-
+function rankFor(b) { for (const r of RANKS) if (b >= r.min) return r.name; return 'CUB'; }
 function renderWallet() {
   const pill = $('walletPill');
-  const btn = $('btnConnect');
   if (!state.wallet) {
-    pill.style.display = 'none';
-    btn.style.display = 'flex';
+    pill.classList.remove('connected');
+    $('rankBadge').textContent = '';
+    $('walletText').textContent = 'CONNECT WALLET';
     return;
   }
-  pill.style.display = 'inline-flex';
-  pill.classList.remove('disconnected');
-  btn.style.display = 'none';
+  pill.classList.add('connected');
   $('rankBadge').textContent = state.wallet.rank;
-  $('walletAddr').textContent = trim(state.wallet.address);
+  $('walletText').textContent = state.wallet.address.slice(0, 6) + '…' + state.wallet.address.slice(-4);
 }
 
-function trim(a) { return a.slice(0, 6) + '…' + a.slice(-4); }
-
-// ============================================================================
-// SUPABASE — leaderboard
-// ============================================================================
+// SUPABASE
 async function submitScore() {
-  if (!state.wallet) {
-    await connectWallet();
-    if (!state.wallet) return;
-  }
-  if (!supabase) {
-    toast('Leaderboard not configured yet', true);
-    return;
-  }
+  if (!state.wallet) { await connectWallet(); if (!state.wallet) return; }
   const score = state.score, distance = Math.floor(state.distance), diamonds = state.diamonds;
   if (score <= 0) { toast('Score must be > 0', true); return; }
   const message = [
@@ -1180,67 +1060,36 @@ async function submitScore() {
   ].join('\n');
   let signature;
   try {
-    signature = await state.activeProvider.request({
-      method: 'personal_sign',
-      params: [message, state.wallet.address],
-    });
-  } catch {
-    toast('Sign rejected', true);
-    return;
-  }
+    signature = await state.activeProvider.request({ method:'personal_sign', params:[message, state.wallet.address] });
+  } catch { toast('Sign rejected', true); return; }
   const { error } = await supabase.from('leaderboard').insert({
     wallet: state.wallet.address.toLowerCase(),
     rank: state.wallet.rank,
-    score, distance, diamonds,
-    signature, message,
+    score, distance, diamonds, signature, message,
   });
   if (error) { toast('Submit failed: ' + error.message, true); return; }
   toast('Score submitted! 🐺');
-  show('screenBoard');
-  loadBoard();
+  show('screenBoard'); loadBoard();
 }
-
 async function loadBoard() {
   const list = $('boardList');
   list.innerHTML = '<div class="board-loader"><div class="spinner"></div><div style="margin-top:.5rem;">Loading...</div></div>';
-  if (!supabase) {
-    list.innerHTML = '<div class="board-empty">Leaderboard not configured. Set Supabase credentials in index.html.</div>';
-    return;
-  }
   const { data, error } = await supabase
     .from('leaderboard')
-    .select('wallet, rank, score, distance, diamonds, created_at')
-    .order('score', { ascending: false })
-    .limit(50);
+    .select('wallet, rank, score, distance, diamonds')
+    .order('score', { ascending: false }).limit(50);
   if (error) { list.innerHTML = '<div class="board-empty">Failed to load.</div>'; return; }
-  if (!data || !data.length) {
-    list.innerHTML = '<div class="board-empty">No scores yet. Be the first to submit.</div>';
-    return;
-  }
-  // Dedupe to best per wallet
+  if (!data?.length) { list.innerHTML = '<div class="board-empty">No scores yet. Be the first.</div>'; return; }
   const best = new Map();
-  for (const row of data) {
-    const k = row.wallet;
-    if (!best.has(k) || best.get(k).score < row.score) best.set(k, row);
-  }
-  const top = [...best.values()].sort((a, b) => b.score - a.score).slice(0, 25);
+  for (const r of data) { const k = r.wallet; if (!best.has(k) || best.get(k).score < r.score) best.set(k, r); }
+  const top = [...best.values()].sort((a,b) => b.score - a.score).slice(0, 25);
+  const trim = a => a.slice(0,6) + '…' + a.slice(-4);
   list.innerHTML = top.map((r, i) => {
     const cls = i === 0 ? 'gold' : (i === 1 ? 'silver' : (i === 2 ? 'bronze' : ''));
-    return `<div class="board-row ${cls}">
-      <div class="pos">${i + 1}</div>
-      <div class="who">
-        <span class="addr">${trim(r.wallet)}</span>
-        <span class="badge">${r.rank || 'CUB'}</span>
-      </div>
-      <div class="score">${(r.score||0).toLocaleString()}</div>
-      <div class="meta">${r.distance||0}m<br>💎 ${r.diamonds||0}</div>
-    </div>`;
+    return `<div class="board-row ${cls}"><div class="pos">${i+1}</div><div class="who"><span class="addr">${trim(r.wallet)}</span><span class="badge">${r.rank||'CUB'}</span></div><div class="score">${(r.score||0).toLocaleString()}</div><div class="meta">${r.distance||0}m<br>💎 ${r.diamonds||0}</div></div>`;
   }).join('');
 }
 
-// ============================================================================
-// TOAST
-// ============================================================================
 function toast(msg, err) {
   const t = $('toast');
   t.textContent = msg;
@@ -1250,38 +1099,18 @@ function toast(msg, err) {
   t._timer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-// ============================================================================
-// MAIN LOOP
-// ============================================================================
 function frame() {
   tick();
   render();
   requestAnimationFrame(frame);
 }
-
 loadAll.then(async () => {
   reset();
   frame();
-  // Show connect button by default on title screen
-  renderWallet();
-  // Auto-recover wallet session
-  // 1) injected wallet already authorized?
-  if (window.ethereum?.selectedAddress) {
-    connectWallet().catch(() => {});
-    return;
-  }
-  // 2) WalletConnect session persisted in localStorage?
-  try {
-    const wc = await getWCProvider();
-    if (wc.session && wc.accounts?.length) {
-      state.activeProvider = wc;
-      const addr = wc.accounts[0];
-      const balance = await readMonwolfBalance(addr);
-      const rank = rankFor(balance);
-      state.wallet = { address: addr, balance, rank };
-      renderWallet();
-    }
-  } catch (e) { /* WC init failed silently — connect button still works */ }
+  const cached = sessionStorage.getItem('mw_wallet');
+  if (cached) { try { state.wallet = JSON.parse(cached); renderWallet(); } catch { renderWallet(); } }
+  else renderWallet();
+  if (window.ethereum?.selectedAddress && !state.wallet) connectWallet().catch(() => {});
 });
 </script>
 </body>

@@ -415,17 +415,22 @@ a { color:inherit; text-decoration:none; }
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { EthereumProvider } from 'https://esm.sh/@walletconnect/ethereum-provider@2.17.0';
 
 // ============================================================================
-// CONFIG  — Replace these two with your Supabase project values, then redeploy.
+// CONFIG
 // ============================================================================
 const SUPABASE_URL  = 'https://cuqhqcmrgpdjlhyqztnc.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1cWhxY21yZ3BkamxoeXF6dG5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjQ4NDAsImV4cCI6MjA5MjgwMDg0MH0.bsmuC_onaPutZmYZWTn9p1DvngKIA7Xx4J3YRajbf-8';
 
+// WalletConnect (Reown) project — gets QR + mobile-wallet deeplinks for non-injected browsers
+const WC_PROJECT_ID = '89d7a1882c0fa9a5bbe0a58accafc100';
+
 // $MONWOLF on Monad
 const MONWOLF_CONTRACT = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
 const MONAD_RPC        = 'https://rpc.monad.xyz';
-const MONAD_CHAIN_HEX  = '0x8f'; // 143 — Monad mainnet
+const MONAD_CHAIN_ID   = 143;        // Monad mainnet (decimal)
+const MONAD_CHAIN_HEX  = '0x8f';     // 143 in hex
 
 // Pack ranks by $MONWOLF balance (whole tokens, 18 decimals assumed)
 const RANKS = [
@@ -919,38 +924,115 @@ function togglePause() {
 // ============================================================================
 // WALLET (Monad)
 // ============================================================================
-async function connectWallet() {
-  if (!window.ethereum) {
-    toast('Install MetaMask to connect', true);
-    return;
-  }
-  try {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    if (!accounts[0]) return;
-    const addr = accounts[0];
+// Active provider — either window.ethereum (injected) or WalletConnect.
+// Both expose the same .request() interface so the rest of the code is provider-agnostic.
+let wcProvider = null;
+state.activeProvider = null;
 
-    // Try switch to Monad
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: MONAD_CHAIN_HEX }],
-      });
-    } catch (err) {
-      if (err.code === 4902) {
-        // Chain not added — user can add manually
-        toast('Add Monad to MetaMask first', true);
+async function getWCProvider() {
+  if (wcProvider) return wcProvider;
+  wcProvider = await EthereumProvider.init({
+    projectId: WC_PROJECT_ID,
+    chains: [MONAD_CHAIN_ID],
+    optionalChains: [MONAD_CHAIN_ID],
+    rpcMap: { [MONAD_CHAIN_ID]: MONAD_RPC },
+    showQrModal: true,
+    qrModalOptions: {
+      themeMode: 'dark',
+      themeVariables: {
+        '--wcm-z-index': '300',
+        '--wcm-accent-color': '#a855f7',
+      },
+    },
+    metadata: {
+      name: 'MONWOLF: Downhill Chaos',
+      description: 'No brakes. No limits. Race for $MONWOLF on Monad.',
+      url: window.location.origin,
+      icons: [window.location.origin + '/logo.png'],
+    },
+  });
+  // session restored / disconnected events
+  wcProvider.on('disconnect', () => {
+    state.wallet = null;
+    state.activeProvider = null;
+    renderWallet();
+    toast('Wallet disconnected');
+  });
+  wcProvider.on('chainChanged', (cid) => {
+    // ignore — we read balance from RPC directly
+  });
+  return wcProvider;
+}
+
+async function connectWallet() {
+  try {
+    let provider, addr;
+
+    // Prefer injected (MetaMask extension, Trust browser, MM Mobile in-app browser)
+    if (window.ethereum) {
+      provider = window.ethereum;
+      const accounts = await provider.request({ method: 'eth_requestAccounts' });
+      addr = accounts[0];
+      // Try switch to Monad mainnet
+      try {
+        await provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: MONAD_CHAIN_HEX }],
+        });
+      } catch (err) {
+        if (err.code === 4902) {
+          // Chain not added — try to add it
+          try {
+            await provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: MONAD_CHAIN_HEX,
+                chainName: 'Monad',
+                nativeCurrency: { name: 'Monad', symbol: 'MON', decimals: 18 },
+                rpcUrls: [MONAD_RPC],
+                blockExplorerUrls: ['https://explorer.monad.xyz'],
+              }],
+            });
+          } catch {
+            toast('Please add Monad to your wallet', true);
+          }
+        }
       }
+    } else {
+      // Mobile Safari / no injection — open WalletConnect modal
+      toast('Opening wallet picker…');
+      const wc = await getWCProvider();
+      if (!wc.session) {
+        await wc.connect();
+      } else {
+        await wc.enable();
+      }
+      provider = wc;
+      addr = wc.accounts?.[0];
     }
 
+    if (!addr) {
+      toast('No account returned', true);
+      return;
+    }
+
+    state.activeProvider = provider;
     const balance = await readMonwolfBalance(addr);
     const rank = rankFor(balance);
     state.wallet = { address: addr, balance, rank };
     renderWallet();
-    toast('Connected as ' + rank);
+    toast('Connected · ' + rank);
   } catch (err) {
     console.error(err);
-    toast('Wallet connect failed', true);
+    toast(err?.message?.slice(0, 80) || 'Wallet connect failed', true);
   }
+}
+
+async function disconnectWallet() {
+  try { if (wcProvider?.session) await wcProvider.disconnect(); } catch {}
+  state.wallet = null;
+  state.activeProvider = null;
+  renderWallet();
 }
 
 async function readMonwolfBalance(addr) {
@@ -1025,7 +1107,7 @@ async function submitScore() {
   ].join('\n');
   let signature;
   try {
-    signature = await window.ethereum.request({
+    signature = await state.activeProvider.request({
       method: 'personal_sign',
       params: [message, state.wallet.address],
     });
@@ -1104,13 +1186,29 @@ function frame() {
   requestAnimationFrame(frame);
 }
 
-loadAll.then(() => {
+loadAll.then(async () => {
   reset();
   frame();
-  // Auto-attempt to recover wallet from previous session
+  // Show connect button by default on title screen
+  renderWallet();
+  // Auto-recover wallet session
+  // 1) injected wallet already authorized?
   if (window.ethereum?.selectedAddress) {
     connectWallet().catch(() => {});
+    return;
   }
+  // 2) WalletConnect session persisted in localStorage?
+  try {
+    const wc = await getWCProvider();
+    if (wc.session && wc.accounts?.length) {
+      state.activeProvider = wc;
+      const addr = wc.accounts[0];
+      const balance = await readMonwolfBalance(addr);
+      const rank = rankFor(balance);
+      state.wallet = { address: addr, balance, rank };
+      renderWallet();
+    }
+  } catch (e) { /* WC init failed silently — connect button still works */ }
 });
 </script>
 </body>

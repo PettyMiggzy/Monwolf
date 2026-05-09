@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#08000f">
+<title>MONWOLF · Arcade</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:#08000f; --panel:#160a26; --border:#3a1f5e;
+  --text:#fff; --text-2:#c8b6e6; --text-3:#7e6d96;
+  --purple:#a855f7; --orange:#ff8a3d; --gold:#f5c242;
+  --green:#22c55e; --red:#ef4444;
+  --grad:linear-gradient(135deg, #a855f7 0%, #ff8a3d 100%);
+  --grad-text:linear-gradient(135deg, #ff8a3d 0%, #a855f7 100%);
+  --safe-top:env(safe-area-inset-top, 0);
+  --safe-bottom:env(safe-area-inset-bottom, 0);
+}
+html,body { width:100%; min-height:100%; background:var(--bg); color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,sans-serif; -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent; overscroll-behavior:none; }
+body { position:relative; min-height:100vh; padding-bottom:calc(2rem + var(--safe-bottom));
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 0%, rgba(168,85,247,.4) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 70% 100%, rgba(255,138,61,.3) 0%, transparent 60%),
+    linear-gradient(180deg, #08000f 0%, #160a26 50%, #08000f 100%);
+  overflow-x:hidden; }
+a { color:inherit; text-decoration:none; }
+
+.page { position:relative; z-index:2; max-width:1100px; margin:0 auto;
+  padding: calc(1.4rem + var(--safe-top)) 1.2rem 0; }
+
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:.6rem;
+  margin-bottom:1.6rem; flex-wrap:wrap; }
+
+.brand { display:flex; align-items:center; gap:.7rem; }
+.brand-logo { width:42px; height:42px; border-radius:10px;
+  background:var(--grad); display:flex; align-items:center; justify-content:center;
+  font-family:'Russo One'; color:#0a0118; font-size:1.2rem;
+  box-shadow:0 8px 24px -6px rgba(168,85,247,.7), inset 0 1px 0 rgba(255,255,255,.3); }
+.brand-name { font-family:'Russo One',sans-serif; font-size:1.05rem;
+  letter-spacing:.18em; line-height:1; }
+.brand-name .sub { display:block; font-size:.65rem; color:var(--text-3);
+  font-weight:600; letter-spacing:.25em; margin-top:.2rem; }
+
+.wallet-pill { display:inline-flex; align-items:center; gap:.5rem; padding:.55rem 1rem;
+  background:rgba(0,0,0,.55); border:1px solid var(--border); border-radius:9999px;
+  font-size:.85rem; font-weight:600; color:var(--text-2); cursor:pointer;
+  backdrop-filter:blur(10px); }
+.wallet-pill .dot { width:8px; height:8px; border-radius:50%; background:#71727f; }
+.wallet-pill.connected .dot { background:var(--green); box-shadow:0 0 8px var(--green); }
+.wallet-pill .rank { color:var(--gold); font-weight:700; font-family:'Russo One';
+  font-size:.72rem; letter-spacing:.12em; }
+
+.hero { text-align:center; margin:1.6rem 0 2rem; }
+.hero-eyebrow { display:inline-block; padding:.3rem .85rem;
+  background:rgba(168,85,247,.15); border:1px solid rgba(168,85,247,.4); border-radius:9999px;
+  font-size:.7rem; letter-spacing:.18em; font-weight:700; color:var(--purple);
+  text-transform:uppercase; margin-bottom:1rem; }
+.hero h1 { font-family:'Russo One',sans-serif; font-size:clamp(2.4rem, 9vw, 3.8rem);
+  line-height:.95; letter-spacing:-.5px;
+  text-shadow:0 4px 20px rgba(168,85,247,.85), 0 2px 0 #000; margin-bottom:.5rem; }
+.hero h1 .grad { background:var(--grad-text); -webkit-background-clip:text;
+  background-clip:text; color:transparent; }
+.hero p { color:var(--text-2); font-size:.95rem; max-width:420px; margin:0 auto;
+  line-height:1.4; }
+
+.games { display:grid; grid-template-columns:1fr; gap:1rem; margin-bottom:1.5rem; }
+@media (min-width: 720px) { .games { grid-template-columns:1fr 1fr; gap:1.2rem; } }
+@media (min-width: 1024px) { .games { grid-template-columns:1fr 1fr 1fr; gap:1.2rem; } }
+
+.game-card { position:relative; display:flex; flex-direction:column;
+  background:rgba(22,10,38,.85); border:1px solid var(--border); border-radius:18px;
+  overflow:hidden; backdrop-filter:blur(14px); cursor:pointer;
+  transition:transform .25s, border-color .25s, box-shadow .25s; }
+.game-card:hover { transform:translateY(-4px); border-color:rgba(168,85,247,.85);
+  box-shadow:0 30px 80px -20px rgba(168,85,247,.5); }
+
+.game-cover { position:relative; height:200px; overflow:hidden; }
+.game-card-cyborg .game-cover {
+  background:linear-gradient(180deg, rgba(8,0,15,.3) 0%, rgba(8,0,15,.85) 100%),
+    url('title_cyborg.jpg') center/cover no-repeat; }
+.game-card-skate .game-cover {
+  background:linear-gradient(180deg, rgba(8,0,15,.3) 0%, rgba(8,0,15,.85) 100%),
+    url('title_skate.jpg') center/cover no-repeat; }
+.game-card-hellcat .game-cover {
+  background:linear-gradient(180deg, rgba(8,0,15,.3) 0%, rgba(8,0,15,.85) 100%),
+    url('title_drift.jpg') center/cover no-repeat; }
+.game-card-pack .game-cover {
+  background:linear-gradient(180deg, rgba(8,0,15,.3) 0%, rgba(8,0,15,.85) 100%),
+    url('title_pack.jpg') center/cover no-repeat; }
+.game-card-rocket .game-cover {
+  background:linear-gradient(180deg, rgba(8,0,15,.3) 0%, rgba(8,0,15,.85) 100%),
+    url('title_rocket.jpg') center/cover no-repeat; }
+
+.game-info { padding:1rem 1.1rem 1.1rem; position:relative; }
+.game-tag { font-size:.65rem; color:var(--purple); font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase; margin-bottom:.3rem; }
+.game-name { font-family:'Russo One',sans-serif; font-size:1.4rem;
+  line-height:1; letter-spacing:.5px; margin-bottom:.4rem; }
+.game-name .grad { background:var(--grad-text); -webkit-background-clip:text;
+  background-clip:text; color:transparent; }
+.game-desc { font-size:.85rem; color:var(--text-2); line-height:1.4; margin-bottom:.85rem;
+  min-height:2.5em; }
+.game-stats { display:flex; justify-content:space-between; align-items:center;
+  padding-top:.6rem; border-top:1px solid var(--border); }
+.game-best { font-size:.72rem; color:var(--text-3); }
+.game-best b { font-family:'Russo One'; font-size:.95rem; color:var(--gold);
+  margin-left:.4rem; letter-spacing:.5px; }
+.game-cta { font-family:'Russo One'; font-size:.75rem; letter-spacing:.15em;
+  color:var(--orange); display:flex; align-items:center; gap:.3rem; }
+.game-cta::after { content:'→'; transition:transform .2s; }
+.game-card:hover .game-cta::after { transform:translateX(3px); }
+
+.section-divider { display:flex; align-items:center; gap:1rem; margin:1.8rem 0 1rem; }
+.section-divider .line { flex:1; height:1px;
+  background:linear-gradient(to right, transparent, var(--border), transparent); }
+.section-divider .lbl { font-family:'Russo One'; color:var(--text-3); font-size:.75rem;
+  letter-spacing:.25em; text-transform:uppercase; }
+
+.pack-link { display:flex; align-items:center; justify-content:center; gap:.5rem;
+  padding:.95rem 1.4rem; background:rgba(168,85,247,.08); border:1px solid var(--border);
+  border-radius:12px; font-family:'Russo One'; font-size:.85rem; letter-spacing:.1em;
+  color:var(--text); backdrop-filter:blur(8px); max-width:340px; margin:0 auto 1.5rem;
+  transition:transform .12s, border-color .15s; }
+.pack-link:hover { transform:translateY(-2px); border-color:var(--purple); }
+
+.credits-bar { margin: 1.6rem auto 0; display:flex; align-items:center; gap:.7rem;
+  justify-content:center; font-size:.78rem; color:var(--text-3); }
+.credits-bar img { width:34px; height:34px; border-radius:50%; border:1px solid var(--border);
+  object-fit:cover; box-shadow:0 0 12px rgba(168,85,247,.4); }
+.credits-bar a { color:var(--purple); font-weight:600; }
+
+.footer { text-align:center; color:var(--text-3); font-size:.72rem;
+  letter-spacing:.1em; padding:1rem 1rem 0; }
+.footer .links { display:flex; justify-content:center; gap:1.2rem; margin-bottom:.7rem;
+  flex-wrap:wrap; }
+.footer .links a { font-family:'Russo One'; font-size:.7rem; letter-spacing:.18em;
+  color:var(--purple); }
+.footer .contract { font-family:'JetBrains Mono'; color:var(--text-2); }
+
+.toast { position:fixed; bottom: calc(1.5rem + var(--safe-bottom)); left:50%;
+  transform:translateX(-50%) translateY(20px); background:#fff; color:#000;
+  padding:.8rem 1.2rem; border-radius:10px; font-weight:700; font-size:.85rem;
+  opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; z-index:200;
+  box-shadow:0 10px 40px -10px rgba(168,85,247,.5); max-width:320px; text-align:center; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.err { background:var(--red); color:#fff; }
+
+@keyframes pulse { 0%,100% { opacity:.5; } 50% { opacity:1; } }
+.hero-eyebrow::before { content:''; display:inline-block; width:7px; height:7px;
+  border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green);
+  margin-right:.5rem; animation:pulse 2s ease-in-out infinite;
+  vertical-align:middle; position:relative; top:-1px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-logo">M</div>
+      <div class="brand-name">MONWOLF<span class="sub">ARCADE</span></div>
+    </div>
+    <div class="wallet-pill" id="walletPill">
+      <span class="dot"></span>
+      <span class="rank" id="rankBadge"></span>
+      <span id="walletText">CONNECT WALLET</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <span class="hero-eyebrow">Monad-7 · 5 Games · 1 Pack</span>
+    <h1>BUILT FROM<br><span class="grad">THE PACK</span></h1>
+    <p>Five arcade games. Hold MONWOLF for higher ranks. Built on Monad.</p>
+  </div>
+
+  <div class="games">
+    <a class="game-card game-card-cyborg" href="cyborg_charge.html">
+      <div class="game-cover"></div>
+      <div class="game-info">
+        <div class="game-tag">Action Runner</div>
+        <h3 class="game-name">CYBORG <span class="grad">CHARGE</span></h3>
+        <p class="game-desc">Hunt the cyborg crowd. Tap to leap. Crush from above. Beat BANKZ boss for bonus.</p>
+        <div class="game-stats">
+          <div class="game-best">Your best:<b id="best_cc">—</b></div>
+          <div class="game-cta">PLAY</div>
+        </div>
+      </div>
+    </a>
+
+    <a class="game-card game-card-skate" href="skate_storm.html">
+      <div class="game-cover"></div>
+      <div class="game-info">
+        <div class="game-tag">Downhill Skater</div>
+        <h3 class="game-name">SKATE <span class="grad">STORM</span></h3>
+        <p class="game-desc">Drop into the storm road. Lean to dodge. Ollie for tricks. Survive the lightning.</p>
+        <div class="game-stats">
+          <div class="game-best">Your best:<b id="best_ss">—</b></div>
+          <div class="game-cta">PLAY</div>
+        </div>
+      </div>
+    </a>
+
+    <a class="game-card game-card-hellcat" href="hellcat_drift.html">
+      <div class="game-cover"></div>
+      <div class="game-info">
+        <div class="game-tag">Top-Down Drifter</div>
+        <h3 class="game-name">HELLCAT <span class="grad">DRIFT</span></h3>
+        <p class="game-desc">700hp on the cyber highway. Steer + drift. Chain combos through traffic.</p>
+        <div class="game-stats">
+          <div class="game-best">Your best:<b id="best_hd">—</b></div>
+          <div class="game-cta">PLAY</div>
+        </div>
+      </div>
+    </a>
+
+    <a class="game-card game-card-pack" href="pack_hunt.html">
+      <div class="game-cover"></div>
+      <div class="game-info">
+        <div class="game-tag">Pack Strategy</div>
+        <h3 class="game-name">PACK <span class="grad">HUNT</span></h3>
+        <p class="game-desc">Lead the pack across moonlit plains. Drag to move. Tap to strike. Hold the line.</p>
+        <div class="game-stats">
+          <div class="game-best">Your best:<b id="best_ph">—</b></div>
+          <div class="game-cta">PLAY</div>
+        </div>
+      </div>
+    </a>
+
+    <a class="game-card game-card-rocket" href="rocket_ride.html">
+      <div class="game-cover"></div>
+      <div class="game-info">
+        <div class="game-tag">Vertical Scroller</div>
+        <h3 class="game-name">ROCKET <span class="grad">RIDE</span></h3>
+        <p class="game-desc">Burn for the moon. Tap to boost. Dodge asteroids. Refuel along the way.</p>
+        <div class="game-stats">
+          <div class="game-best">Your best:<b id="best_rr">—</b></div>
+          <div class="game-cta">PLAY</div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <a class="pack-link" href="pack.html">CHECK YOUR PACK ID →</a>
+
+  <div class="section-divider">
+    <div class="line"></div>
+    <div class="lbl">Built By</div>
+    <div class="line"></div>
+  </div>
+
+  <div class="credits-bar">
+    <img src="bankz_avatar.jpg" alt="">
+    <div>Art by <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">WinslowBankz</a></div>
+  </div>
+
+  <div class="footer">
+    <div class="links">
+      <a href="https://x.com/monwolfmonad" target="_blank">X</a>
+      <a href="https://t.me/monwolfmonad" target="_blank">TELEGRAM</a>
+      <a href="https://monad.xyz" target="_blank">MONAD</a>
+    </div>
+    <div>contract <span class="contract">0x8361…7777</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { EthereumProvider } from 'https://esm.sh/@walletconnect/ethereum-provider@2.17.0';
+
+const WC_PROJECT_ID = '89d7a1882c0fa9a5bbe0a58accafc100';
+const MONWOLF_CONTRACT = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
+const MONAD_RPC = 'https://rpc.monad.xyz';
+const MONAD_CHAIN_ID = 143;
+const MONAD_CHAIN_HEX = '0x8f';
+const RANKS = [
+  { name:'ALPHA', min: 10_000_000 },{ name:'BETA', min: 1_000_000 },
+  { name:'SCOUT', min: 100_000 },{ name:'PACK', min: 10_000 },{ name:'CUB', min: 0 },
+];
+
+const $ = id => document.getElementById(id);
+let wallet = null, activeProvider = null;
+
+const cc = parseInt(localStorage.getItem('mw_cc_best')||'0', 10);
+const ss = parseInt(localStorage.getItem('mw_ss_best')||'0', 10);
+const hd = parseInt(localStorage.getItem('mw_hd_best')||'0', 10);
+const ph = parseInt(localStorage.getItem('mw_ph_best')||'0', 10);
+const rr = parseInt(localStorage.getItem('mw_rr_best')||'0', 10);
+$('best_cc').textContent = cc > 0 ? cc.toLocaleString() : '—';
+$('best_ss').textContent = ss > 0 ? ss.toLocaleString() : '—';
+$('best_hd').textContent = hd > 0 ? hd.toLocaleString() : '—';
+$('best_ph').textContent = ph > 0 ? ph.toLocaleString() : '—';
+$('best_rr').textContent = rr > 0 ? rr.toLocaleString() : '—';
+
+let wcProvider = null;
+async function getWCProvider() {
+  if (wcProvider) return wcProvider;
+  wcProvider = await EthereumProvider.init({
+    projectId: WC_PROJECT_ID, chains: [MONAD_CHAIN_ID], optionalChains: [MONAD_CHAIN_ID],
+    rpcMap: { [MONAD_CHAIN_ID]: MONAD_RPC }, showQrModal: true,
+    qrModalOptions: { themeMode: 'dark', themeVariables: { '--wcm-z-index': '300', '--wcm-accent-color': '#a855f7' } },
+    metadata: { name: 'MONWOLF Arcade', description: 'Arcade games on Monad', url: window.location.origin, icons: [window.location.origin + '/logo.png'] },
+  });
+  wcProvider.on('disconnect', () => { wallet = null; activeProvider = null; renderWallet(); });
+  return wcProvider;
+}
+async function connectWallet() {
+  if (wallet) return;
+  try {
+    let provider, addr;
+    if (window.ethereum) {
+      provider = window.ethereum;
+      const accs = await provider.request({ method:'eth_requestAccounts' });
+      addr = accs[0];
+      try { await provider.request({ method:'wallet_switchEthereumChain', params:[{chainId:MONAD_CHAIN_HEX}] }); }
+      catch (err) {
+        if (err.code === 4902) {
+          try {
+            await provider.request({
+              method:'wallet_addEthereumChain',
+              params:[{ chainId:MONAD_CHAIN_HEX, chainName:'Monad', nativeCurrency:{name:'Monad',symbol:'MON',decimals:18}, rpcUrls:[MONAD_RPC], blockExplorerUrls:['https://explorer.monad.xyz']}],
+            });
+          } catch {}
+        }
+      }
+    } else {
+      toast('Opening wallet picker…');
+      const wc = await getWCProvider();
+      if (!wc.session) await wc.connect();
+      provider = wc; addr = wc.accounts?.[0];
+    }
+    if (!addr) return;
+    activeProvider = provider;
+    const balance = await readMonwolfBalance(addr);
+    const rank = rankFor(balance);
+    wallet = { address:addr, balance, rank };
+    sessionStorage.setItem('mw_wallet', JSON.stringify(wallet));
+    renderWallet();
+    toast('Connected · ' + rank);
+  } catch (err) { toast(err?.message?.slice(0,80) || 'Connect failed', true); }
+}
+async function readMonwolfBalance(addr) {
+  try {
+    const data = '0x70a08231' + addr.slice(2).toLowerCase().padStart(64, '0');
+    const r = await fetch(MONAD_RPC, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ jsonrpc:'2.0', id:1, method:'eth_call', params:[{to:MONWOLF_CONTRACT, data},'latest'] }),
+    });
+    const j = await r.json();
+    if (!j.result) return 0;
+    return Number(BigInt(j.result) / (10n ** 16n)) / 100;
+  } catch { return 0; }
+}
+function rankFor(b) { for (const r of RANKS) if (b >= r.min) return r.name; return 'CUB'; }
+function renderWallet() {
+  const pill = $('walletPill');
+  if (!wallet) {
+    pill.classList.remove('connected');
+    $('rankBadge').textContent = '';
+    $('walletText').textContent = 'CONNECT WALLET';
+    return;
+  }
+  pill.classList.add('connected');
+  $('rankBadge').textContent = wallet.rank;
+  $('walletText').textContent = wallet.address.slice(0,6) + '…' + wallet.address.slice(-4);
+}
+$('walletPill').onclick = connectWallet;
+const cached = sessionStorage.getItem('mw_wallet');
+if (cached) try { wallet = JSON.parse(cached); renderWallet(); } catch {}
+function toast(msg, err) {
+  const t = $('toast');
+  t.textContent = msg; t.classList.toggle('err', !!err); t.classList.add('show');
+  clearTimeout(window._toastTo);
+  window._toastTo = setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>

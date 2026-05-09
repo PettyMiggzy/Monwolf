@@ -487,6 +487,18 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
 }
 @keyframes wild-blink { 0%,49%{opacity:1} 50%,100%{opacity:0.35} }
 
+/* Mini cam (desktop only) — scale brand + LIVE down so they don't overpower the smaller frame */
+@media (min-width:721px) {
+  .wild-stage .is-mini .wild-mark {
+    padding:4px 9px 4px 4px; gap:6px;
+  }
+  .wild-stage .is-mini .wild-mark-img { width:22px; height:22px; }
+  .wild-stage .is-mini .wild-mark-text { font-size:9px; letter-spacing:0.14em; }
+  .wild-stage .is-mini .wild-live { padding:4px 8px; }
+  .wild-stage .is-mini .wild-live-text { font-size:9px; }
+  .wild-stage .is-mini .wild-swap { right:8px; left:auto; }  /* shift TAP-TO-SWAP to right so it doesn't collide with brand */
+}
+
 /* Mobile: stack vertically, BOTH cams full width so they're both usable */
 @media (max-width:720px) {
   .wild-stage { flex-direction:column; gap:10px; }
@@ -735,6 +747,14 @@ footer a:hover { color:var(--purple); }
           allow="autoplay; encrypted-media; picture-in-picture"
           allowfullscreen
           loading="lazy"></iframe>
+        <div class="wild-mark">
+          <img src="logo.png" alt="" class="wild-mark-img">
+          <span class="wild-mark-text">MONWOLF</span>
+        </div>
+        <div class="wild-live">
+          <span class="wild-live-dot"></span>
+          <span class="wild-live-text">LIVE</span>
+        </div>
         <div class="wild-camlabel" id="wildMiniLabel">NORTH CAM</div>
         <div class="wild-swap">↔ TAP TO SWAP</div>
       </div>

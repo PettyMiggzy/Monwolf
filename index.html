@@ -388,6 +388,53 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
 }
 .ca-bar button:hover { background:#fff; }
 
+/* === MOON HUNT BANNER === */
+.moon-banner {
+  position:relative; overflow:hidden;
+  background:linear-gradient(90deg, rgba(168,85,247,0.10), rgba(124,58,237,0.16), rgba(168,85,247,0.10));
+  border-bottom:1px solid rgba(168,85,247,0.28);
+  padding:9px 16px; text-align:center;
+  font-family:'JetBrains Mono', ui-monospace, monospace;
+}
+.moon-banner::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at center, rgba(168,85,247,0.20) 0%, transparent 70%);
+}
+.moon-inner {
+  position:relative; display:inline-flex; align-items:center; gap:14px;
+  flex-wrap:wrap; justify-content:center;
+}
+.moon-icon { font-size:16px; filter:drop-shadow(0 0 6px rgba(168,85,247,0.65)); }
+.moon-label {
+  font-family:'Russo One', system-ui, sans-serif;
+  font-size:11px; letter-spacing:.2em; color:rgba(255,255,255,0.78);
+}
+.moon-time {
+  font-weight:700; color:#fff; letter-spacing:.08em; font-size:12.5px;
+  text-shadow:0 0 8px rgba(168,85,247,0.4);
+}
+.moon-banner.special {
+  background:linear-gradient(90deg, rgba(255,138,61,0.12), rgba(255,107,42,0.22), rgba(255,138,61,0.12));
+  border-bottom-color:rgba(255,138,61,0.45);
+  animation:moon-pulse 2.4s ease-in-out infinite;
+}
+.moon-banner.special::before {
+  background:radial-gradient(ellipse at center, rgba(255,138,61,0.28) 0%, transparent 70%);
+}
+.moon-banner.special .moon-label { color:#ff8a3d; }
+.moon-banner.special .moon-icon { filter:drop-shadow(0 0 10px rgba(255,138,61,0.85)); }
+.moon-banner.special .moon-time { text-shadow:0 0 8px rgba(255,138,61,0.5); }
+@keyframes moon-pulse {
+  0%,100% { box-shadow:inset 0 0 30px rgba(255,138,61,0); }
+  50%     { box-shadow:inset 0 0 40px rgba(255,138,61,0.18); }
+}
+@media (max-width:600px) {
+  .moon-banner { padding:8px 10px; }
+  .moon-label { font-size:10px; letter-spacing:.16em; }
+  .moon-time  { font-size:11.5px; }
+  .moon-inner { gap:9px; }
+}
+
 /* === DEV CARD === */
 .dev-stack { display:flex; flex-direction:column; gap:1.4rem; max-width:680px; margin:0 auto; }
 .dev-card {
@@ -488,6 +535,15 @@ footer a:hover { color:var(--purple); }
     </div>
   </div>
 </nav>
+
+<!-- MOON HUNT COUNTDOWN -->
+<div class="moon-banner" id="moonBanner">
+  <div class="moon-inner">
+    <span class="moon-icon" id="moonIcon">🌕</span>
+    <span class="moon-label" id="moonLabel">NEXT FULL MOON HUNT IN</span>
+    <span class="moon-time" id="moonTime">—d —h —m —s</span>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -916,6 +972,79 @@ function toast(msg, err) {
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 2400);
 }
+
+// ============================================================================
+// MOON HUNT COUNTDOWN
+// ============================================================================
+// Hardcoded full moon dates (UTC). Source: timeanddate.com (NASA-aligned).
+// Update annually by appending new entries.
+// Types: 'full' = regular monthly, 'super'/'blue'/'eclipse' = special events
+// (all specials get the orange "special" styling treatment).
+(function(){
+  const MOONS = [
+    // 2026
+    { date:'2026-05-31T08:45:00Z', type:'blue',    label:'BLUE MOON HUNT' },
+    { date:'2026-06-29T23:56:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2026-07-29T14:35:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2026-08-28T04:18:00Z', type:'eclipse', label:'BLOOD MOON HUNT' },
+    { date:'2026-09-26T16:49:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2026-10-26T04:11:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2026-11-24T14:53:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2026-12-24T01:28:00Z', type:'super',   label:'SUPER MOON HUNT' },
+    // 2027 (estimated from 29.53d cycle — refine when official data drops)
+    { date:'2027-01-22T13:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-02-21T01:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-03-22T13:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-04-21T01:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-05-20T13:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-06-19T01:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-07-18T13:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-08-17T01:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-09-15T13:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-10-15T01:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-11-13T13:00:00Z', type:'full',    label:'FULL MOON HUNT' },
+    { date:'2027-12-13T01:00:00Z', type:'full',    label:'FULL MOON HUNT' }
+  ];
+
+  const ICONS = { full:'🌕', super:'👑', blue:'🌕', eclipse:'🌑' };
+  const SPECIAL = new Set(['super','blue','eclipse']);
+
+  const banner = $('moonBanner');
+  const labelEl = $('moonLabel');
+  const timeEl  = $('moonTime');
+  const iconEl  = $('moonIcon');
+
+  function findNext(){
+    const now = Date.now();
+    for (let i = 0; i < MOONS.length; i++){
+      if (new Date(MOONS[i].date).getTime() > now) return MOONS[i];
+    }
+    return null;
+  }
+  const pad = n => n < 10 ? '0' + n : '' + n;
+
+  function tick(){
+    const next = findNext();
+    if (!next){
+      labelEl.textContent = 'PACK MOVES BY MOON';
+      timeEl.textContent  = '— calendar refresh due —';
+      return;
+    }
+    const diffMs = new Date(next.date).getTime() - Date.now();
+    if (diffMs < 0){ tick(); return; } // moon just passed, recurse
+    const total = Math.floor(diffMs / 1000);
+    const d = Math.floor(total / 86400);
+    const h = Math.floor((total % 86400) / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    labelEl.textContent = 'NEXT ' + next.label + ' IN';
+    timeEl.textContent  = d + 'd ' + pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's';
+    iconEl.textContent  = ICONS[next.type] || '🌕';
+    banner.classList.toggle('special', SPECIAL.has(next.type));
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
 </script>
 </body>
 </html>

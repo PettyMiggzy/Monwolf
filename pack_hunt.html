@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#08000f">
+<title>MONWOLF · Pack Hunt</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:#08000f; --panel:#160a26; --border:#3a1f5e;
+  --text:#fff; --text-2:#c8b6e6; --text-3:#7e6d96;
+  --purple:#a855f7; --orange:#ff8a3d; --gold:#f5c242;
+  --green:#22c55e; --red:#ef4444;
+  --grad:linear-gradient(135deg, #a855f7 0%, #ff8a3d 100%);
+  --grad-text:linear-gradient(135deg, #ff8a3d 0%, #a855f7 100%);
+  --safe-top:env(safe-area-inset-top, 0);
+  --safe-bottom:env(safe-area-inset-bottom, 0);
+}
+html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); color:var(--text);
+  font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent; touch-action:none; user-select:none; -webkit-user-select:none;
+  overscroll-behavior:none; }
+body { position:fixed; inset:0; }
+a { color:inherit; text-decoration:none; }
+#game { position:absolute; inset:0; width:100%; height:100%; display:block; background:#000; }
+
+.hud { position:absolute; top:0; left:0; right:0;
+  padding: calc(.55rem + var(--safe-top)) 56px .6rem;
+  display:flex; justify-content:space-between; align-items:flex-start; z-index:10; pointer-events:none;
+  background:linear-gradient(to bottom, rgba(0,0,0,.7) 0%, transparent 100%); }
+.hud-left, .hud-right { display:flex; flex-direction:column; gap:.3rem; }
+.hud-right { align-items:flex-end; }
+.stat { font-family:'Russo One',sans-serif; font-size:1.15rem; line-height:1;
+  text-shadow:0 0 10px rgba(168,85,247,.7), 0 1px 2px #000; letter-spacing:.5px; }
+.stat .lbl { font-size:.62rem; color:var(--text-3); font-family:'Inter'; font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase; display:block; margin-bottom:.18rem; text-shadow:none; }
+
+.pack-bar { display:flex; gap:.25rem; margin-top:.2rem; }
+.pack-pip { width:14px; height:14px; border-radius:50%;
+  background:radial-gradient(circle, #a855f7, #581c87);
+  box-shadow:0 0 8px rgba(168,85,247,.85); }
+.pack-pip.gone { background:#2a1a3a; box-shadow:none; }
+
+.corner-btn { position:absolute; display:flex; align-items:center; justify-content:center;
+  width:38px; height:38px; background:rgba(0,0,0,.55); border:1px solid var(--border);
+  border-radius:10px; z-index:11; pointer-events:auto; cursor:pointer;
+  backdrop-filter:blur(10px); color:var(--text); }
+.corner-btn:hover { border-color:var(--purple); background:rgba(168,85,247,.2); }
+.corner-btn svg { width:14px; height:14px; }
+#hubBtn { top: calc(.55rem + var(--safe-top)); left:.6rem; display:none; }
+#pauseBtn { top: calc(.55rem + var(--safe-top)); right:.6rem; display:none; }
+#hubBtn.show, #pauseBtn.show { display:flex; }
+
+#chargeBanner { position:absolute; top:42%; left:50%;
+  transform:translate(-50%, -50%) scale(.5); font-family:'Russo One',sans-serif;
+  font-size:clamp(2.2rem, 12vw, 4rem);
+  background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 40px rgba(255,138,61,.7); pointer-events:none; opacity:0; z-index:9;
+  letter-spacing:3px; white-space:nowrap; font-weight:900; }
+#chargeBanner.show { animation: chaos 1.6s ease-out forwards; }
+@keyframes chaos {
+  0% { opacity:0; transform:translate(-50%, -50%) scale(.4); }
+  18% { opacity:1; transform:translate(-50%, -50%) scale(1.2); }
+  60% { opacity:1; transform:translate(-50%, -50%) scale(1); }
+  100% { opacity:0; transform:translate(-50%, -50%) scale(1.5); }
+}
+
+.screen { position:absolute; inset:0; display:none; flex-direction:column;
+  z-index:20; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+.screen.show { display:flex; }
+.screen.fade { animation: fadein .35s ease both; }
+@keyframes fadein { from { opacity:0; } to { opacity:1; } }
+
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
+  padding:.95rem 1.4rem; border-radius:12px; border:none;
+  font-family:'Russo One',sans-serif; font-size:1rem; letter-spacing:.05em; cursor:pointer;
+  transition:transform .12s, box-shadow .15s; width:100%; max-width:320px;
+  text-decoration:none; text-transform:uppercase; color:var(--text); }
+.btn:active { transform:scale(.97); }
+.btn-primary { background:var(--grad); color:#000; box-shadow:0 8px 30px -8px rgba(168,85,247,.7); }
+.btn-ghost { background:rgba(168,85,247,.08); color:var(--text); border:1px solid var(--border); backdrop-filter:blur(8px); }
+.btn-row { display:flex; flex-direction:column; gap:.6rem; align-items:center; }
+
+#screenTitle {
+  background:
+    linear-gradient(to bottom, rgba(8,0,15,.55) 0%, rgba(8,0,15,.92) 70%, var(--bg) 100%),
+    url('title_pack.jpg') center/cover no-repeat;
+  padding: calc(2rem + var(--safe-top)) 1.3rem calc(1.5rem + var(--safe-bottom));
+  justify-content:flex-end; text-align:center;
+}
+.title-stack { padding-bottom:1rem; }
+.eyebrow { display:inline-block; padding:.3rem .85rem;
+  background:rgba(168,85,247,.15); border:1px solid rgba(168,85,247,.4); border-radius:9999px;
+  font-size:.7rem; letter-spacing:.18em; font-weight:700; color:var(--purple);
+  text-transform:uppercase; margin-bottom:1rem; }
+.title-h1 { font-family:'Russo One',sans-serif;
+  font-size:clamp(2.4rem, 9vw, 3.8rem); line-height:.95; letter-spacing:-.5px;
+  text-shadow:0 4px 20px rgba(168,85,247,.85), 0 2px 0 #000; margin-bottom:.5rem; }
+.title-h1 .grad { background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.title-sub { color:var(--text-2); font-size:.92rem; max-width:340px; margin:0 auto 1.6rem; }
+
+.wallet-pill { display:inline-flex; align-items:center; gap:.4rem;
+  padding:.4rem .85rem; background:rgba(0,0,0,.5); border:1px solid var(--border);
+  border-radius:9999px; font-size:.78rem; font-weight:600; color:var(--text-2); cursor:pointer;
+  pointer-events:auto; backdrop-filter:blur(10px); }
+.wallet-pill .dot { width:7px; height:7px; border-radius:50%; background:#71727f; }
+.wallet-pill.connected .dot { background:var(--green); box-shadow:0 0 6px var(--green); }
+.wallet-pill .rank { color:var(--gold); font-weight:700; font-family:'Russo One'; font-size:.7rem; letter-spacing:.1em; }
+
+.back-link { margin-top:.6rem; font-size:.78rem; letter-spacing:.1em; font-weight:700; color:var(--text-3); }
+.credits-bar { margin-top:1.4rem; display:flex; align-items:center; gap:.7rem;
+  justify-content:center; font-size:.78rem; color:var(--text-3); }
+.credits-bar img { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
+.credits-bar a { color:var(--purple); font-weight:600; }
+
+.tap-hint { position:absolute; top:50%; left:0; right:0; text-align:center;
+  color:rgba(255,255,255,.55); font-size:.85rem; letter-spacing:.2em; font-weight:700;
+  text-transform:uppercase; animation:pulse 1.5s ease-in-out infinite; pointer-events:none; }
+@keyframes pulse { 0%,100% { opacity:.4; } 50% { opacity:1; } }
+
+#screenOver { background:linear-gradient(to bottom, rgba(8,0,15,.85) 0%, rgba(8,0,15,.97) 100%);
+  padding: calc(2rem + var(--safe-top)) 1.2rem calc(1.5rem + var(--safe-bottom));
+  justify-content:center; text-align:center; align-items:center; }
+.over-card { background:rgba(22,10,38,.85); border:1px solid var(--border); border-radius:18px;
+  padding:1.6rem 1.4rem; max-width:400px; width:100%; backdrop-filter:blur(14px); }
+.over-img { width:160px; margin:0 auto 1rem; display:block; opacity:.95;
+  filter:drop-shadow(0 8px 30px rgba(168,85,247,.5)); }
+.over-h { font-family:'Russo One',sans-serif; font-size:1.7rem;
+  background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin-bottom:.5rem; letter-spacing:1px; }
+.score-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:.6rem; margin: 1rem 0 1.4rem; }
+.score-cell { background:rgba(0,0,0,.35); border:1px solid var(--border); border-radius:10px; padding:.7rem .4rem; }
+.score-cell .v { font-family:'Russo One'; font-size:1.4rem; line-height:1;
+  background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.score-cell .l { font-size:.62rem; color:var(--text-3); letter-spacing:.12em; text-transform:uppercase; margin-top:.3rem; font-weight:700; }
+.best-line { color:var(--text-3); font-size:.82rem; margin:-.2rem 0 1rem; }
+.best-line b { color:var(--gold); }
+
+#screenBoard { background:linear-gradient(180deg, var(--bg) 0%, #190a2e 100%);
+  padding: calc(1.4rem + var(--safe-top)) 1rem calc(1.5rem + var(--safe-bottom)); }
+.board-head { text-align:center; margin-bottom:1.2rem; }
+.board-h { font-family:'Russo One',sans-serif; font-size:1.6rem; letter-spacing:1px;
+  background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.board-list { background:rgba(0,0,0,.35); border:1px solid var(--border); border-radius:14px;
+  overflow:hidden; max-width:520px; margin:0 auto; }
+.board-row { display:grid; grid-template-columns:36px 1fr auto auto; gap:.7rem; align-items:center;
+  padding:.85rem .9rem; border-bottom:1px solid rgba(58,31,94,.5); }
+.board-row:last-child { border-bottom:none; }
+.board-row .pos { font-family:'Russo One'; color:var(--text-3); text-align:center; font-size:1rem; }
+.board-row.gold .pos { color:var(--gold); font-size:1.2rem; }
+.board-row.silver .pos { color:#cbd5e1; }
+.board-row.bronze .pos { color:#d97706; }
+.board-row .addr { font-family:'JetBrains Mono'; font-size:.78rem; color:var(--text-2); }
+.board-row .badge { font-family:'Russo One'; font-size:.62rem; color:var(--purple); letter-spacing:.1em; }
+.board-row .score { font-family:'Russo One'; font-size:1.1rem;
+  background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.board-row .meta { font-size:.62rem; color:var(--text-3); text-align:right; min-width:60px; }
+.board-empty, .board-loader { text-align:center; padding:2rem 1rem; color:var(--text-3); font-size:.9rem; }
+.spinner { display:inline-block; width:24px; height:24px; border:3px solid var(--border);
+  border-top-color:var(--purple); border-radius:50%; animation:spin 1s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.toast { position:fixed; bottom: calc(1.5rem + var(--safe-bottom)); left:50%;
+  transform:translateX(-50%) translateY(20px); background:#fff; color:#000;
+  padding:.8rem 1.2rem; border-radius:10px; font-weight:700; font-size:.85rem;
+  opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; z-index:200;
+  max-width:320px; text-align:center; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.err { background:var(--red); color:#fff; }
+
+.pause-overlay { position:absolute; inset:0; background:rgba(8,0,15,.85);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  z-index:30; backdrop-filter:blur(20px); gap:.6rem; padding:1.5rem; }
+.pause-overlay.show { display:flex; }
+.pause-overlay h2 { font-family:'Russo One'; font-size:2rem;
+  background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin-bottom:1rem; letter-spacing:2px; }
+
+.howl-btn { position:fixed; bottom: calc(1.5rem + var(--safe-bottom)); right:1rem;
+  width:80px; height:80px; border-radius:50%; pointer-events:auto;
+  background:radial-gradient(circle at 30% 30%,#ff8a3d,#a855f7); border:none;
+  box-shadow:0 8px 24px -4px rgba(255,138,61,.6),inset 0 2px 8px rgba(255,255,255,.3);
+  font-family:'Russo One',sans-serif; font-size:.85rem; color:#0a0118; cursor:pointer;
+  letter-spacing:1px; z-index:8; display:none; }
+.howl-btn.active { display:block; }
+.howl-btn:active { transform:scale(.92); }
+.howl-btn:disabled { opacity:.4; }
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<div class="hud" id="hud" style="display:none;">
+  <div class="hud-left">
+    <div class="stat"><span class="lbl">Score</span><span id="hudScore">0</span></div>
+    <div class="stat"><span class="lbl">Wave</span><span id="hudWave">1</span></div>
+  </div>
+  <div class="hud-right">
+    <div class="stat" style="text-align:right;"><span class="lbl">Pack</span><span id="hudPackCount">4</span></div>
+    <div class="pack-bar" id="hudPack">
+      <span class="pack-pip"></span><span class="pack-pip"></span><span class="pack-pip"></span><span class="pack-pip"></span>
+    </div>
+  </div>
+</div>
+
+<a class="corner-btn" id="hubBtn" href="index.html" title="Hub">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
+</a>
+<button class="corner-btn" id="pauseBtn" aria-label="Pause">
+  <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+</button>
+
+<button class="howl-btn" id="howlBtn">HOWL</button>
+
+<div id="chargeBanner">PACK STRIKE!</div>
+
+<div class="pause-overlay" id="pauseOverlay">
+  <h2>PAUSED</h2>
+  <button class="btn btn-primary" id="btnResume">RESUME</button>
+  <button class="btn btn-ghost" id="btnQuit">END HUNT</button>
+  <a class="btn btn-ghost" href="index.html">BACK TO HUB</a>
+</div>
+
+<div class="screen show fade" id="screenTitle">
+  <div class="title-stack">
+    <span class="eyebrow">Moonlight Plains · Lead The Pack</span>
+    <h1 class="title-h1">PACK<br><span class="grad">HUNT</span></h1>
+    <p class="title-sub">You are the alpha. Move to lead. Tap to set hunt point — pack converges & strikes. Don't let prey reach the moon.</p>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnPlay">PLAY</button>
+      <button class="btn btn-ghost" id="btnLeaderboard">LEADERBOARD</button>
+      <div class="wallet-pill" id="walletPill">
+        <span class="dot"></span>
+        <span class="rank" id="rankBadge"></span>
+        <span id="walletText">CONNECT WALLET</span>
+      </div>
+      <a href="index.html" class="back-link">← BACK TO HUB</a>
+    </div>
+    <div class="credits-bar">
+      <img src="bankz_avatar.jpg" alt="">
+      <div>Art by <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">WinslowBankz</a></div>
+    </div>
+  </div>
+  <div class="tap-hint" id="tapHint" style="display:none;">DRAG TO MOVE · TAP TO STRIKE</div>
+</div>
+
+<div class="screen" id="screenOver">
+  <div class="over-card">
+    <img class="over-img" src="mwf_alpha.png" alt="">
+    <div class="over-h">HUNT ENDED</div>
+    <p class="best-line" id="bestLine"></p>
+    <div class="score-grid">
+      <div class="score-cell"><div class="v" id="finalScore">0</div><div class="l">Score</div></div>
+      <div class="score-cell"><div class="v" id="finalKills">0</div><div class="l">Prey</div></div>
+      <div class="score-cell"><div class="v" id="finalWave">1</div><div class="l">Wave</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnRetry">HUNT AGAIN</button>
+      <button class="btn btn-ghost" id="btnSubmit">SUBMIT TO LEADERBOARD</button>
+      <a href="index.html" class="btn btn-ghost">BACK TO HUB</a>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screenBoard">
+  <div class="board-head">
+    <div class="board-h">PACK HUNT · TOP ALPHAS</div>
+    <p style="color:var(--text-3); font-size:.85rem; margin-top:.3rem;">Highest scorers on Monad</p>
+  </div>
+  <div class="board-list" id="boardList">
+    <div class="board-loader"><div class="spinner"></div><div style="margin-top:.5rem;">Loading...</div></div>
+  </div>
+  <div style="text-align:center; margin-top:1.4rem; display:flex; flex-direction:column; gap:.5rem; align-items:center;">
+    <button class="btn btn-ghost" id="btnBoardHome" style="max-width:260px;">BACK TO TITLE</button>
+    <a href="index.html" class="back-link">← BACK TO HUB</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { EthereumProvider } from 'https://esm.sh/@walletconnect/ethereum-provider@2.17.0';
+
+const SUPABASE_URL='https://cuqhqcmrgpdjlhyqztnc.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1cWhxY21yZ3BkamxoeXF6dG5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjQ4NDAsImV4cCI6MjA5MjgwMDg0MH0.bsmuC_onaPutZmYZWTn9p1DvngKIA7Xx4J3YRajbf-8';
+const WC_PROJECT_ID='89d7a1882c0fa9a5bbe0a58accafc100';
+const MONWOLF_CONTRACT='0x8361a59d340466211ad4aB41C09a32e4530a7777';
+const MONAD_RPC='https://rpc.monad.xyz';
+const MONAD_CHAIN_ID=143; const MONAD_CHAIN_HEX='0x8f';
+const RANKS=[
+  {name:'ALPHA',min:10_000_000,packSize:6},
+  {name:'BETA',min:1_000_000,packSize:5},
+  {name:'SCOUT',min:100_000,packSize:4},
+  {name:'PACK',min:10_000,packSize:4},
+  {name:'CUB',min:0,packSize:3},
+];
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+const $ = id => document.getElementById(id);
+const cv = $('game'), ctx = cv.getContext('2d');
+let W=0, H=0, DPR=1;
+function resize() {
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = W*DPR; cv.height = H*DPR;
+  cv.style.width = W+'px'; cv.style.height = H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+resize(); window.addEventListener('resize', resize); window.addEventListener('orientationchange', resize);
+
+const ASSETS = {};
+function loadImg(name, src) {
+  return new Promise(r => {
+    const img = new Image();
+    img.onload = () => { ASSETS[name] = img; r(); };
+    img.onerror = () => { console.warn('img fail', src); r(); };
+    img.src = src;
+  });
+}
+const loadAll = Promise.all([
+  loadImg('alpha', 'mwf_alpha.png'),
+]);
+
+const state = {
+  screen:'title', running:false, paused:false,
+  alpha: { x:0, y:0, tx:0, ty:0, vx:0, vy:0, anim:0 },
+  pack: [], // black wolves following
+  prey: [],
+  particles: [],
+  strike: null, // {x,y,t} pack converges here
+  howlCooldown: 0, // global ability cooldown
+  speedMul: 1,
+  spawnTimer: 60, spawnEvery: 90,
+  tick:0, score:0, kills:0, wave:1, packLost:0,
+  bestLocal: parseInt(localStorage.getItem('mw_ph_best')||'0', 10),
+  shake:0, hitUntil:0,
+  wallet:null, activeProvider:null,
+};
+
+function reset() {
+  const packSize = state.wallet ? rankPackSize(state.wallet.rank) : 4;
+  state.alpha = { x:W/2, y:H/2, tx:W/2, ty:H/2, vx:0, vy:0, anim:0 };
+  state.pack = [];
+  for (let i = 0; i < packSize; i++) {
+    const a = (i / packSize) * Math.PI * 2;
+    state.pack.push({ x:W/2+Math.cos(a)*50, y:H/2+Math.sin(a)*50, vx:0, vy:0, idx:i, alive:true, anim:Math.random()*100 });
+  }
+  state.prey = []; state.particles = []; state.strike = null;
+  state.howlCooldown = 0; state.speedMul = 1;
+  state.spawnTimer = 60; state.spawnEvery = 90;
+  state.tick = 0; state.score = 0; state.kills = 0; state.wave = 1; state.packLost = 0;
+  state.shake = 0; state.hitUntil = 0;
+}
+function rankPackSize(rank) { const r = RANKS.find(r=>r.name===rank); return r ? r.packSize : 4; }
+function alivePack() { return state.pack.filter(w => w.alive); }
+
+function spawnPrey() {
+  // spawn from edges, target = moon at top center
+  const side = Math.floor(Math.random() * 4);
+  let x, y;
+  if (side === 0) { x = -30; y = H * 0.4 + Math.random() * H * 0.55; }
+  else if (side === 1) { x = W + 30; y = H * 0.4 + Math.random() * H * 0.55; }
+  else if (side === 2) { x = Math.random() * W; y = H + 30; }
+  else { x = Math.random() * W; y = H * 0.4 + Math.random() * H * 0.2; }
+  state.prey.push({
+    x, y, hp: 1 + Math.floor(state.wave / 3),
+    speed: 0.7 + state.wave * 0.05, type:'cyborg',
+    hue: 270 + Math.random() * 60, walkPhase: Math.random() * 6.28,
+    targetX: W/2, targetY: H * 0.18, // moon
+    fleeing: false, dead:false,
+  });
+}
+
+function tick() {
+  if (!state.running || state.paused) return;
+  state.tick++;
+  if (state.howlCooldown > 0) state.howlCooldown--;
+
+  // wave progression
+  if (state.tick % (60 * 15) === 0 && state.tick > 0) {
+    state.wave++;
+    state.spawnEvery = Math.max(35, state.spawnEvery - 8);
+    const banner = $('chargeBanner');
+    banner.textContent = 'WAVE ' + state.wave;
+    banner.classList.remove('show'); void banner.offsetWidth; banner.classList.add('show');
+  }
+
+  // alpha movement (lerp toward target)
+  const a = state.alpha;
+  const ax = a.tx - a.x; const ay = a.ty - a.y;
+  const adist = Math.sqrt(ax*ax + ay*ay);
+  if (adist > 4) {
+    a.vx = (ax / adist) * 4.5;
+    a.vy = (ay / adist) * 4.5;
+    a.anim += 0.4;
+  } else { a.vx *= 0.8; a.vy *= 0.8; }
+  a.x += a.vx; a.y += a.vy;
+  a.x = Math.max(30, Math.min(W - 30, a.x));
+  a.y = Math.max(H * 0.35, Math.min(H - 30, a.y));
+
+  // pack flanking - each wolf has an offset target from alpha
+  state.pack.forEach((w, i) => {
+    if (!w.alive) return;
+    let tx, ty;
+    if (state.strike && state.tick - state.strike.t < 50) {
+      // converge on strike point
+      const a2 = (i / state.pack.length) * Math.PI * 2;
+      tx = state.strike.x + Math.cos(a2) * 30;
+      ty = state.strike.y + Math.sin(a2) * 30;
+    } else {
+      // flank around alpha
+      const a2 = (i / state.pack.length) * Math.PI * 2 + state.tick * 0.005;
+      tx = a.x + Math.cos(a2) * 70;
+      ty = a.y + Math.sin(a2) * 70;
+    }
+    const dx = tx - w.x; const dy = ty - w.y;
+    const d = Math.sqrt(dx*dx + dy*dy);
+    if (d > 4) { w.vx = (dx/d) * 4; w.vy = (dy/d) * 4; w.anim += 0.4; }
+    else { w.vx *= 0.85; w.vy *= 0.85; }
+    w.x += w.vx; w.y += w.vy;
+  });
+
+  // strike clear
+  if (state.strike && state.tick - state.strike.t > 60) state.strike = null;
+
+  // prey
+  state.spawnTimer--;
+  if (state.spawnTimer <= 0) {
+    state.spawnTimer = state.spawnEvery + (Math.random() * 30 - 15)|0;
+    spawnPrey();
+  }
+
+  for (let i = state.prey.length - 1; i >= 0; i--) {
+    const p = state.prey[i];
+    // move toward moon
+    const dx = p.targetX - p.x; const dy = p.targetY - p.y;
+    const d = Math.sqrt(dx*dx + dy*dy);
+    if (d > 1) {
+      p.x += (dx/d) * p.speed;
+      p.y += (dy/d) * p.speed;
+    }
+    p.walkPhase += 0.18;
+
+    // reached moon = lose pack member
+    if (p.y < H * 0.22) {
+      // prey escapes — lose a pack member
+      const aliveW = alivePack();
+      if (aliveW.length > 0) {
+        const target = aliveW[0];
+        target.alive = false;
+        state.packLost++;
+        burst(target.x, target.y, '#ef4444', 25, 4);
+        haptic([60, 30, 60]);
+        if (alivePack().length === 0) { gameOver(); return; }
+      }
+      state.prey.splice(i, 1);
+      state.shake = 14;
+      continue;
+    }
+
+    // pack member touches prey = damage
+    for (const w of state.pack) {
+      if (!w.alive) continue;
+      const wdx = p.x - w.x; const wdy = p.y - w.y;
+      if (wdx*wdx + wdy*wdy < 30 * 30) {
+        p.hp--;
+        burst(p.x, p.y, '#a855f7', 8, 2);
+        if (p.hp <= 0) {
+          state.prey.splice(i, 1);
+          state.kills++;
+          state.score += 100 + state.wave * 20;
+          burst(p.x, p.y, '#ff8a3d', 25, 4);
+          burst(p.x, p.y, '#a855f7', 18, 3.5);
+          state.particles.push({
+            text: '+' + (100 + state.wave * 20), x: p.x, y: p.y - 20,
+            vx: 0, vy: -2, life: 50, color: '#ffd54a', textParticle: true,
+          });
+          haptic(30);
+          break;
+        }
+      }
+    }
+    // alpha touches prey = also damage
+    if (i >= 0 && state.prey[i] === p) {
+      const adx = p.x - a.x; const ady = p.y - a.y;
+      if (adx*adx + ady*ady < 35 * 35) {
+        p.hp -= 2; // alpha hits harder
+        burst(p.x, p.y, '#ff8a3d', 10, 2.5);
+        if (p.hp <= 0) {
+          state.prey.splice(i, 1);
+          state.kills++;
+          state.score += 150 + state.wave * 25;
+          burst(p.x, p.y, '#ff8a3d', 25, 4);
+          haptic(35);
+        }
+      }
+    }
+  }
+
+  // particles
+  for (let i = state.particles.length - 1; i >= 0; i--) {
+    const p = state.particles[i];
+    p.x += p.vx; p.y += p.vy;
+    if (!p.textParticle) p.vy += 0.18;
+    p.life--;
+    if (p.life <= 0) state.particles.splice(i,1);
+  }
+
+  if (state.shake > 0.5) state.shake *= 0.85; else state.shake = 0;
+  updateHUD();
+}
+
+function burst(x, y, color, count, scale) {
+  count = count || 16; scale = scale || 3;
+  for (let i = 0; i < count; i++) {
+    state.particles.push({
+      x, y, vx: (Math.random()-0.5)*8*scale, vy: (Math.random()-0.5)*7*scale - 1,
+      life: 22 + ((Math.random()*16)|0), color,
+    });
+  }
+}
+function haptic(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
+
+// HOWL ability — instant strike all visible prey for damage + bonus score
+function howl() {
+  if (state.howlCooldown > 0 || !state.running || state.paused) return;
+  state.howlCooldown = 60 * 15; // 15s cooldown
+  // damage all prey
+  for (let i = state.prey.length - 1; i >= 0; i--) {
+    const p = state.prey[i];
+    p.hp -= 2;
+    burst(p.x, p.y, '#fff', 15, 3);
+    burst(p.x, p.y, '#a855f7', 10, 3);
+    if (p.hp <= 0) {
+      state.prey.splice(i, 1);
+      state.kills++;
+      state.score += 100 + state.wave * 20;
+    }
+  }
+  state.shake = 20;
+  haptic([30, 20, 60, 20, 30]);
+  const banner = $('chargeBanner');
+  banner.textContent = 'HOWL!';
+  banner.classList.remove('show'); void banner.offsetWidth; banner.classList.add('show');
+}
+
+// === RENDER ===
+function render() {
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  if (state.shake > 0.5) ctx.translate((Math.random()-0.5)*state.shake, (Math.random()-0.5)*state.shake);
+
+  // SKY (deep night purple)
+  const sky = ctx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, '#1a0033');
+  sky.addColorStop(0.4, '#2a0f4a');
+  sky.addColorStop(0.7, '#3b0764');
+  sky.addColorStop(1, '#08000f');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+
+  // STARS
+  for (let i = 0; i < 60; i++) {
+    const x = ((i * 137) % W);
+    const y = ((i * 51) % (H * 0.35));
+    const a = 0.2 + 0.5 * Math.sin(state.tick * 0.02 + i * 0.6);
+    ctx.fillStyle = `rgba(255,255,255,${a})`;
+    ctx.fillRect(x, y, 1.5, 1.5);
+  }
+
+  // BIG MOON (top center)
+  const moonR = Math.min(W, H) * 0.16;
+  const moonX = W * 0.5, moonY = H * 0.18;
+  const mGrad = ctx.createRadialGradient(moonX, moonY, 0, moonX, moonY, moonR * 1.7);
+  mGrad.addColorStop(0, 'rgba(232,213,255,.7)');
+  mGrad.addColorStop(0.5, 'rgba(168,85,247,.4)');
+  mGrad.addColorStop(1, 'rgba(168,85,247,0)');
+  ctx.fillStyle = mGrad; ctx.fillRect(moonX - moonR * 2, moonY - moonR * 2, moonR * 4, moonR * 4);
+  ctx.fillStyle = '#e9d5ff';
+  ctx.shadowColor = '#a855f7'; ctx.shadowBlur = 40;
+  ctx.beginPath(); ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2); ctx.fill();
+  ctx.shadowBlur = 0;
+  // moon craters
+  ctx.fillStyle = 'rgba(168,85,247,.3)';
+  ctx.beginPath(); ctx.arc(moonX - moonR * 0.3, moonY - moonR * 0.2, moonR * 0.18, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(moonX + moonR * 0.2, moonY + moonR * 0.3, moonR * 0.12, 0, Math.PI*2); ctx.fill();
+
+  // GROUND (moonlit plain)
+  const horizonY = H * 0.35;
+  const ground = ctx.createLinearGradient(0, horizonY, 0, H);
+  ground.addColorStop(0, '#3b0764');
+  ground.addColorStop(0.4, '#2a0f4a');
+  ground.addColorStop(1, '#0a0118');
+  ctx.fillStyle = ground; ctx.fillRect(0, horizonY, W, H - horizonY);
+
+  // Ground fog
+  ctx.fillStyle = 'rgba(168,85,247,.12)';
+  for (let i = 0; i < 8; i++) {
+    const fy = horizonY + 30 + i * 60;
+    ctx.fillRect(0, fy, W, 4);
+  }
+
+  // Strike zone indicator
+  if (state.strike) {
+    const age = state.tick - state.strike.t;
+    const r = 30 + age * 1.5;
+    const alpha = Math.max(0, 1 - age / 60);
+    ctx.strokeStyle = `rgba(255,138,61,${alpha})`;
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(state.strike.x, state.strike.y, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = `rgba(255,138,61,${alpha * 0.15})`;
+    ctx.beginPath(); ctx.arc(state.strike.x, state.strike.y, r, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Sort entities by Y for depth
+  const entities = [
+    ...state.prey.map(p => ({ kind:'prey', y:p.y, ref:p })),
+    ...state.pack.filter(w => w.alive).map(w => ({ kind:'wolf', y:w.y, ref:w })),
+    { kind:'alpha', y: state.alpha.y, ref: state.alpha },
+  ].sort((a, b) => a.y - b.y);
+
+  for (const e of entities) {
+    if (e.kind === 'prey') drawPrey(e.ref);
+    else if (e.kind === 'wolf') drawBlackWolf(e.ref);
+    else if (e.kind === 'alpha') drawAlpha(e.ref);
+  }
+
+  // particles
+  for (const p of state.particles) {
+    if (p.textParticle) {
+      ctx.fillStyle = p.color;
+      ctx.font = 'bold 20px "Russo One",sans-serif';
+      ctx.textAlign = 'center';
+      ctx.globalAlpha = Math.min(1, p.life / 30);
+      ctx.fillText(p.text, p.x, p.y);
+    } else {
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.min(1, p.life / 30);
+      ctx.fillRect(p.x - 2.5, p.y - 2.5, 5, 5);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawAlpha(a) {
+  const img = ASSETS.alpha;
+  const baseW = Math.min(W * 0.13, 110, H * 0.16);
+  // shadow
+  ctx.fillStyle = 'rgba(0,0,0,.5)';
+  ctx.beginPath(); ctx.ellipse(a.x, a.y + baseW * 0.3, baseW * 0.45, baseW * 0.12, 0, 0, Math.PI*2); ctx.fill();
+  // aura
+  ctx.save();
+  const ag = ctx.createRadialGradient(a.x, a.y, 0, a.x, a.y, baseW * 0.7);
+  ag.addColorStop(0, 'rgba(255,138,61,.6)');
+  ag.addColorStop(1, 'rgba(168,85,247,0)');
+  ctx.fillStyle = ag;
+  ctx.fillRect(a.x - baseW, a.y - baseW, baseW * 2, baseW * 2);
+  ctx.restore();
+  if (img) {
+    const aspect = img.height / img.width;
+    const w = baseW; const h = w * aspect;
+    const bob = Math.sin(a.anim) * 2;
+    ctx.save();
+    ctx.shadowColor = 'rgba(255,138,61,.85)'; ctx.shadowBlur = 20;
+    ctx.drawImage(img, a.x - w/2, a.y - h * 0.65 + bob, w, h);
+    ctx.restore();
+  } else {
+    ctx.fillStyle = '#ff8a3d';
+    ctx.beginPath(); ctx.arc(a.x, a.y, baseW * 0.4, 0, Math.PI*2); ctx.fill();
+  }
+}
+
+function drawBlackWolf(w) {
+  const sz = 32;
+  const ang = Math.atan2(w.vy, w.vx);
+  const bob = Math.sin(w.anim) * 1.5;
+  // shadow
+  ctx.fillStyle = 'rgba(0,0,0,.45)';
+  ctx.beginPath(); ctx.ellipse(w.x, w.y + sz * 0.3, sz * 0.5, sz * 0.13, 0, 0, Math.PI*2); ctx.fill();
+  // body silhouette
+  ctx.save();
+  ctx.translate(w.x, w.y + bob);
+  ctx.rotate(ang);
+  ctx.shadowColor = '#a855f7'; ctx.shadowBlur = 12;
+  ctx.fillStyle = '#0a0a14';
+  // body ellipse
+  ctx.beginPath();
+  ctx.ellipse(0, 0, sz * 0.6, sz * 0.32, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // head
+  ctx.beginPath();
+  ctx.arc(sz * 0.55, -sz * 0.05, sz * 0.22, 0, Math.PI * 2);
+  ctx.fill();
+  // ears
+  ctx.beginPath();
+  ctx.moveTo(sz * 0.45, -sz * 0.18);
+  ctx.lineTo(sz * 0.55, -sz * 0.35);
+  ctx.lineTo(sz * 0.62, -sz * 0.18);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(sz * 0.62, -sz * 0.18);
+  ctx.lineTo(sz * 0.72, -sz * 0.32);
+  ctx.lineTo(sz * 0.74, -sz * 0.12);
+  ctx.closePath(); ctx.fill();
+  // tail
+  ctx.beginPath();
+  ctx.moveTo(-sz * 0.55, -sz * 0.05);
+  ctx.lineTo(-sz * 0.85, -sz * 0.25);
+  ctx.lineTo(-sz * 0.7, sz * 0.05);
+  ctx.closePath(); ctx.fill();
+  ctx.shadowBlur = 0;
+  // glowing eyes
+  ctx.fillStyle = '#fff';
+  ctx.shadowColor = '#a855f7'; ctx.shadowBlur = 8;
+  ctx.fillRect(sz * 0.7, -sz * 0.12, 2, 2);
+  ctx.fillRect(sz * 0.7, sz * 0.02, 2, 2);
+  ctx.shadowBlur = 0;
+  // chest gem
+  ctx.fillStyle = '#a855f7';
+  ctx.shadowColor = '#a855f7'; ctx.shadowBlur = 10;
+  ctx.beginPath();
+  ctx.moveTo(sz * 0.1, -3); ctx.lineTo(sz * 0.18, 0);
+  ctx.lineTo(sz * 0.1, 3); ctx.lineTo(sz * 0.02, 0);
+  ctx.closePath(); ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.restore();
+}
+
+function drawPrey(p) {
+  // top-down cyborg silhouette
+  const sz = 28;
+  const ang = Math.atan2(p.targetY - p.y, p.targetX - p.x);
+  ctx.fillStyle = 'rgba(0,0,0,.5)';
+  ctx.beginPath(); ctx.ellipse(p.x, p.y + sz * 0.3, sz * 0.45, sz * 0.13, 0, 0, Math.PI*2); ctx.fill();
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(ang);
+  // body
+  ctx.fillStyle = '#15151f';
+  ctx.fillRect(-sz * 0.35, -sz * 0.4, sz * 0.7, sz * 0.8);
+  // chest light
+  ctx.fillStyle = `hsl(${p.hue}, 90%, 60%)`;
+  ctx.shadowColor = `hsl(${p.hue}, 100%, 70%)`; ctx.shadowBlur = 10;
+  ctx.fillRect(sz * 0.2, -3, 6, 6);
+  ctx.shadowBlur = 0;
+  // head
+  ctx.fillStyle = '#1a1a28';
+  ctx.beginPath(); ctx.arc(sz * 0.4, 0, sz * 0.2, 0, Math.PI*2); ctx.fill();
+  // visor/eye
+  ctx.fillStyle = `hsl(${p.hue}, 100%, 65%)`;
+  ctx.shadowColor = `hsl(${p.hue}, 100%, 70%)`; ctx.shadowBlur = 10;
+  ctx.fillRect(sz * 0.5, -1, sz * 0.18, 2);
+  ctx.shadowBlur = 0;
+  // hp pip
+  if (p.hp > 1) {
+    ctx.fillStyle = '#fff';
+    for (let i = 0; i < p.hp; i++) {
+      ctx.fillRect(-sz * 0.35 + i * 6, -sz * 0.5, 4, 2);
+    }
+  }
+  ctx.restore();
+}
+
+// === HUD ===
+function updateHUD() {
+  $('hudScore').textContent = state.score.toLocaleString();
+  $('hudWave').textContent = state.wave;
+  const aliveCount = alivePack().length;
+  $('hudPackCount').textContent = aliveCount;
+  // refresh pip count
+  const pipsEl = $('hudPack');
+  while (pipsEl.children.length < state.pack.length) {
+    const s = document.createElement('span'); s.className = 'pack-pip'; pipsEl.appendChild(s);
+  }
+  while (pipsEl.children.length > state.pack.length) pipsEl.removeChild(pipsEl.lastChild);
+  Array.from(pipsEl.children).forEach((el, i) => {
+    el.classList.toggle('gone', !state.pack[i] || !state.pack[i].alive);
+  });
+  // howl button cooldown
+  const btn = $('howlBtn');
+  if (state.howlCooldown > 0) {
+    btn.disabled = true;
+    btn.textContent = Math.ceil(state.howlCooldown / 60) + 's';
+  } else {
+    btn.disabled = false;
+    btn.textContent = 'HOWL';
+  }
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('show', 'fade'));
+  $(id).classList.add('show', 'fade');
+  state.screen = id;
+}
+function startGame() {
+  reset();
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
+  $('hud').style.display = 'flex';
+  $('hubBtn').classList.add('show'); $('pauseBtn').classList.add('show');
+  $('howlBtn').classList.add('active');
+  state.running = true; state.paused = false; state.screen = 'playing';
+  $('tapHint').style.display = 'block';
+  setTimeout(() => { $('tapHint').style.display = 'none'; }, 2000);
+  updateHUD();
+}
+function gameOver() {
+  state.running = false;
+  $('hud').style.display = 'none';
+  $('hubBtn').classList.remove('show'); $('pauseBtn').classList.remove('show');
+  $('howlBtn').classList.remove('active');
+  if (state.score > state.bestLocal) {
+    state.bestLocal = state.score;
+    localStorage.setItem('mw_ph_best', state.score);
+  }
+  $('finalScore').textContent = state.score.toLocaleString();
+  $('finalKills').textContent = state.kills;
+  $('finalWave').textContent = state.wave;
+  $('bestLine').innerHTML = state.score === state.bestLocal && state.score > 0
+    ? '🏆 NEW PERSONAL BEST!' : 'Best: <b>' + state.bestLocal.toLocaleString() + '</b>';
+  haptic([60, 40, 60]);
+  show('screenOver');
+}
+
+// INPUT — drag to move alpha, tap (no-drag) to set strike point
+let touchStart = null, isDragging = false;
+cv.addEventListener('touchstart', e => {
+  e.preventDefault();
+  if (!state.running || state.paused) return;
+  const t = e.touches[0];
+  touchStart = { x: t.clientX, y: t.clientY, time: Date.now() };
+  isDragging = false;
+}, { passive: false });
+cv.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!state.running || state.paused || !touchStart) return;
+  const t = e.touches[0];
+  const dx = t.clientX - touchStart.x;
+  const dy = t.clientY - touchStart.y;
+  if (Math.abs(dx) > 8 || Math.abs(dy) > 8) isDragging = true;
+  if (isDragging) {
+    state.alpha.tx = t.clientX;
+    state.alpha.ty = t.clientY;
+  }
+}, { passive: false });
+cv.addEventListener('touchend', e => {
+  if (!state.running || state.paused || !touchStart) return;
+  const dt = Date.now() - touchStart.time;
+  if (!isDragging && dt < 300) {
+    // tap = strike
+    state.strike = { x: touchStart.x, y: touchStart.y, t: state.tick };
+    haptic(20);
+  }
+  touchStart = null;
+});
+cv.addEventListener('mousedown', e => {
+  if (!state.running || state.paused) return;
+  touchStart = { x: e.clientX, y: e.clientY, time: Date.now() };
+  isDragging = false;
+});
+cv.addEventListener('mousemove', e => {
+  if (!touchStart || !state.running || state.paused) return;
+  const dx = e.clientX - touchStart.x;
+  const dy = e.clientY - touchStart.y;
+  if (Math.abs(dx) > 8 || Math.abs(dy) > 8) isDragging = true;
+  if (isDragging) {
+    state.alpha.tx = e.clientX;
+    state.alpha.ty = e.clientY;
+  }
+});
+cv.addEventListener('mouseup', e => {
+  if (!state.running || state.paused || !touchStart) return;
+  const dt = Date.now() - touchStart.time;
+  if (!isDragging && dt < 300) {
+    state.strike = { x: touchStart.x, y: touchStart.y, t: state.tick };
+  }
+  touchStart = null;
+});
+
+document.addEventListener('keydown', e => {
+  if (!state.running || state.paused) {
+    if (e.key === 'Escape' || e.key === 'p') togglePause();
+    return;
+  }
+  const a = state.alpha;
+  const step = 50;
+  if (e.key === 'ArrowLeft' || e.key === 'a') a.tx = Math.max(30, a.x - step);
+  else if (e.key === 'ArrowRight' || e.key === 'd') a.tx = Math.min(W - 30, a.x + step);
+  else if (e.key === 'ArrowUp' || e.key === 'w') a.ty = Math.max(H * 0.35, a.y - step);
+  else if (e.key === 'ArrowDown' || e.key === 's') a.ty = Math.min(H - 30, a.y + step);
+  else if (e.key === ' ') { e.preventDefault(); howl(); }
+  else if (e.key === 'Escape' || e.key === 'p') togglePause();
+});
+
+$('btnPlay').onclick = startGame;
+$('btnRetry').onclick = startGame;
+$('btnLeaderboard').onclick = () => { show('screenBoard'); loadBoard(); };
+$('btnBoardHome').onclick = () => show('screenTitle');
+$('btnSubmit').onclick = submitScore;
+$('walletPill').onclick = connectWallet;
+$('pauseBtn').onclick = togglePause;
+$('btnResume').onclick = togglePause;
+$('btnQuit').onclick = () => { state.paused = false; gameOver(); $('pauseOverlay').classList.remove('show'); };
+$('howlBtn').onclick = howl;
+
+function togglePause() {
+  if (!state.running) return;
+  state.paused = !state.paused;
+  $('pauseOverlay').classList.toggle('show', state.paused);
+}
+
+let wcProvider = null;
+async function getWCProvider() {
+  if (wcProvider) return wcProvider;
+  wcProvider = await EthereumProvider.init({
+    projectId: WC_PROJECT_ID, chains: [MONAD_CHAIN_ID], optionalChains: [MONAD_CHAIN_ID],
+    rpcMap: { [MONAD_CHAIN_ID]: MONAD_RPC }, showQrModal: true,
+    qrModalOptions: { themeMode:'dark', themeVariables:{'--wcm-z-index':'300','--wcm-accent-color':'#a855f7'} },
+    metadata: { name:'MONWOLF Pack Hunt', description:'Lead the pack on Monad', url:window.location.origin, icons:[window.location.origin + '/logo.png'] },
+  });
+  wcProvider.on('disconnect', () => { state.wallet = null; state.activeProvider = null; renderWallet(); });
+  return wcProvider;
+}
+async function connectWallet() {
+  if (state.wallet) return;
+  try {
+    let provider, addr;
+    if (window.ethereum) {
+      provider = window.ethereum;
+      const accs = await provider.request({ method:'eth_requestAccounts' });
+      addr = accs[0];
+      try { await provider.request({ method:'wallet_switchEthereumChain', params:[{chainId:MONAD_CHAIN_HEX}] }); }
+      catch (err) {
+        if (err.code === 4902) {
+          try {
+            await provider.request({
+              method:'wallet_addEthereumChain',
+              params:[{ chainId:MONAD_CHAIN_HEX, chainName:'Monad', nativeCurrency:{name:'Monad',symbol:'MON',decimals:18}, rpcUrls:[MONAD_RPC], blockExplorerUrls:['https://explorer.monad.xyz']}],
+            });
+          } catch {}
+        }
+      }
+    } else {
+      toast('Opening wallet picker…');
+      const wc = await getWCProvider();
+      if (!wc.session) await wc.connect();
+      provider = wc; addr = wc.accounts?.[0];
+    }
+    if (!addr) return;
+    state.activeProvider = provider;
+    const balance = await readMonwolfBalance(addr);
+    const rank = rankFor(balance);
+    state.wallet = { address:addr, balance, rank };
+    sessionStorage.setItem('mw_wallet', JSON.stringify(state.wallet));
+    renderWallet();
+    toast('Connected · ' + rank);
+  } catch (err) { toast(err?.message?.slice(0,80) || 'Connect failed', true); }
+}
+async function readMonwolfBalance(addr) {
+  try {
+    const data = '0x70a08231' + addr.slice(2).toLowerCase().padStart(64, '0');
+    const r = await fetch(MONAD_RPC, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ jsonrpc:'2.0', id:1, method:'eth_call', params:[{to:MONWOLF_CONTRACT, data},'latest'] }),
+    });
+    const j = await r.json();
+    if (!j.result) return 0;
+    return Number(BigInt(j.result) / (10n ** 16n)) / 100;
+  } catch { return 0; }
+}
+function rankFor(b) { for (const r of RANKS) if (b >= r.min) return r.name; return 'CUB'; }
+function renderWallet() {
+  const pill = $('walletPill');
+  if (!state.wallet) { pill.classList.remove('connected'); $('rankBadge').textContent = ''; $('walletText').textContent = 'CONNECT WALLET'; return; }
+  pill.classList.add('connected');
+  $('rankBadge').textContent = state.wallet.rank;
+  $('walletText').textContent = state.wallet.address.slice(0,6) + '…' + state.wallet.address.slice(-4);
+}
+
+async function submitScore() {
+  if (!state.wallet) { await connectWallet(); if (!state.wallet) return; }
+  const score = state.score, kills = state.kills, wave = state.wave;
+  if (score <= 0) { toast('Score must be > 0', true); return; }
+  const message = [
+    'MONWOLF Pack Hunt — score submission',
+    'Wallet: ' + state.wallet.address,
+    'Score: ' + score, 'Prey: ' + kills, 'Wave: ' + wave,
+    'Rank: ' + state.wallet.rank, 'Time: ' + new Date().toISOString(),
+  ].join('\n');
+  let signature;
+  try { signature = await state.activeProvider.request({ method:'personal_sign', params:[message, state.wallet.address] }); }
+  catch { toast('Sign rejected', true); return; }
+  const { error } = await supabase.from('leaderboard').insert({
+    wallet: state.wallet.address.toLowerCase(), rank: state.wallet.rank,
+    score, distance: kills, diamonds: wave, signature, message,
+  });
+  if (error) { toast('Submit failed: ' + error.message, true); return; }
+  toast('Score submitted! 🐺');
+  show('screenBoard'); loadBoard();
+}
+
+async function loadBoard() {
+  const list = $('boardList');
+  list.innerHTML = '<div class="board-loader"><div class="spinner"></div><div style="margin-top:.5rem;">Loading...</div></div>';
+  const { data: rows, error } = await supabase.from('leaderboard').select('*').order('score', { ascending: false }).limit(50);
+  if (error || !rows) {
+    list.innerHTML = '<div class="board-empty">Could not load leaderboard.</div>'; return;
+  }
+  if (rows.length === 0) { list.innerHTML = '<div class="board-empty">No scores yet. Be first.</div>'; return; }
+  list.innerHTML = rows.map((r, i) => {
+    const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+    const addr = r.wallet ? r.wallet.slice(0,6) + '…' + r.wallet.slice(-4) : '?';
+    return `<div class="board-row ${cls}">
+      <div class="pos">${i+1}</div>
+      <div><div class="addr">${addr}</div><div class="badge">${r.rank || ''}</div></div>
+      <div class="score">${(r.score || 0).toLocaleString()}</div>
+      <div class="meta">${r.distance || 0}</div>
+    </div>`;
+  }).join('');
+}
+function toast(msg, err) {
+  const t = $('toast');
+  t.textContent = msg; t.classList.toggle('err', !!err); t.classList.add('show');
+  clearTimeout(window._toastTo);
+  window._toastTo = setTimeout(() => t.classList.remove('show'), 3500);
+}
+const cached = sessionStorage.getItem('mw_wallet');
+if (cached) try { state.wallet = JSON.parse(cached); renderWallet(); } catch {}
+
+function loop() { tick(); render(); requestAnimationFrame(loop); }
+(async function init() { await loadAll; loop(); })();
+</script>
+</body>
+</html>

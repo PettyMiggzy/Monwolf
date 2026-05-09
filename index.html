@@ -401,8 +401,7 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
   display:flex; gap:12px; align-items:stretch;
 }
 .wild-stage .is-main  { flex:7 1 0; }
-.wild-stage .is-mini  { flex:3 1 0; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
-.wild-stage .is-mini:hover { border-color:rgba(168,85,247,0.6); box-shadow:0 0 24px rgba(168,85,247,0.35); }
+.wild-stage .is-mini  { flex:3 1 0; }
 
 .wild-frame {
   position:relative; aspect-ratio:16/9;
@@ -422,23 +421,6 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
   font-family:'JetBrains Mono', monospace;
   font-weight:700; font-size:10px; letter-spacing:0.18em;
   color:#fff; pointer-events:none;
-}
-
-/* Tap-to-swap hint on the mini cam */
-.wild-swap {
-  position:absolute; top:10px; left:10px; z-index:5;
-  padding:4px 9px;
-  background:rgba(168,85,247,0.85);
-  border-radius:20px;
-  font-family:'JetBrains Mono', monospace;
-  font-weight:700; font-size:9px; letter-spacing:0.16em;
-  color:#fff; pointer-events:none;
-  box-shadow:0 0 12px rgba(168,85,247,0.4);
-  animation:wild-swap-pulse 2.6s ease-in-out infinite;
-}
-@keyframes wild-swap-pulse {
-  0%,100% { transform:scale(1); }
-  50%     { transform:scale(1.06); }
 }
 
 /* Brand mark — top-left corner, semi-transparent so wolves stay visible */
@@ -496,7 +478,6 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
   .wild-stage .is-mini .wild-mark-text { font-size:9px; letter-spacing:0.14em; }
   .wild-stage .is-mini .wild-live { padding:4px 8px; }
   .wild-stage .is-mini .wild-live-text { font-size:9px; }
-  .wild-stage .is-mini .wild-swap { right:8px; left:auto; }  /* shift TAP-TO-SWAP to right so it doesn't collide with brand */
 }
 
 /* Mobile: stack vertically, BOTH cams full width so they're both usable */
@@ -510,7 +491,6 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
   .wild-live { top:8px; right:8px; padding:4px 8px; }
   .wild-live-text { font-size:9px; }
   .wild-camlabel { font-size:9px; padding:3px 8px; bottom:6px; left:6px; }
-  .wild-swap { font-size:8px; padding:3px 7px; top:6px; left:6px; }
 }
 
 .wild-meta {
@@ -724,7 +704,7 @@ footer a:hover { color:var(--purple); }
       <div class="wild-frame is-main" id="wildMain">
         <iframe
           id="wildMainIframe"
-          src="https://www.youtube.com/embed/CYl_uPm7yto?autoplay=1&mute=1&rel=0&playsinline=1"
+          src="https://www.youtube.com/embed/CYl_uPm7yto?autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1"
           title="Live Wolf Cam · International Wolf Center · South"
           allow="autoplay; encrypted-media; picture-in-picture"
           allowfullscreen
@@ -742,7 +722,7 @@ footer a:hover { color:var(--purple); }
       <div class="wild-frame is-mini" id="wildMini" title="Tap to swap views">
         <iframe
           id="wildMiniIframe"
-          src="https://www.youtube.com/embed/5e4lsEe4Vew?autoplay=1&mute=1&rel=0&playsinline=1"
+          src="https://www.youtube.com/embed/5e4lsEe4Vew?autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1"
           title="Live Wolf Cam · International Wolf Center · North"
           allow="autoplay; encrypted-media; picture-in-picture"
           allowfullscreen
@@ -756,7 +736,6 @@ footer a:hover { color:var(--purple); }
           <span class="wild-live-text">LIVE</span>
         </div>
         <div class="wild-camlabel" id="wildMiniLabel">NORTH CAM</div>
-        <div class="wild-swap">↔ TAP TO SWAP</div>
       </div>
     </div>
     <div class="wild-meta">
@@ -774,27 +753,6 @@ footer a:hover { color:var(--purple); }
     </div>
   </div>
 </section>
-
-<script>
-(function(){
-  var mini = document.getElementById('wildMini');
-  if (!mini) return;
-  var mainIf = document.getElementById('wildMainIframe');
-  var miniIf = document.getElementById('wildMiniIframe');
-  var mainLb = document.getElementById('wildMainLabel');
-  var miniLb = document.getElementById('wildMiniLabel');
-  mini.addEventListener('click', function(e){
-    // Don't swap if user is clicking the iframe itself (lets them control video)
-    if (e.target.tagName === 'IFRAME') return;
-    var tSrc = mainIf.src;
-    mainIf.src = miniIf.src;
-    miniIf.src = tSrc;
-    var tLb = mainLb.textContent;
-    mainLb.textContent = miniLb.textContent;
-    miniLb.textContent = tLb;
-  });
-})();
-</script>
 
 <!-- LIVE STATS -->
 <section class="block">

@@ -388,6 +388,46 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
 }
 .ca-bar button:hover { background:#fff; }
 
+/* === FROM THE WILD · LIVE WOLF CAM === */
+.wild-cam {
+  max-width:980px; margin:0 auto;
+  background:linear-gradient(145deg, var(--panel), var(--panel-2));
+  border:1px solid var(--border);
+  border-radius:18px; padding:18px;
+  box-shadow:0 0 60px rgba(168,85,247,0.08);
+}
+.wild-frame {
+  position:relative; width:100%; aspect-ratio:16/9;
+  border-radius:12px; overflow:hidden;
+  background:#000; border:1px solid rgba(168,85,247,0.25);
+  box-shadow:inset 0 0 40px rgba(0,0,0,0.6);
+}
+.wild-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+.wild-meta {
+  display:grid; grid-template-columns:1fr 1fr; gap:18px;
+  margin-top:18px; padding:14px 16px;
+  background:rgba(0,0,0,0.35); border-radius:10px;
+  border:1px solid rgba(168,85,247,0.15);
+}
+.wild-meta > div { display:flex; flex-direction:column; gap:4px; }
+.wild-label {
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px; letter-spacing:0.18em; color:var(--purple);
+}
+.wild-names { font-size:13px; color:var(--text); letter-spacing:0.02em; line-height:1.4; }
+.wild-credit {
+  text-align:center; margin-top:14px;
+  font-family:'JetBrains Mono', monospace; font-size:10px;
+  color:rgba(255,255,255,0.4); letter-spacing:0.1em;
+}
+.wild-credit a { color:rgba(168,85,247,0.85); text-decoration:none; border-bottom:1px dotted rgba(168,85,247,0.4); }
+.wild-credit a:hover { color:#fff; border-bottom-color:#fff; }
+@media (max-width:600px) {
+  .wild-cam { padding:12px; }
+  .wild-meta { grid-template-columns:1fr; gap:12px; padding:12px; }
+  .wild-names { font-size:12px; }
+}
+
 /* === MOON HUNT BANNER === */
 .moon-banner {
   position:relative; overflow:hidden;
@@ -562,6 +602,38 @@ footer a:hover { color:var(--purple); }
   </div>
 </section>
 
+<!-- FROM THE WILD · LIVE WOLF CAM -->
+<section class="block">
+  <div class="block-head">
+    <div class="eyebrow">// FROM THE WILD · LIVE</div>
+    <h2 class="block-h">REAL <span class="grad">WOLVES</span> · REAL TIME</h2>
+    <p class="block-sub">Live feed from the Exhibit Pack at the International Wolf Center · Ely, Minnesota · powered by explore.org</p>
+  </div>
+  <div class="wild-cam">
+    <div class="wild-frame">
+      <iframe
+        src="https://www.youtube.com/embed/CYl_uPm7yto?autoplay=1&mute=1&rel=0&playsinline=1"
+        title="Live Wolf Cam · International Wolf Center"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        loading="lazy"></iframe>
+    </div>
+    <div class="wild-meta">
+      <div class="wild-pack">
+        <span class="wild-label">▌ THE PACK</span>
+        <span class="wild-names">Rieka · Blackstone · Caz · Cedar · Rowan</span>
+      </div>
+      <div class="wild-tip">
+        <span class="wild-label">▌ BEST VIEWING</span>
+        <span class="wild-names">6–9 AM · 5–8 PM CT (when wolves are most active)</span>
+      </div>
+    </div>
+    <div class="wild-credit">
+      Stream by <a href="https://explore.org/wolves" target="_blank" rel="noopener">explore.org</a> · International Wolf Center · USDA-licensed sanctuary
+    </div>
+  </div>
+</section>
+
 <!-- LIVE STATS -->
 <section class="block">
   <div class="block-head">
@@ -613,22 +685,6 @@ footer a:hover { color:var(--purple); }
         <p>Five games, one pack. Cyborg Charge, Skate Storm, Hellcat Drift, Pack Hunt, Rocket Ride.</p>
       </div>
     </a>
-    <div class="app-card locked">
-      <div class="app-overlay" style="background:linear-gradient(to top, rgba(8,0,15,.95), rgba(22,10,38,.7));"></div>
-      <div class="app-content">
-        <span class="app-tag soon">COMING SOON</span>
-        <h3>RAID MODE</h3>
-        <p>Coordinated raids on social. Earn $MONWOLF for participation.</p>
-      </div>
-    </div>
-    <div class="app-card locked">
-      <div class="app-overlay" style="background:linear-gradient(to top, rgba(8,0,15,.95), rgba(22,10,38,.7));"></div>
-      <div class="app-content">
-        <span class="app-tag soon">COMING SOON</span>
-        <h3>STAKING</h3>
-        <p>Lock $MONWOLF, earn boosted rank multipliers and exclusive drops.</p>
-      </div>
-    </div>
   </div>
 </section>
 

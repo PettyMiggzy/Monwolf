@@ -498,7 +498,7 @@ footer a:hover { color:var(--purple); }
     <h1>THE FUTURE<br><span class="grad">IS OURS.</span></h1>
     <p>The official $MONWOLF hub on Monad. Game, leaderboard, pack ID, more incoming. Built by the pack, for the pack.</p>
     <div class="hero-ctas">
-      <a href="game.html" class="btn btn-primary btn-lg">PLAY DOWNHILL CHAOS →</a>
+      <a href="arcade.html" class="btn btn-primary btn-lg">PLAY THE ARCADE →</a>
       <a id="buyBtn" href="https://dexscreener.com/monad/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener" class="btn btn-ghost btn-lg">BUY $MONWOLF</a>
     </div>
   </div>
@@ -543,7 +543,7 @@ footer a:hover { color:var(--purple); }
     <p class="block-sub">Tools and games for the MONWOLF community</p>
   </div>
   <div class="apps">
-    <a class="app-card" href="game.html">
+    <a class="app-card" href="arcade.html">
       <video class="app-video" autoplay muted loop playsinline preload="metadata">
         <source src="media/skater.mp4" type="video/mp4">
       </video>
@@ -551,8 +551,8 @@ footer a:hover { color:var(--purple); }
       <div class="app-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
       <div class="app-content">
         <span class="app-tag live">● LIVE</span>
-        <h3>DOWNHILL CHAOS</h3>
-        <p>3-lane endless skater. Wallet-gated leaderboard. No brakes, no limits.</p>
+        <h3>MONWOLF ARCADE</h3>
+        <p>Five games, one pack. Cyborg Charge, Skate Storm, Hellcat Drift, Pack Hunt, Rocket Ride.</p>
       </div>
     </a>
     <a class="app-card" href="pack.html">
@@ -597,7 +597,7 @@ footer a:hover { color:var(--purple); }
     <div class="board-loading"><div class="spinner"></div> Loading top scores…</div>
   </div>
   <div style="text-align:center; margin-top:1.5rem;">
-    <a href="game.html#leaderboard" class="btn btn-ghost">VIEW FULL LEADERBOARD</a>
+    <a href="arcade.html" class="btn btn-ghost">VIEW FULL LEADERBOARD</a>
   </div>
 </section>
 
@@ -634,7 +634,7 @@ footer a:hover { color:var(--purple); }
   <div class="links">
     <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">X / Twitter</a>
     <a href="https://dexscreener.com/monad/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">DexScreener</a>
-    <a href="game.html">Play Game</a>
+    <a href="arcade.html">Arcade</a>
     <a href="pack.html">Pack ID</a>
   </div>
   <div>© <span id="year"></span> MONWOLF · Monad-7 · The Future Is Ours</div>
@@ -767,7 +767,7 @@ async function loadBoard() {
       .limit(20);
     if (error) throw error;
     if (!data || !data.length) {
-      el.innerHTML = '<div class="board-empty">No scores yet. Be the first.<br><br><a href="game.html" class="btn btn-primary">PLAY NOW</a></div>';
+      el.innerHTML = '<div class="board-empty">No scores yet. Be the first.<br><br><a href="arcade.html" class="btn btn-primary">PLAY NOW</a></div>';
       return;
     }
     const best = new Map();

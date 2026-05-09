@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WOLVES · MONWOLF</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0118">
+<meta name="description" content="Live wolf cams from sanctuaries around the world. Real wolves. Real time. Powered by the MonWolf pack.">
+<link rel="icon" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0a0118;
+  --panel:    #11052a;
+  --panel-2:  #1a0b3d;
+  --border:   rgba(168,85,247,0.18);
+  --purple:   #a855f7;
+  --pink:     #ec4899;
+  --text:     #f8fafc;
+  --text-2:   #cbd5e1;
+  --text-3:   #94a3b8;
+}
+* { box-sizing:border-box; }
+html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family:system-ui, -apple-system, sans-serif; -webkit-font-smoothing:antialiased; }
+body {
+  background:
+    radial-gradient(ellipse at top, rgba(168,85,247,0.18), transparent 55%),
+    radial-gradient(ellipse at bottom right, rgba(236,72,153,0.10), transparent 55%),
+    var(--bg);
+  min-height:100vh;
+}
+a { color:var(--text-2); text-decoration:none; }
+.grad { background:linear-gradient(135deg, var(--purple), var(--pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+/* Nav (mirrors index.html) */
+nav { position:sticky; top:0; z-index:50; backdrop-filter:blur(14px) saturate(180%); background:rgba(10,1,24,0.78); border-bottom:1px solid var(--border); }
+.nav-inner { max-width:1200px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.logo { display:flex; align-items:center; gap:10px; color:var(--text); font-family:'Russo One', sans-serif; }
+.logo img { width:34px; height:34px; border-radius:50%; }
+.logo .name { font-size:18px; letter-spacing:0.18em; }
+.nav-actions a { font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.18em; color:var(--text-3); padding:8px 14px; border:1px solid var(--border); border-radius:30px; transition:color .15s, border-color .15s; }
+.nav-actions a:hover { color:#fff; border-color:rgba(168,85,247,0.5); }
+
+/* Page header */
+.page-head { max-width:1100px; margin:0 auto; padding:60px 22px 30px; text-align:center; }
+.page-head .eyebrow { font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.22em; color:var(--purple); margin-bottom:14px; }
+.page-head h1 { font-family:'Russo One', sans-serif; font-size:clamp(2rem, 6vw, 4rem); margin:0 0 14px; line-height:1.05; letter-spacing:0.02em; }
+.page-head p { font-size:15px; color:var(--text-3); max-width:640px; margin:0 auto; line-height:1.6; }
+
+/* Cam grid */
+.cams { max-width:1200px; margin:0 auto; padding:30px 22px 40px; display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:22px; }
+.cam-card {
+  background:linear-gradient(145deg, var(--panel), var(--panel-2));
+  border:1px solid var(--border);
+  border-radius:18px; padding:14px;
+  box-shadow:0 0 60px rgba(168,85,247,0.06);
+}
+.cam-frame {
+  position:relative; width:100%; aspect-ratio:16/9;
+  border-radius:12px; overflow:hidden;
+  background:#000; border:1px solid rgba(168,85,247,0.25);
+  box-shadow:inset 0 0 40px rgba(0,0,0,0.6);
+}
+.cam-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+/* Brand mark — top-left */
+.cam-mark {
+  position:absolute; top:10px; left:10px; z-index:5;
+  display:flex; align-items:center; gap:7px;
+  padding:5px 11px 5px 5px;
+  background:rgba(8,0,15,0.7); backdrop-filter:blur(6px);
+  border:1px solid rgba(168,85,247,0.4);
+  border-radius:30px;
+  pointer-events:none;
+  box-shadow:0 0 16px rgba(168,85,247,0.25);
+}
+.cam-mark img { width:24px; height:24px; border-radius:50%; border:1px solid rgba(255,255,255,0.18); display:block; }
+.cam-mark span { font-family:'Russo One', sans-serif; font-size:10px; letter-spacing:0.18em; color:#fff; text-shadow:0 0 6px rgba(168,85,247,0.6); }
+
+/* LIVE indicator — top-right */
+.cam-live {
+  position:absolute; top:10px; right:10px; z-index:5;
+  display:flex; align-items:center; gap:6px;
+  padding:4px 9px;
+  background:rgba(8,0,15,0.7); backdrop-filter:blur(6px);
+  border:1px solid rgba(255,30,80,0.5);
+  border-radius:30px;
+  pointer-events:none;
+  box-shadow:0 0 12px rgba(255,30,80,0.3);
+}
+.cam-live .dot { width:6px; height:6px; border-radius:50%; background:#ff1e50; box-shadow:0 0 8px #ff1e50; animation:cam-blink 1.4s ease-in-out infinite; }
+.cam-live span { font-family:'JetBrains Mono', monospace; font-weight:700; font-size:9px; letter-spacing:0.18em; color:#fff; }
+@keyframes cam-blink { 0%,49%{opacity:1} 50%,100%{opacity:0.35} }
+
+/* Cam meta below the iframe */
+.cam-info { padding:14px 6px 4px; }
+.cam-info h3 { margin:0 0 4px; font-family:'Russo One', sans-serif; font-size:14px; letter-spacing:0.1em; color:#fff; }
+.cam-info .loc { font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.16em; color:var(--purple); }
+.cam-info p { margin:8px 0 0; font-size:13px; color:var(--text-3); line-height:1.55; }
+
+/* External cams section */
+.ext-section { max-width:1100px; margin:0 auto; padding:50px 22px 30px; }
+.ext-section h2 { font-family:'Russo One', sans-serif; font-size:clamp(1.4rem, 4vw, 2rem); text-align:center; letter-spacing:0.04em; margin:0 0 8px; }
+.ext-section .sub { font-family:'JetBrains Mono', monospace; text-align:center; font-size:11px; letter-spacing:0.18em; color:var(--purple); margin-bottom:30px; }
+.ext-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; }
+.ext-card {
+  display:block;
+  background:rgba(17,5,42,0.6);
+  border:1px solid var(--border);
+  border-radius:14px; padding:18px;
+  transition:border-color .15s, transform .15s, box-shadow .15s;
+}
+.ext-card:hover {
+  border-color:rgba(168,85,247,0.6);
+  transform:translateY(-2px);
+  box-shadow:0 6px 24px rgba(168,85,247,0.18);
+}
+.ext-card .where { font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.18em; color:var(--purple); }
+.ext-card h3 { margin:6px 0 8px; font-family:'Russo One', sans-serif; font-size:15px; letter-spacing:0.06em; color:#fff; }
+.ext-card p { margin:0 0 10px; font-size:12px; color:var(--text-3); line-height:1.5; }
+.ext-card .arrow { font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.18em; color:var(--purple); }
+
+/* Back-home + footer */
+.back-home { text-align:center; padding:30px 22px 50px; }
+.back-home a { font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.2em; color:var(--text-3); border:1px solid var(--border); padding:10px 22px; border-radius:30px; }
+.back-home a:hover { color:#fff; border-color:rgba(168,85,247,0.5); }
+
+footer { padding:22px; text-align:center; color:var(--text-3); border-top:1px solid var(--border); margin-top:30px; }
+footer .links { display:flex; justify-content:center; gap:1.4rem; margin-bottom:1rem; flex-wrap:wrap; }
+footer a:hover { color:var(--purple); }
+
+@media (max-width:600px) {
+  .cam-mark { padding:4px 9px 4px 4px; }
+  .cam-mark img { width:20px; height:20px; }
+  .cam-mark span { font-size:8px; }
+  .cam-live span { font-size:8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><img src="logo.png" alt=""><span class="name">MONWOLF</span></a>
+    <div class="nav-actions">
+      <a href="index.html">← HOME</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEAD -->
+<section class="page-head">
+  <div class="eyebrow">// FROM THE WILD · LIVE 24/7</div>
+  <h1>WATCH THE <span class="grad">PACK</span></h1>
+  <p>Live wolf cams from sanctuaries and parks across North America. Real wolves, real time. Watch them hunt, howl, sleep, and roam — and remember why we built this.</p>
+</section>
+
+<!-- EMBEDDED LIVE CAMS -->
+<section class="cams">
+
+  <!-- IWC SOUTH -->
+  <div class="cam-card">
+    <div class="cam-frame">
+      <iframe
+        src="https://www.youtube.com/embed/CYl_uPm7yto?autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1"
+        title="IWC South Cam"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        loading="lazy"></iframe>
+      <div class="cam-mark"><img src="logo.png" alt=""><span>MONWOLF</span></div>
+      <div class="cam-live"><span class="dot"></span><span>LIVE</span></div>
+    </div>
+    <div class="cam-info">
+      <h3>IWC · SOUTH CAM</h3>
+      <span class="loc">▌ ELY, MINNESOTA · USA</span>
+      <p>The Exhibit Pack — Rieka, Blackstone, Caz, Cedar, Rowan. South-facing camera over their 1.25-acre habitat. Most active 6–9 AM and 5–8 PM CT.</p>
+    </div>
+  </div>
+
+  <!-- IWC NORTH -->
+  <div class="cam-card">
+    <div class="cam-frame">
+      <iframe
+        src="https://www.youtube.com/embed/5e4lsEe4Vew?autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1"
+        title="IWC North Cam"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        loading="lazy"></iframe>
+      <div class="cam-mark"><img src="logo.png" alt=""><span>MONWOLF</span></div>
+      <div class="cam-live"><span class="dot"></span><span>LIVE</span></div>
+    </div>
+    <div class="cam-info">
+      <h3>IWC · NORTH CAM</h3>
+      <span class="loc">▌ ELY, MINNESOTA · USA</span>
+      <p>Same Exhibit Pack — different angle. North-facing view catches the wolves when they're closer to the dens and the pond. Try this when South Cam shows empty woods.</p>
+    </div>
+  </div>
+
+  <!-- YELLOWSTONE OLD FAITHFUL -->
+  <div class="cam-card">
+    <div class="cam-frame">
+      <iframe
+        src="https://www.youtube.com/embed/BWnloy8r0qU?autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1"
+        title="Yellowstone Old Faithful Cam"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        loading="lazy"></iframe>
+      <div class="cam-mark"><img src="logo.png" alt=""><span>MONWOLF</span></div>
+      <div class="cam-live"><span class="dot"></span><span>LIVE</span></div>
+    </div>
+    <div class="cam-info">
+      <h3>YELLOWSTONE · OLD FAITHFUL</h3>
+      <span class="loc">▌ WYOMING · USA · WILD</span>
+      <p>Wild wolves occasionally cross through the Upper Geyser Basin. The Wapiti Lake pack has been seen here. Rare sightings, but when it happens — that's a real wolf, in a real wilderness, doing real wolf things.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- EXTERNAL SANCTUARY LINKS -->
+<section class="ext-section">
+  <h2>MORE <span class="grad">SANCTUARIES</span></h2>
+  <div class="sub">// THESE STREAMS LIVE ON THEIR OWN SITES — VISIT TO WATCH</div>
+
+  <div class="ext-grid">
+    <a class="ext-card" href="https://nywolf.org/meet-our-wolves/webcams/" target="_blank" rel="noopener">
+      <div class="where">▌ SOUTH SALEM, NY · USA</div>
+      <h3>Wolf Conservation Center</h3>
+      <p>Multiple cams covering ambassador wolves Nikai, Silas, and Kinari plus seven critically endangered packs of red and Mexican gray wolves.</p>
+      <div class="arrow">VISIT NYWOLF.ORG →</div>
+    </a>
+
+    <a class="ext-card" href="https://www.californiawolfcenter.org/webcam" target="_blank" rel="noopener">
+      <div class="where">▌ JULIAN, CALIFORNIA · USA</div>
+      <h3>California Wolf Center</h3>
+      <p>Mexican Gray Wolves Thor and Durango. Interactive PTZ cam (paid) plus free preview windows.</p>
+      <div class="arrow">VISIT CALIFORNIAWOLFCENTER.ORG →</div>
+    </a>
+
+    <a class="ext-card" href="https://www.endangeredwolfcenter.org/webcams/" target="_blank" rel="noopener">
+      <div class="where">▌ EUREKA, MISSOURI · USA</div>
+      <h3>Endangered Wolf Center</h3>
+      <p>Live cams featuring critically endangered Mexican wolves and African painted dog puppies. Founded by Marlin Perkins of "Wild Kingdom" fame.</p>
+      <div class="arrow">VISIT ENDANGEREDWOLFCENTER.ORG →</div>
+    </a>
+
+    <a class="ext-card" href="https://www.grizzlydiscoveryctr.org/wolf-cam" target="_blank" rel="noopener">
+      <div class="where">▌ WEST YELLOWSTONE, MT · USA</div>
+      <h3>Grizzly & Wolf Discovery Center</h3>
+      <p>Grey wolves with several acres to roam. "Didn't see them in Yellowstone? You'll definitely see them here."</p>
+      <div class="arrow">VISIT GRIZZLYDISCOVERYCTR.ORG →</div>
+    </a>
+
+    <a class="ext-card" href="https://explore.org/wolves" target="_blank" rel="noopener">
+      <div class="where">▌ MULTI-LOCATION · GLOBAL</div>
+      <h3>explore.org Wolf Network</h3>
+      <p>The full explore.org wildlife cam network including all the IWC feeds, plus dozens of other live nature cams from around the world.</p>
+      <div class="arrow">VISIT EXPLORE.ORG →</div>
+    </a>
+
+    <a class="ext-card" href="https://www.nps.gov/yell/learn/photosmultimedia/webcams.htm" target="_blank" rel="noopener">
+      <div class="where">▌ YELLOWSTONE NP · USA</div>
+      <h3>Yellowstone Webcams (NPS)</h3>
+      <p>Official National Park Service webcams. Old Faithful is the volunteer-controlled live feed where wild wolves occasionally appear.</p>
+      <div class="arrow">VISIT NPS.GOV →</div>
+    </a>
+  </div>
+</section>
+
+<!-- BACK HOME -->
+<div class="back-home">
+  <a href="index.html">← BACK TO MONWOLF HUB</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="links">
+    <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">X / Twitter</a>
+    <a href="https://dexscreener.com/monad/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">DexScreener</a>
+    <a href="arcade.html">Arcade</a>
+    <a href="index.html">Hub</a>
+  </div>
+  <div>© <span id="year"></span> MONWOLF · Monad-7 · The Future Is Ours</div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+</body>
+</html>

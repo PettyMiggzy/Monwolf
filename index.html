@@ -396,13 +396,50 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
   border-radius:18px; padding:18px;
   box-shadow:0 0 60px rgba(168,85,247,0.08);
 }
+/* Stage = horizontal flex container holding main + mini cams */
+.wild-stage {
+  display:flex; gap:12px; align-items:stretch;
+}
+.wild-stage .is-main  { flex:7 1 0; }
+.wild-stage .is-mini  { flex:3 1 0; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
+.wild-stage .is-mini:hover { border-color:rgba(168,85,247,0.6); box-shadow:0 0 24px rgba(168,85,247,0.35); }
+
 .wild-frame {
-  position:relative; width:100%; aspect-ratio:16/9;
+  position:relative; aspect-ratio:16/9;
   border-radius:12px; overflow:hidden;
   background:#000; border:1px solid rgba(168,85,247,0.25);
   box-shadow:inset 0 0 40px rgba(0,0,0,0.6);
 }
 .wild-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+/* Cam label — small text identifying which cam (NORTH / SOUTH) */
+.wild-camlabel {
+  position:absolute; bottom:10px; left:10px; z-index:5;
+  padding:4px 10px;
+  background:rgba(8,0,15,0.75); backdrop-filter:blur(6px);
+  border:1px solid rgba(168,85,247,0.3);
+  border-radius:20px;
+  font-family:'JetBrains Mono', monospace;
+  font-weight:700; font-size:10px; letter-spacing:0.18em;
+  color:#fff; pointer-events:none;
+}
+
+/* Tap-to-swap hint on the mini cam */
+.wild-swap {
+  position:absolute; top:10px; left:10px; z-index:5;
+  padding:4px 9px;
+  background:rgba(168,85,247,0.85);
+  border-radius:20px;
+  font-family:'JetBrains Mono', monospace;
+  font-weight:700; font-size:9px; letter-spacing:0.16em;
+  color:#fff; pointer-events:none;
+  box-shadow:0 0 12px rgba(168,85,247,0.4);
+  animation:wild-swap-pulse 2.6s ease-in-out infinite;
+}
+@keyframes wild-swap-pulse {
+  0%,100% { transform:scale(1); }
+  50%     { transform:scale(1.06); }
+}
 
 /* Brand mark — top-left corner, semi-transparent so wolves stay visible */
 .wild-mark {
@@ -450,12 +487,18 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
 }
 @keyframes wild-blink { 0%,49%{opacity:1} 50%,100%{opacity:0.35} }
 
-@media (max-width:600px) {
+/* Mobile: stack vertically, mini becomes a smaller block underneath */
+@media (max-width:720px) {
+  .wild-stage { flex-direction:column; gap:8px; }
+  .wild-stage .is-main { flex:1 1 auto; }
+  .wild-stage .is-mini { flex:0 0 auto; max-width:55%; align-self:flex-end; }
   .wild-mark { top:8px; left:8px; padding:5px 10px 5px 5px; gap:6px; }
   .wild-mark-img { width:22px; height:22px; }
   .wild-mark-text { font-size:9px; letter-spacing:0.14em; }
   .wild-live { top:8px; right:8px; padding:4px 8px; }
   .wild-live-text { font-size:9px; }
+  .wild-camlabel { font-size:9px; padding:3px 8px; bottom:6px; left:6px; }
+  .wild-swap { font-size:8px; padding:3px 7px; top:6px; left:6px; }
 }
 
 .wild-meta {
@@ -665,20 +708,35 @@ footer a:hover { color:var(--purple); }
     <p class="block-sub">Live feed from the Exhibit Pack at the International Wolf Center · Ely, Minnesota · powered by explore.org</p>
   </div>
   <div class="wild-cam">
-    <div class="wild-frame">
-      <iframe
-        src="https://www.youtube.com/embed/CYl_uPm7yto?autoplay=1&mute=1&rel=0&playsinline=1"
-        title="Live Wolf Cam · International Wolf Center"
-        allow="autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen
-        loading="lazy"></iframe>
-      <div class="wild-mark">
-        <img src="logo.png" alt="" class="wild-mark-img">
-        <span class="wild-mark-text">MONWOLF</span>
+    <div class="wild-stage">
+      <div class="wild-frame is-main" id="wildMain">
+        <iframe
+          id="wildMainIframe"
+          src="https://www.youtube.com/embed/CYl_uPm7yto?autoplay=1&mute=1&rel=0&playsinline=1"
+          title="Live Wolf Cam · International Wolf Center · South"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+          loading="lazy"></iframe>
+        <div class="wild-mark">
+          <img src="logo.png" alt="" class="wild-mark-img">
+          <span class="wild-mark-text">MONWOLF</span>
+        </div>
+        <div class="wild-live">
+          <span class="wild-live-dot"></span>
+          <span class="wild-live-text">LIVE</span>
+        </div>
+        <div class="wild-camlabel" id="wildMainLabel">SOUTH CAM</div>
       </div>
-      <div class="wild-live">
-        <span class="wild-live-dot"></span>
-        <span class="wild-live-text">LIVE</span>
+      <div class="wild-frame is-mini" id="wildMini" title="Tap to swap views">
+        <iframe
+          id="wildMiniIframe"
+          src="https://www.youtube.com/embed/5e4lsEe4Vew?autoplay=1&mute=1&rel=0&playsinline=1"
+          title="Live Wolf Cam · International Wolf Center · North"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+          loading="lazy"></iframe>
+        <div class="wild-camlabel" id="wildMiniLabel">NORTH CAM</div>
+        <div class="wild-swap">↔ TAP TO SWAP</div>
       </div>
     </div>
     <div class="wild-meta">
@@ -688,7 +746,7 @@ footer a:hover { color:var(--purple); }
       </div>
       <div class="wild-tip">
         <span class="wild-label">▌ BEST VIEWING</span>
-        <span class="wild-names">6–9 AM · 5–8 PM CT (when wolves are most active)</span>
+        <span class="wild-names">6–9 AM · 5–8 PM CT — wolves are elusive, watch the trees</span>
       </div>
     </div>
     <div class="wild-credit">
@@ -696,6 +754,27 @@ footer a:hover { color:var(--purple); }
     </div>
   </div>
 </section>
+
+<script>
+(function(){
+  var mini = document.getElementById('wildMini');
+  if (!mini) return;
+  var mainIf = document.getElementById('wildMainIframe');
+  var miniIf = document.getElementById('wildMiniIframe');
+  var mainLb = document.getElementById('wildMainLabel');
+  var miniLb = document.getElementById('wildMiniLabel');
+  mini.addEventListener('click', function(e){
+    // Don't swap if user is clicking the iframe itself (lets them control video)
+    if (e.target.tagName === 'IFRAME') return;
+    var tSrc = mainIf.src;
+    mainIf.src = miniIf.src;
+    miniIf.src = tSrc;
+    var tLb = mainLb.textContent;
+    mainLb.textContent = miniLb.textContent;
+    miniLb.textContent = tLb;
+  });
+})();
+</script>
 
 <!-- LIVE STATS -->
 <section class="block">

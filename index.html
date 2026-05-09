@@ -389,6 +389,7 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
 .ca-bar button:hover { background:#fff; }
 
 /* === DEV CARD === */
+.dev-stack { display:flex; flex-direction:column; gap:1.4rem; max-width:680px; margin:0 auto; }
 .dev-card {
   display:grid; grid-template-columns:140px 1fr;
   gap:0;
@@ -396,13 +397,14 @@ section.block { position:relative; z-index:3; padding:4rem 1rem; max-width:1280p
   border:1px solid var(--border);
   border-radius:18px;
   overflow:hidden;
-  max-width:680px; margin:0 auto;
 }
 .dev-video {
   width:100%; height:100%;
   object-fit:cover;
   border-right:1px solid var(--border);
+  background:#0a0118;
 }
+img.dev-video { object-position:center top; }
 .dev-info { padding:1.4rem 1.3rem; }
 .dev-info .role { font-family:'JetBrains Mono'; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--purple); margin-bottom:.3rem; }
 .dev-info h3 { font-family:'Russo One'; font-size:1.4rem; letter-spacing:.5px; margin-bottom:.4rem; background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
@@ -598,21 +600,34 @@ footer a:hover { color:var(--purple); }
   </div>
 </section>
 
-<!-- DEV CARD -->
+<!-- DEV CARDS -->
 <section class="block">
   <div class="block-head">
     <div class="eyebrow">// CREDITS</div>
     <h2 class="block-h">BUILT BY <span class="grad">THE PACK</span></h2>
   </div>
-  <div class="dev-card">
-    <video class="dev-video" autoplay muted loop playsinline preload="metadata">
-      <source src="media/dev.mp4" type="video/mp4">
-    </video>
-    <div class="dev-info">
-      <div class="role">Lead Artist · Vibe Architect</div>
-      <h3>WinslowBankz</h3>
-      <p>Original art, world-building, and the entire MONWOLF aesthetic. Every poster, every clip, every vibe.</p>
-      <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">Follow @MonWolfMonad ↗</a>
+
+  <div class="dev-stack">
+    <div class="dev-card">
+      <video class="dev-video" autoplay muted loop playsinline preload="metadata">
+        <source src="media/dev.mp4" type="video/mp4">
+      </video>
+      <div class="dev-info">
+        <div class="role">Community Lead</div>
+        <h3>WinslowBankz</h3>
+        <p>Leads the pack. Raids, community ops, and the voice of MONWOLF across socials. Built the world from day one.</p>
+        <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">Follow @MonWolfMonad ↗</a>
+      </div>
+    </div>
+
+    <div class="dev-card">
+      <img class="dev-video" src="monwolf_head_only.png" alt="Kevlar" loading="lazy">
+      <div class="dev-info">
+        <div class="role">Lead Artist</div>
+        <h3>Kevlar</h3>
+        <p>Original art, posters, clips, and the visual world of MONWOLF. Every new asset, every animation, every drop.</p>
+        <a href="https://x.com/KevlarLA" target="_blank" rel="noopener">Follow @KevlarLA ↗</a>
+      </div>
     </div>
   </div>
 </section>

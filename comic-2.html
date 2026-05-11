@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08000f">
+<title>MONWOLF · Issue №02 — The Pack Hunts</title>
+<meta name="description" content="The alpha howls. The pack answers. The bears run. They shouldn't bother.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MONWOLF · Issue №02 — The Pack Hunts">
+<meta property="og:description" content="Five wolves. One moon. Zero mercy.">
+<meta property="og:image" content="comic-art/p2-moon.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="comic-art/p2-moon.jpg">
+<link rel="icon" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500;600;700;800;900&family=Permanent+Marker&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:#08000f;color:#fff;overflow-x:hidden;font-family:'Inter',system-ui,sans-serif;}
+:root{
+  --bg:#08000f;
+  --bg-2:#100722;
+  --panel:#160a26;
+  --panel-2:#1c0e30;
+  --border:#3a1f5e;
+  --border-2:#4a2a73;
+  --text:#fff;
+  --text-2:#c8b6e6;
+  --text-3:#7e6d96;
+  --purple:#a855f7;
+  --purple-2:#7c3aed;
+  --purple-bright:#cb66ff;
+  --pink:#ec4899;
+  --orange:#ff8a3d;
+  --gold:#f5c242;
+  --red:#ef4444;
+  --display:'Russo One',sans-serif;
+  --hand:'Permanent Marker',cursive;
+  --mono:'JetBrains Mono',monospace;
+}
+img{display:block;max-width:100%;height:auto;}
+a{color:inherit;text-decoration:none;}
+
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(to bottom,rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:1;mix-blend-mode:overlay;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.7) 100%);pointer-events:none;z-index:2;}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:3;opacity:.06;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+
+.plate{position:relative;padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:2.2px;color:var(--text-3);text-transform:uppercase;background:var(--bg-2);z-index:5;}
+.plate b{color:var(--purple-bright);font-weight:700;}
+.plate-mid{flex:1;text-align:center;display:none;}
+@media(min-width:720px){.plate-mid{display:block;}}
+.plate a{color:var(--text-3);}
+.plate a:hover{color:var(--purple-bright);}
+
+.cover{position:relative;padding:60px 22px 50px;text-align:center;border-bottom:1px solid var(--border);background:radial-gradient(ellipse at 50% 0%,rgba(168,85,247,.22),transparent 55%),var(--bg);}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:6px;color:var(--purple-bright);text-transform:uppercase;margin-bottom:18px;}
+.cover h1{font-family:var(--display);font-weight:400;font-size:clamp(60px,14vw,130px);line-height:.9;letter-spacing:.01em;margin:0 auto 18px;color:#fff;max-width:14ch;text-shadow:0 0 20px rgba(168,85,247,.5),0 4px 30px rgba(168,85,247,.4);}
+.cover h1 em{font-style:normal;background:linear-gradient(135deg,#cb66ff,#ff8a3d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.cover .sub{font-family:var(--hand);font-size:clamp(18px,4.4vw,26px);color:var(--text-2);max-width:30ch;margin:14px auto 28px;line-height:1.35;letter-spacing:.5px;}
+.cover .sub b{color:var(--orange);}
+.cover .meta-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;letter-spacing:2px;color:var(--text-2);text-transform:uppercase;margin-top:24px;}
+.cover .meta-row span{padding:6px 12px;background:var(--panel);border:1px solid var(--border-2);}
+
+.recap{padding:28px 22px;text-align:center;background:var(--bg-2);border-bottom:1px solid var(--border);}
+.recap .recap-label{font-family:var(--mono);font-size:10px;letter-spacing:5px;color:var(--purple-bright);text-transform:uppercase;margin-bottom:10px;}
+.recap p{font-family:var(--hand);font-size:clamp(14px,3.5vw,16px);color:var(--text-2);max-width:44ch;margin:0 auto 14px;line-height:1.4;}
+.recap a{font-family:var(--display);font-size:12px;letter-spacing:1.5px;color:var(--purple-bright);text-transform:uppercase;border:1.5px solid var(--purple);padding:8px 14px;text-decoration:none;display:inline-block;}
+.recap a:hover{background:var(--purple);color:#fff;}
+
+section.act{padding:50px 24px 36px;text-align:center;background:linear-gradient(180deg,rgba(168,85,247,.08),rgba(255,138,61,.04));border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:18px 0;}
+section.act .ax-tag{font-family:var(--mono);font-size:11px;letter-spacing:5px;color:var(--purple-bright);text-transform:uppercase;margin:0 0 8px;font-weight:700;}
+section.act .ax-title{font-family:var(--display);font-weight:400;font-size:clamp(36px,8vw,60px);color:#fff;margin:0 0 12px;letter-spacing:.02em;text-shadow:0 0 20px rgba(168,85,247,.4);}
+section.act .ax-line{font-family:var(--hand);font-size:clamp(15px,3.8vw,18px);color:var(--text-2);max-width:36ch;margin:0 auto;line-height:1.4;}
+
+.panel{padding:24px 16px 32px;max-width:700px;margin:0 auto;opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease;}
+.panel.in{opacity:1;transform:translateY(0);}
+.panel-num{position:absolute;top:-12px;left:-12px;z-index:10;width:48px;height:48px;background:linear-gradient(135deg,var(--purple),var(--orange));color:#fff;border:3px solid var(--bg);border-radius:50%;font-family:var(--display);font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(168,85,247,.6),3px 3px 0 var(--bg);}
+
+.caption-box{position:relative;margin:0;padding:14px 18px;background:var(--panel);color:var(--text);border:2px solid var(--purple);border-bottom:0;font-family:var(--hand);font-size:clamp(15px,3.9vw,18px);line-height:1.45;letter-spacing:.3px;box-shadow:0 0 20px rgba(168,85,247,.2) inset;}
+.caption-box::after{content:'';position:absolute;left:-2px;right:-2px;bottom:-1px;height:2px;background:var(--purple-bright);box-shadow:0 0 12px var(--purple-bright);}
+.caption-box b{font-family:var(--display);font-weight:400;font-size:1.05em;letter-spacing:1.5px;color:var(--orange);}
+
+.frame{position:relative;background:#000;border:2px solid var(--purple);overflow:hidden;box-shadow:0 0 30px rgba(168,85,247,.25),0 8px 30px rgba(0,0,0,.6);}
+.frame img{width:100%;display:block;}
+
+.tab{position:absolute;top:8px;right:8px;z-index:5;background:linear-gradient(135deg,var(--purple),var(--orange));color:#fff;font-family:var(--display);font-size:13px;letter-spacing:1.5px;padding:5px 10px 4px;text-transform:uppercase;border:1.5px solid var(--bg);box-shadow:0 0 10px rgba(168,85,247,.5);transform:rotate(3deg);}
+
+.bubble{position:absolute;z-index:6;background:rgba(8,0,15,.92);color:#fff;border:2px solid var(--purple-bright);border-radius:14px;padding:8px 12px;font-family:var(--hand);font-size:clamp(13px,3.2vw,15px);line-height:1.25;letter-spacing:.3px;box-shadow:0 0 14px rgba(203,102,255,.45);max-width:62%;backdrop-filter:blur(4px);}
+.bubble::before,.bubble::after{content:'';position:absolute;}
+.bubble::before{width:0;height:0;border-left:12px solid transparent;border-right:0 solid transparent;border-top:16px solid var(--purple-bright);bottom:-16px;left:24px;}
+.bubble::after{width:0;height:0;border-left:8px solid transparent;border-right:0 solid transparent;border-top:11px solid rgba(8,0,15,.92);bottom:-10px;left:27px;}
+.bubble.tl{top:8px;left:8px;}
+.bubble.tr{top:8px;right:8px;}
+.bubble.bl{bottom:18px;left:8px;}
+.bubble.br{bottom:18px;right:8px;}
+.bubble.bl::before,.bubble.br::before{border-top:0;border-bottom:16px solid var(--purple-bright);bottom:auto;top:-16px;}
+.bubble.bl::after,.bubble.br::after{border-top:0;border-bottom:11px solid rgba(8,0,15,.92);bottom:auto;top:-10px;}
+.bubble.tr::before{left:auto;right:24px;}
+.bubble.tr::after{left:auto;right:27px;}
+.bubble.br::before{left:auto;right:24px;}
+.bubble.br::after{left:auto;right:27px;}
+.bubble.shout{background:rgba(255,138,61,.92);border-color:var(--orange);color:#fff;font-family:var(--display);font-size:clamp(15px,4vw,18px);letter-spacing:1.2px;text-transform:uppercase;}
+.bubble.shout::before{border-top-color:var(--orange);}
+.bubble.shout::after{border-top-color:rgba(255,138,61,.92);}
+.bubble.shout.bl::before,.bubble.shout.br::before{border-bottom-color:var(--orange);}
+.bubble.shout.bl::after,.bubble.shout.br::after{border-bottom-color:rgba(255,138,61,.92);}
+
+.sfx{position:absolute;z-index:7;font-family:var(--display);font-size:clamp(28px,9vw,52px);background:linear-gradient(135deg,#cb66ff,#ff8a3d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;transform:rotate(-12deg);pointer-events:none;line-height:.9;text-transform:uppercase;filter:drop-shadow(0 0 8px rgba(168,85,247,.7));}
+.sfx.tl{top:12px;left:12px;}
+.sfx.tr{top:12px;right:12px;transform:rotate(12deg);}
+.sfx.bl{bottom:18px;left:14px;}
+.sfx.br{bottom:18px;right:14px;transform:rotate(8deg);}
+.sfx.center{top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);}
+
+.panel-art{position:relative;}
+
+/* Member intro panels are tighter */
+.panel.member .frame img{max-width:340px;margin:0 auto;}
+.panel.member .frame{background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(255,138,61,.05));}
+
+.endplate{margin-top:30px;padding:60px 24px 40px;text-align:center;background:linear-gradient(180deg,rgba(168,85,247,.12),rgba(255,138,61,.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;}
+.endplate .stamp{font-family:var(--mono);font-size:11px;letter-spacing:6px;color:var(--purple-bright);text-transform:uppercase;margin-bottom:18px;font-weight:700;}
+.endplate h2{font-family:var(--display);font-weight:400;font-size:clamp(36px,8vw,64px);color:#fff;margin:0 0 14px;line-height:1;text-shadow:0 0 20px rgba(168,85,247,.5);}
+.endplate h2 em{font-style:normal;background:linear-gradient(135deg,#cb66ff,#ff8a3d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.endplate p{font-family:var(--hand);color:var(--text-2);font-size:clamp(15px,3.8vw,18px);max-width:36ch;margin:14px auto 28px;line-height:1.4;}
+.cta-row{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:28px auto 0;max-width:560px;}
+.cta{padding:13px 18px;font-family:var(--display);font-size:13px;letter-spacing:1.5px;text-decoration:none;border:1.5px solid var(--purple);color:#fff;background:var(--panel);transition:all .15s;text-transform:uppercase;}
+.cta:hover{background:var(--purple);box-shadow:0 0 20px rgba(168,85,247,.5);transform:translateY(-2px);}
+.cta.crimson{background:linear-gradient(135deg,var(--purple),var(--orange));border-color:transparent;}
+
+.colophon{padding:30px 22px 46px;text-align:center;background:var(--bg);font-family:var(--mono);font-size:10px;letter-spacing:2.5px;color:var(--text-3);text-transform:uppercase;line-height:2;border-top:1px solid var(--border);}
+.colophon b{color:var(--purple-bright);}
+.colophon a{color:var(--text-3);border-bottom:1px dotted var(--border-2);}
+.colophon a:hover{color:var(--purple-bright);}
+
+.home-btn{position:fixed;bottom:env(safe-area-inset-bottom,16px);left:50%;transform:translateX(-50%);margin-bottom:14px;padding:11px 18px;background:rgba(8,0,15,.92);backdrop-filter:blur(10px);border:1.5px solid var(--purple);color:#fff;font-family:var(--display);font-size:11px;letter-spacing:2px;text-decoration:none;z-index:50;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.home-btn.show{opacity:1;pointer-events:auto;}
+
+@media(max-width:540px){
+  .panel{padding:18px 12px 24px;}
+  .bubble{font-size:13px;padding:7px 10px;max-width:68%;}
+  .panel-num{width:40px;height:40px;font-size:16px;top:-10px;left:-10px;}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="plate">
+  <div>ISSUE <b>№02</b></div>
+  <div class="plate-mid">THE PACK HUNTS · MONAD MAINNET · MMXXVI</div>
+  <a href="index.html">▲ HUB</a>
+</header>
+
+<section class="cover">
+  <div class="eyebrow">★ MONWOLF · ISSUE №02 ★</div>
+  <h1>The Pack <em>Hunts</em></h1>
+  <p class="sub">Five wolves. <b>One moon.</b><br>Zero mercy.</p>
+  <div class="meta-row">
+    <span>ACT I · THE CALL</span>
+    <span>ACT II · THE PACK</span>
+    <span>ACT III · THE RIDE</span>
+  </div>
+</section>
+
+<section class="recap">
+  <div class="recap-label">★ Previously · Issue №01 ★</div>
+  <p>3am. Mile Hi. Bankz found the wolf inside him. The first bear went down before sunrise. The pack would smell him coming.</p>
+  <a href="comic.html">▸ Read Issue №01 — Born A Wolf</a>
+</section>
+
+<section class="act">
+  <div class="ax-tag">— Act One —</div>
+  <h2 class="ax-title">The Call</h2>
+  <p class="ax-line">When the alpha howls, the pack hears. Doesn't matter where they are.</p>
+</section>
+
+<!-- PANEL 1 — Bankz howls -->
+<article class="panel" data-num="01">
+  <div class="caption-box">When the alpha howls, the pack <b>hears.</b> Doesn't matter where they are.</div>
+  <div class="panel-art">
+    <span class="panel-num">1</span>
+    <div class="frame">
+      <span class="tab">The Howl</span>
+      <div class="sfx tr">AWOOOO</div>
+      <img src="comic-art/p2-alpha.jpg" alt="Bankz as alpha boss, full wolf spirit, howling at the moon.">
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 2 — Kevlar -->
+<article class="panel member" data-num="02">
+  <div class="caption-box">Kevlar was in the gym. <b>He left mid-rep.</b></div>
+  <div class="panel-art">
+    <span class="panel-num">2</span>
+    <div class="frame">
+      <span class="tab">@Kevlar</span>
+      <img src="comic-art/p2-kevlar.jpg" alt="Kevlar avatar — responding to the call.">
+      <div class="bubble br">say less.</div>
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 3 — DonJohn -->
+<article class="panel member" data-num="03">
+  <div class="caption-box">DonJohn was at the club. <b>He didn't even close his tab.</b></div>
+  <div class="panel-art">
+    <span class="panel-num">3</span>
+    <div class="frame">
+      <span class="tab">@DonJohn</span>
+      <img src="comic-art/p2-donjohn.jpg" alt="DonJohn avatar — gold chains, ready.">
+      <div class="bubble br">on the way.</div>
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 4 — Green Ranger -->
+<article class="panel member" data-num="04">
+  <div class="caption-box">Green Ranger was on patrol. <b>He went off duty.</b></div>
+  <div class="panel-art">
+    <span class="panel-num">4</span>
+    <div class="frame">
+      <span class="tab">@GreenRanger</span>
+      <img src="comic-art/p2-ranger.jpg" alt="Green Ranger avatar — armored up.">
+      <div class="bubble br">ETA two.</div>
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 5 — Mr T -->
+<article class="panel member" data-num="05">
+  <div class="caption-box">Mr T was eating. <b>He brought the meal.</b></div>
+  <div class="panel-art">
+    <span class="panel-num">5</span>
+    <div class="frame">
+      <span class="tab">@MrT</span>
+      <img src="comic-art/p2-mrt.jpg" alt="Mr T avatar — ready for action.">
+      <div class="bubble br">pity the bears.</div>
+    </div>
+  </div>
+</article>
+
+<section class="act">
+  <div class="ax-tag">— Act Two —</div>
+  <h2 class="ax-title">The Pack</h2>
+  <p class="ax-line">Five wolves under one moon. The math wrote itself.</p>
+</section>
+
+<!-- PANEL 6 — Pack assembles -->
+<article class="panel" data-num="06">
+  <div class="caption-box"><b>Five wolves. One moon.</b> Zero mercy. The math wrote itself.</div>
+  <div class="panel-art">
+    <span class="panel-num">6</span>
+    <div class="frame">
+      <span class="tab">Pack Assembled</span>
+      <div class="sfx bl">AWOOOO</div>
+      <img src="comic-art/p2-moon.jpg" alt="Monwolf in red hoodie with the pack assembled in front of a giant purple moon.">
+      <div class="bubble shout tr">SEND IT.</div>
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 7 — Hellcat ignition -->
+<article class="panel" data-num="07">
+  <div class="caption-box">When the wolves can't catch up — <b>they drive.</b> The Hellcat doesn't ask.</div>
+  <div class="panel-art">
+    <span class="panel-num">7</span>
+    <div class="frame">
+      <span class="tab">Ignition</span>
+      <div class="sfx tr">VRRRRRM</div>
+      <img src="comic-art/p2-hellcat.jpg" alt="Hellcat firing up in the night, purple smoke.">
+    </div>
+  </div>
+</article>
+
+<section class="act">
+  <div class="ax-tag">— Act Three —</div>
+  <h2 class="ax-title">The Ride</h2>
+  <p class="ax-line">Through the storm. Through the streets. Through the bears.</p>
+</section>
+
+<!-- PANEL 8 — Lightning skate -->
+<article class="panel" data-num="08">
+  <div class="caption-box">Through the storm. Through the streets. <b>Through the bears.</b></div>
+  <div class="panel-art">
+    <span class="panel-num">8</span>
+    <div class="frame">
+      <span class="tab">Lightning</span>
+      <div class="sfx tl">SKRRRRT</div>
+      <img src="comic-art/p2-lightning.jpg" alt="Skate alley action, lightning crashing.">
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 9 — Pack charges -->
+<article class="panel" data-num="09">
+  <div class="caption-box">The hunt isn't a race. <b>It's an inevitability.</b></div>
+  <div class="panel-art">
+    <span class="panel-num">9</span>
+    <div class="frame">
+      <span class="tab">Charge</span>
+      <div class="sfx br">THUNDER</div>
+      <img src="comic-art/p2-charge.jpg" alt="Full pack charging at full speed.">
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 10 — Rocket / dawn -->
+<article class="panel" data-num="10">
+  <div class="caption-box" style="background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(255,138,61,.15));border-color:var(--orange);">By sunrise, the bears were a story <b>the survivors didn't want to tell.</b></div>
+  <div class="panel-art">
+    <span class="panel-num">★</span>
+    <div class="frame">
+      <span class="tab">Dawn</span>
+      <img src="comic-art/p2-rocket.jpg" alt="Wolf on a rocket, ascending toward the sky.">
+      <div class="bubble shout tl">THE PACK SEES.</div>
+    </div>
+  </div>
+</article>
+
+<section class="endplate">
+  <div class="stamp">— End of Issue №02 —</div>
+  <h2>The pack hunts.<br><em>The bears run.</em></h2>
+  <p>By sunrise, the bears were a story the survivors didn't want to tell. Issue №03 is in development. The hunt continues.</p>
+  <div class="cta-row">
+    <a class="cta" href="comic.html">◂ Issue №01</a>
+    <a class="cta crimson" href="https://dexscreener.com/monad/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">📈 Chart</a>
+    <a class="cta" href="index.html">▲ Hub</a>
+    <a class="cta" href="arcade.html">🎮 Arcade</a>
+  </div>
+</section>
+
+<footer class="colophon">
+  <div>$MONWOLF · <b>THE PACK HUNTS</b> · CHAPTER ∞ · MMXXVI</div>
+  <div>FOR THE PACK · BY THE PACK</div>
+  <div><a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">X</a> · <a href="index.html">HUB</a> · <a href="arcade.html">ARCADE</a></div>
+</footer>
+
+<a class="home-btn" id="homeBtn" href="index.html">◂ HUB</a>
+
+<script>
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  },{rootMargin:'-12% 0px',threshold:.05});
+  document.querySelectorAll('.panel').forEach(p=>obs.observe(p));
+
+  const hb = document.getElementById('homeBtn');
+  const cover = document.querySelector('.cover');
+  window.addEventListener('scroll',()=>{
+    if(!cover) return;
+    const past = window.scrollY > cover.offsetHeight + 200;
+    hb.classList.toggle('show', past);
+  },{passive:true});
+</script>
+
+</body>
+</html>

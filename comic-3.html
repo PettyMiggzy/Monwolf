@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08000f">
+<title>MONWOLF · Issue №03 — The Comeback</title>
+<meta name="description" content="The bears were a story. The pack rested. Then the chain hummed loud enough to wake him.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MONWOLF · Issue №03 — The Comeback">
+<meta property="og:description" content="He's not back. He never left. Issue №03 of the MONWOLF saga.">
+<meta property="og:image" content="mwf_alpha.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="mwf_alpha.png">
+<link rel="icon" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500;600;700;800;900&family=Permanent+Marker&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:#08000f;color:#fff;overflow-x:hidden;font-family:'Inter',system-ui,sans-serif;}
+:root{
+  --bg:#08000f;
+  --bg-2:#100722;
+  --panel:#160a26;
+  --panel-2:#1c0e30;
+  --border:#3a1f5e;
+  --border-2:#4a2a73;
+  --text:#fff;
+  --text-2:#c8b6e6;
+  --text-3:#7e6d96;
+  --purple:#a855f7;
+  --purple-2:#7c3aed;
+  --purple-bright:#cb66ff;
+  --pink:#ec4899;
+  --orange:#ff8a3d;
+  --gold:#f5c242;
+  --red:#ef4444;
+  --display:'Russo One',sans-serif;
+  --hand:'Permanent Marker',cursive;
+  --mono:'JetBrains Mono',monospace;
+}
+img{display:block;max-width:100%;height:auto;}
+a{color:inherit;text-decoration:none;}
+
+/* scanlines + vignette */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(to bottom,rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:1;mix-blend-mode:overlay;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.7) 100%);pointer-events:none;z-index:2;}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:3;opacity:.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* PLATE */
+.plate{position:relative;padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:2.2px;color:var(--text-3);text-transform:uppercase;background:var(--bg-2);z-index:5;}
+.plate b{color:var(--purple-bright);font-weight:700;}
+.plate-mid{flex:1;text-align:center;display:none;}
+@media(min-width:720px){.plate-mid{display:block;}}
+.plate a{color:var(--text-3);text-decoration:none;}
+.plate a:hover{color:var(--purple-bright);}
+
+/* COVER */
+.cover{position:relative;padding:60px 22px 50px;text-align:center;border-bottom:1px solid var(--border);background:radial-gradient(ellipse at 50% 0%,rgba(168,85,247,.18),transparent 55%),var(--bg);}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:6px;color:var(--purple-bright);text-transform:uppercase;margin-bottom:18px;}
+.cover h1{font-family:var(--display);font-weight:400;font-size:clamp(64px,15vw,140px);line-height:.9;letter-spacing:.01em;margin:0 auto 18px;color:#fff;max-width:14ch;text-shadow:0 0 20px rgba(168,85,247,.5),0 4px 30px rgba(168,85,247,.4);}
+.cover h1 em{font-style:normal;background:linear-gradient(135deg,#cb66ff,#ff8a3d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.cover .sub{font-family:var(--hand);font-size:clamp(18px,4.4vw,26px);color:var(--text-2);max-width:30ch;margin:14px auto 28px;line-height:1.35;letter-spacing:.5px;}
+.cover .bday-tag{display:inline-block;margin:10px auto 0;padding:8px 14px;background:rgba(245,194,66,.12);border:1px solid var(--gold);color:var(--gold);font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;}
+.cover .meta-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;letter-spacing:2px;color:var(--text-2);text-transform:uppercase;margin-top:24px;}
+.cover .meta-row span{padding:6px 12px;background:var(--panel);border:1px solid var(--border-2);}
+
+/* ACT BREAK */
+section.act{padding:50px 24px 36px;text-align:center;background:linear-gradient(180deg,rgba(168,85,247,.08),rgba(255,138,61,.04));border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:18px 0;}
+section.act .ax-tag{font-family:var(--mono);font-size:11px;letter-spacing:5px;color:var(--purple-bright);text-transform:uppercase;margin:0 0 8px;font-weight:700;}
+section.act .ax-title{font-family:var(--display);font-weight:400;font-size:clamp(36px,8vw,60px);color:#fff;margin:0 0 12px;letter-spacing:.02em;text-shadow:0 0 20px rgba(168,85,247,.4);}
+section.act .ax-line{font-family:var(--hand);font-size:clamp(15px,3.8vw,18px);color:var(--text-2);max-width:34ch;margin:0 auto;line-height:1.4;}
+
+/* PANEL */
+.panel{padding:24px 16px 32px;max-width:700px;margin:0 auto;opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease;}
+.panel.in{opacity:1;transform:translateY(0);}
+.panel-num{position:absolute;top:-12px;left:-12px;z-index:10;width:48px;height:48px;background:linear-gradient(135deg,var(--purple),var(--orange));color:#fff;border:3px solid var(--bg);border-radius:50%;font-family:var(--display);font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(168,85,247,.6),3px 3px 0 var(--bg);}
+
+.caption-box{position:relative;margin:0;padding:14px 18px;background:var(--panel);color:var(--text);border:2px solid var(--purple);border-bottom:0;font-family:var(--hand);font-size:clamp(15px,3.9vw,18px);line-height:1.45;letter-spacing:.3px;box-shadow:0 0 20px rgba(168,85,247,.2) inset;}
+.caption-box::after{content:'';position:absolute;left:-2px;right:-2px;bottom:-1px;height:2px;background:var(--purple-bright);box-shadow:0 0 12px var(--purple-bright);}
+.caption-box b{font-family:var(--display);font-weight:400;font-size:1.05em;letter-spacing:1.5px;color:var(--orange);}
+
+.frame{position:relative;background:#000;border:2px solid var(--purple);overflow:hidden;box-shadow:0 0 30px rgba(168,85,247,.25),0 8px 30px rgba(0,0,0,.6);}
+.frame img{width:100%;display:block;}
+
+.tab{position:absolute;top:8px;right:8px;z-index:5;background:linear-gradient(135deg,var(--purple),var(--orange));color:#fff;font-family:var(--display);font-size:13px;letter-spacing:1.5px;padding:5px 10px 4px;text-transform:uppercase;border:1.5px solid var(--bg);box-shadow:0 0 10px rgba(168,85,247,.5);transform:rotate(3deg);}
+
+.bubble{position:absolute;z-index:6;background:rgba(8,0,15,.92);color:#fff;border:2px solid var(--purple-bright);border-radius:14px;padding:8px 12px;font-family:var(--hand);font-size:clamp(13px,3.2vw,15px);line-height:1.25;letter-spacing:.3px;box-shadow:0 0 14px rgba(203,102,255,.45);max-width:62%;backdrop-filter:blur(4px);}
+.bubble::before,.bubble::after{content:'';position:absolute;}
+.bubble::before{width:0;height:0;border-left:12px solid transparent;border-right:0 solid transparent;border-top:16px solid var(--purple-bright);bottom:-16px;left:24px;}
+.bubble::after{width:0;height:0;border-left:8px solid transparent;border-right:0 solid transparent;border-top:11px solid rgba(8,0,15,.92);bottom:-10px;left:27px;}
+.bubble.tl{top:8px;left:8px;}
+.bubble.tr{top:8px;right:8px;}
+.bubble.bl{bottom:18px;left:8px;}
+.bubble.br{bottom:18px;right:8px;}
+.bubble.bl::before,.bubble.br::before{border-top:0;border-bottom:16px solid var(--purple-bright);bottom:auto;top:-16px;}
+.bubble.bl::after,.bubble.br::after{border-top:0;border-bottom:11px solid rgba(8,0,15,.92);bottom:auto;top:-10px;}
+.bubble.tr::before{left:auto;right:24px;}
+.bubble.tr::after{left:auto;right:27px;}
+.bubble.br::before{left:auto;right:24px;}
+.bubble.br::after{left:auto;right:27px;}
+.bubble.shout{background:rgba(255,138,61,.92);border-color:var(--orange);color:#fff;font-family:var(--display);font-size:clamp(15px,4vw,18px);letter-spacing:1.2px;text-transform:uppercase;box-shadow:0 0 18px rgba(255,138,61,.5);}
+.bubble.shout::before{border-top-color:var(--orange);}
+.bubble.shout::after{border-top-color:rgba(255,138,61,.92);}
+.bubble.shout.bl::before,.bubble.shout.br::before{border-bottom-color:var(--orange);}
+.bubble.shout.bl::after,.bubble.shout.br::after{border-bottom-color:rgba(255,138,61,.92);}
+
+/* SFX */
+.sfx{position:absolute;z-index:7;font-family:var(--display);font-size:clamp(28px,9vw,52px);background:linear-gradient(135deg,#cb66ff,#ff8a3d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;text-shadow:0 0 24px rgba(203,102,255,.6);transform:rotate(-12deg);pointer-events:none;line-height:.9;text-transform:uppercase;filter:drop-shadow(0 0 8px rgba(168,85,247,.7));}
+.sfx.tl{top:12px;left:12px;}
+.sfx.tr{top:12px;right:12px;transform:rotate(12deg);}
+.sfx.bl{bottom:18px;left:14px;}
+.sfx.br{bottom:18px;right:14px;transform:rotate(8deg);}
+.sfx.center{top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);}
+
+.panel-art{position:relative;}
+
+/* ENDPLATE */
+.endplate{margin-top:30px;padding:60px 24px 40px;text-align:center;background:linear-gradient(180deg,rgba(168,85,247,.12),rgba(255,138,61,.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;}
+.endplate .stamp{font-family:var(--mono);font-size:11px;letter-spacing:6px;color:var(--purple-bright);text-transform:uppercase;margin-bottom:18px;font-weight:700;}
+.endplate h2{font-family:var(--display);font-weight:400;font-size:clamp(38px,8vw,68px);color:#fff;margin:0 0 14px;line-height:1;text-shadow:0 0 20px rgba(168,85,247,.5);}
+.endplate h2 em{font-style:normal;background:linear-gradient(135deg,#cb66ff,#ff8a3d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.endplate p{font-family:var(--hand);color:var(--text-2);font-size:clamp(15px,3.8vw,18px);max-width:36ch;margin:14px auto 28px;line-height:1.4;}
+.cta-row{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:28px auto 0;max-width:560px;}
+.cta{padding:13px 18px;font-family:var(--display);font-size:13px;letter-spacing:1.5px;text-decoration:none;border:1.5px solid var(--purple);color:#fff;background:var(--panel);transition:all .15s;text-transform:uppercase;}
+.cta:hover{background:var(--purple);color:#fff;box-shadow:0 0 20px rgba(168,85,247,.5);transform:translateY(-2px);}
+.cta.crimson{background:linear-gradient(135deg,var(--purple),var(--orange));border-color:transparent;}
+.cta.gold{background:rgba(245,194,66,.14);border-color:var(--gold);color:var(--gold);}
+
+.colophon{padding:30px 22px 46px;text-align:center;background:var(--bg);font-family:var(--mono);font-size:10px;letter-spacing:2.5px;color:var(--text-3);text-transform:uppercase;line-height:2;border-top:1px solid var(--border);}
+.colophon b{color:var(--purple-bright);}
+.colophon a{color:var(--text-3);text-decoration:none;border-bottom:1px dotted var(--border-2);}
+.colophon a:hover{color:var(--purple-bright);}
+
+.home-btn{position:fixed;bottom:env(safe-area-inset-bottom,16px);left:50%;transform:translateX(-50%);margin-bottom:14px;padding:11px 18px;background:rgba(8,0,15,.92);backdrop-filter:blur(10px);border:1.5px solid var(--purple);color:#fff;font-family:var(--display);font-size:11px;letter-spacing:2px;text-decoration:none;z-index:50;opacity:0;pointer-events:none;transition:opacity .3s ease;box-shadow:0 0 15px rgba(168,85,247,.4);}
+.home-btn.show{opacity:1;pointer-events:auto;}
+
+@media(max-width:540px){
+  .panel{padding:18px 12px 24px;}
+  .bubble{font-size:13px;padding:7px 10px;max-width:68%;}
+  .panel-num{width:40px;height:40px;font-size:16px;top:-10px;left:-10px;}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="plate">
+  <div>ISSUE <b>№03</b></div>
+  <div class="plate-mid">THE COMEBACK · MONAD MAINNET · MMXXVI</div>
+  <a href="index.html">▲ HUB</a>
+</header>
+
+<section class="cover">
+  <div class="eyebrow">★ MONWOLF · A GRAPHIC SAGA · ISSUE №03 ★</div>
+  <h1>The <em>Comeback</em></h1>
+  <p class="sub">The bears were a story.<br>The pack rested.<br><b style="color:var(--orange);">Then the chain hummed.</b></p>
+  <div class="bday-tag">★ CHAPTER ∞ · BUILT FOR THE PACK ★</div>
+  <div class="meta-row">
+    <span>ACT I · THE QUIET</span>
+    <span>ACT II · THE SIGNAL</span>
+    <span>ACT III · THE RECLAIM</span>
+  </div>
+</section>
+
+<section class="act">
+  <div class="ax-tag">— Act One —</div>
+  <h2 class="ax-title">The Quiet</h2>
+  <p class="ax-line">After the bears burned, the streets went quiet. He let them rest.</p>
+</section>
+
+<!-- PANEL 1 -->
+<article class="panel" data-num="01">
+  <div class="caption-box">After the bears burned, the chain went quiet. <b>He let it.</b> Even alphas need a minute.</div>
+  <div class="panel-art">
+    <span class="panel-num">1</span>
+    <div class="frame">
+      <span class="tab">The Quiet</span>
+      <div class="sfx br" style="font-size:clamp(20px,5vw,32px);">…</div>
+      <img src="mwf_standing.png" alt="MonWolf standing calm post-victory, pointing forward in his hoodie and chain pants." loading="eager">
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 2 -->
+<article class="panel" data-num="02">
+  <div class="caption-box">Some chains thought he was finished. <b>Old. Tired.</b> Out of teeth.</div>
+  <div class="panel-art">
+    <span class="panel-num">2</span>
+    <div class="frame">
+      <span class="tab">The Lie</span>
+      <img src="mwf_alpha.png" alt="MonWolf running under the moon, fanged grin, glasses glowing.">
+      <div class="bubble br">…wrong.</div>
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 3 -->
+<article class="panel" data-num="03">
+  <div class="caption-box">He wasn't done. <b>He was charging.</b> The diamond on his chest never went dark.</div>
+  <div class="panel-art">
+    <span class="panel-num">3</span>
+    <div class="frame">
+      <span class="tab">The Pulse</span>
+      <div class="sfx tr">hummmm</div>
+      <img src="mwf_powerup.png" alt="MonWolf with the glowing diamond on his chest, full energy.">
+    </div>
+  </div>
+</article>
+
+<section class="act">
+  <div class="ax-tag">— Act Two —</div>
+  <h2 class="ax-title">The Signal</h2>
+  <p class="ax-line">The chain hums before it howls. Old wolves know the sound.</p>
+</section>
+
+<!-- PANEL 4 -->
+<article class="panel" data-num="04">
+  <div class="caption-box">Then the chain hummed louder. <b>Loud enough to crack stone.</b> He moved before he thought.</div>
+  <div class="panel-art">
+    <span class="panel-num">4</span>
+    <div class="frame">
+      <span class="tab">The Wake</span>
+      <img src="mwf_leap.png" alt="MonWolf airborne in a punk leap, hoodie streaming.">
+      <div class="bubble tl">*tch.*</div>
+      <div class="bubble br">go.</div>
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 5 -->
+<article class="panel" data-num="05">
+  <div class="caption-box">By night he was back on the streets. <b>They remembered his step</b> before they saw the eyes.</div>
+  <div class="panel-art">
+    <span class="panel-num">5</span>
+    <div class="frame">
+      <span class="tab">The Run</span>
+      <div class="sfx tl">TAP TAP</div>
+      <img src="mwf_run.png" alt="MonWolf in full sprint through Monad streets.">
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 6 -->
+<article class="panel" data-num="06">
+  <div class="caption-box">Hellcat back on the strip. <b>Heads turned. Engines stalled.</b> Even the lights forgot to change.</div>
+  <div class="panel-art">
+    <span class="panel-num">6</span>
+    <div class="frame">
+      <span class="tab">The Hellcat</span>
+      <div class="sfx center" style="color:#fff;-webkit-text-fill-color:#fff;background:none;text-shadow:4px 4px 0 var(--purple),0 0 30px var(--orange);">VROOOM</div>
+      <img src="mwf_hellcat_side.png" alt="MonWolf grinning behind the wheel of his purple Hellcat.">
+    </div>
+  </div>
+</article>
+
+<section class="act">
+  <div class="ax-tag">— Act Three —</div>
+  <h2 class="ax-title">The Reclaim</h2>
+  <p class="ax-line">A wolf doesn't come back. He shows up. Loud.</p>
+</section>
+
+<!-- PANEL 7 -->
+<article class="panel" data-num="07">
+  <div class="caption-box">The pack felt him before they saw him. <b>The water shook first.</b> Then everything else.</div>
+  <div class="panel-art">
+    <span class="panel-num">7</span>
+    <div class="frame">
+      <span class="tab">The Pulse</span>
+      <img src="mwf_splash.png" alt="MonWolf crouched on a purple surge of energy, water exploding around him.">
+      <div class="bubble br">he's back.</div>
+    </div>
+  </div>
+</article>
+
+<!-- PANEL 8 — FINAL · THE HOWL -->
+<article class="panel" data-num="08">
+  <div class="caption-box" style="background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(255,138,61,.15));border-color:var(--orange);">He's not back. <b>He never left.</b> The moon got the memo first.</div>
+  <div class="panel-art">
+    <span class="panel-num">★</span>
+    <div class="frame">
+      <span class="tab">The Howl</span>
+      <div class="sfx tr" style="font-size:clamp(28px,7vw,52px);">AWOOOOOOOO</div>
+      <img src="mwf_alpha.png" alt="MonWolf charging out of the moon, fangs out, glasses blazing — the howl.">
+      <div class="bubble shout tl">FIND YOUR<br>RANK.</div>
+    </div>
+  </div>
+</article>
+
+<section class="endplate">
+  <div class="stamp">— End of Issue №03 —</div>
+  <h2>He never left.<br><em>Find your rank.</em></h2>
+  <p>The pack is bigger than it was. The chain is louder than it was. Connect your wallet on the hub — your rank reveals itself. ALPHA, BETA, SCOUT, PACK, or CUB. The moon already knows which one.</p>
+  <div class="cta-row">
+    <a class="cta crimson" href="index.html#wallet">▸ Find Your Rank</a>
+    <a class="cta" href="comic-2.html">◂ Issue №02</a>
+    <a class="cta" href="comic.html">◂ Issue №01</a>
+    <a class="cta gold" href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">🐺 X / @MonWolfMonad</a>
+    <a class="cta" href="arcade.html">🎮 Arcade</a>
+  </div>
+</section>
+
+<footer class="colophon">
+  <div>$MONWOLF · <b>THE COMEBACK</b> · CHAPTER ∞ · MMXXVI</div>
+  <div>FRAMED FOR THE PACK · BY THE PACK</div>
+  <div><a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">X</a> · <a href="index.html">HUB</a> · <a href="arcade.html">ARCADE</a></div>
+</footer>
+
+<a class="home-btn" id="homeBtn" href="index.html">◂ HUB</a>
+
+<!-- AUDIO NARRATION CONTROL -->
+<style>
+  .audio-btn{position:fixed;top:14px;right:14px;z-index:200;background:linear-gradient(135deg,var(--purple),var(--orange));color:#fff;border:none;font-family:var(--display);font-size:11px;letter-spacing:1.6px;padding:11px 14px;border-radius:24px;cursor:pointer;box-shadow:0 6px 22px rgba(168,85,247,.45);display:flex;align-items:center;gap:8px;text-transform:uppercase;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+  .audio-btn:active{transform:scale(.95);}
+  .audio-btn .dot{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 8px #fff;}
+  .audio-btn.off .dot{background:#5a4470;box-shadow:none;}
+  .audio-btn .lbl{font-weight:700;}
+  .cover-narrate{margin-top:18px;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--purple),var(--orange));color:#fff;font-family:var(--display);font-size:14px;letter-spacing:2px;padding:14px 22px;border:none;border-radius:32px;cursor:pointer;text-transform:uppercase;box-shadow:0 10px 28px rgba(168,85,247,.4);transition:all .15s;}
+  .cover-narrate:active{transform:scale(.97);}
+  .cover-narrate .play-tri{display:inline-block;width:0;height:0;border-style:solid;border-width:7px 0 7px 11px;border-color:transparent transparent transparent #fff;}
+  .panel.speaking .frame{box-shadow:0 0 0 2px var(--orange),0 24px 60px rgba(255,138,61,.35);transition:box-shadow .35s;}
+</style>
+
+<button class="audio-btn off" id="audioBtn" aria-label="Toggle narration">
+  <span class="dot"></span><span class="lbl" id="audioLbl">MUTE</span>
+</button>
+
+<script>
+  /* ===== fade-in observer (existing) ===== */
+  const fadeObs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); fadeObs.unobserve(e.target); }
+    });
+  },{rootMargin:'-12% 0px',threshold:.05});
+  document.querySelectorAll('.panel').forEach(p=>fadeObs.observe(p));
+
+  /* ===== hub button reveal (existing) ===== */
+  const hb = document.getElementById('homeBtn');
+  const cover = document.querySelector('.cover');
+  window.addEventListener('scroll',()=>{
+    if(!cover) return;
+    const past = window.scrollY > cover.offsetHeight + 200;
+    hb.classList.toggle('show', past);
+  },{passive:true});
+
+  /* ===== AUDIO NARRATION + HOWL ===== */
+  const synth = window.speechSynthesis;
+  const audioBtn = document.getElementById('audioBtn');
+  const audioLbl = document.getElementById('audioLbl');
+  let audioOn = false;
+  let voices = [];
+  let narratedSet = new Set();
+  let audioCtx = null;
+
+  function loadVoices(){
+    voices = synth ? synth.getVoices() : [];
+  }
+  if (synth) {
+    loadVoices();
+    synth.addEventListener && synth.addEventListener('voiceschanged', loadVoices);
+  }
+
+  function pickVoice(){
+    if (!voices.length) loadVoices();
+    // Prefer deep / male English voices for that gravelly narrator feel
+    const preferred = ['Daniel','Alex','Fred','David','Aaron','Arthur','Microsoft David','Google UK English Male','Google US English'];
+    for (const name of preferred) {
+      const v = voices.find(x => x.name && x.name.includes(name));
+      if (v) return v;
+    }
+    return voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
+  }
+
+  function stripText(html){
+    return html.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  }
+
+  function narrate(text){
+    if (!audioOn || !synth) return Promise.resolve();
+    return new Promise(resolve=>{
+      synth.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      const v = pickVoice();
+      if (v) u.voice = v;
+      u.rate = 0.92;
+      u.pitch = 0.7;
+      u.volume = 1;
+      u.onend = resolve;
+      u.onerror = resolve;
+      synth.speak(u);
+    });
+  }
+
+  /* Synthesized wolf howl — Web Audio API, no file dependency */
+  function playHowl(){
+    if (!audioOn) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const t0 = audioCtx.currentTime;
+      const dur = 3.6;
+
+      // Two detuned oscillators stacked = beefier howl
+      const o1 = audioCtx.createOscillator();
+      const o2 = audioCtx.createOscillator();
+      o1.type = 'sawtooth';
+      o2.type = 'triangle';
+
+      // Pitch sweep: starts low → rises to a sustained peak → falls
+      const sweep = (osc, base) => {
+        osc.frequency.setValueAtTime(base * 0.6, t0);
+        osc.frequency.exponentialRampToValueAtTime(base * 1.4, t0 + 0.55);
+        osc.frequency.exponentialRampToValueAtTime(base * 1.55, t0 + 1.4);
+        osc.frequency.linearRampToValueAtTime(base * 1.45, t0 + 2.3);
+        osc.frequency.exponentialRampToValueAtTime(base * 0.5, t0 + dur);
+      };
+      sweep(o1, 230);
+      sweep(o2, 345); // perfect-fifth-ish above for harmonic body
+      o2.detune.value = -8;
+
+      // Bandpass filter to give it animal-throat character
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(700, t0);
+      filter.frequency.linearRampToValueAtTime(1100, t0 + 1.2);
+      filter.frequency.linearRampToValueAtTime(600, t0 + dur);
+      filter.Q.value = 3;
+
+      // Amplitude envelope — quick attack, long body, fade
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(0.34, t0 + 0.18);
+      g.gain.linearRampToValueAtTime(0.38, t0 + 1.3);
+      g.gain.linearRampToValueAtTime(0.28, t0 + 2.4);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+
+      // Tiny noise breath layer
+      const noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate * dur, audioCtx.sampleRate);
+      const nd = noiseBuf.getChannelData(0);
+      for (let i = 0; i < nd.length; i++) nd[i] = (Math.random()*2-1) * 0.5;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = noiseBuf;
+      const noiseFilter = audioCtx.createBiquadFilter();
+      noiseFilter.type = 'bandpass';
+      noiseFilter.frequency.value = 1800;
+      noiseFilter.Q.value = 1.2;
+      const noiseG = audioCtx.createGain();
+      noiseG.gain.setValueAtTime(0, t0);
+      noiseG.gain.linearRampToValueAtTime(0.06, t0 + 0.3);
+      noiseG.gain.linearRampToValueAtTime(0.04, t0 + 2.0);
+      noiseG.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+
+      o1.connect(filter);
+      o2.connect(filter);
+      filter.connect(g);
+      g.connect(audioCtx.destination);
+
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseG);
+      noiseG.connect(audioCtx.destination);
+
+      o1.start(t0); o2.start(t0); noise.start(t0);
+      o1.stop(t0 + dur); o2.stop(t0 + dur); noise.stop(t0 + dur);
+    } catch(e) { /* silent fail */ }
+  }
+
+  /* As panels enter view, narrate caption. Final panel = narrate then howl. */
+  function speakPanel(panel){
+    if (!audioOn) return;
+    const num = panel.getAttribute('data-num');
+    if (narratedSet.has(num)) return;
+    narratedSet.add(num);
+    const capEl = panel.querySelector('.caption-box');
+    if (!capEl) return;
+    const text = stripText(capEl.innerHTML);
+    panel.classList.add('speaking');
+    narrate(text).then(()=>{
+      panel.classList.remove('speaking');
+      if (num === '08') {
+        setTimeout(playHowl, 260);
+      }
+    });
+  }
+
+  const speakObs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if (e.isIntersecting && audioOn) speakPanel(e.target);
+    });
+  },{rootMargin:'-30% 0px -30% 0px', threshold:.01});
+  document.querySelectorAll('.panel').forEach(p=>speakObs.observe(p));
+
+  /* Audio toggle button */
+  audioBtn.addEventListener('click', ()=>{
+    audioOn = !audioOn;
+    audioBtn.classList.toggle('off', !audioOn);
+    audioLbl.textContent = audioOn ? 'AUDIO ON' : 'MUTE';
+    if (!audioOn) {
+      synth && synth.cancel();
+      narratedSet.clear();
+    } else {
+      // Prime the audio context on user gesture (mobile requirement)
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      // Re-narrate any currently visible panel
+      const visible = [...document.querySelectorAll('.panel')].find(p=>{
+        const r = p.getBoundingClientRect();
+        return r.top < window.innerHeight*0.7 && r.bottom > window.innerHeight*0.3;
+      });
+      if (visible) { narratedSet.delete(visible.getAttribute('data-num')); speakPanel(visible); }
+    }
+  });
+
+  /* "Play from top" CTA on cover */
+  const coverEl = document.querySelector('.cover');
+  if (coverEl) {
+    const btn = document.createElement('button');
+    btn.className = 'cover-narrate';
+    btn.innerHTML = '<span class="play-tri"></span> Play With Audio';
+    btn.addEventListener('click', ()=>{
+      if (!audioOn) audioBtn.click();
+      window.scrollTo({ top: coverEl.offsetHeight + 40, behavior:'smooth' });
+    });
+    coverEl.appendChild(btn);
+  }
+
+  /* Pause speech when tab is hidden */
+  document.addEventListener('visibilitychange', ()=>{
+    if (document.hidden && synth) synth.cancel();
+  });
+</script>
+
+</body>
+</html>

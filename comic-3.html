@@ -86,8 +86,68 @@ section.act .ax-line{font-family:var(--hand);font-size:clamp(15px,3.8vw,18px);co
 .caption-box::after{content:'';position:absolute;left:-2px;right:-2px;bottom:-1px;height:2px;background:var(--purple-bright);box-shadow:0 0 12px var(--purple-bright);}
 .caption-box b{font-family:var(--display);font-weight:400;font-size:1.05em;letter-spacing:1.5px;color:var(--orange);}
 
-.frame{position:relative;background:#000;border:2px solid var(--purple);overflow:hidden;box-shadow:0 0 30px rgba(168,85,247,.25),0 8px 30px rgba(0,0,0,.6);}
-.frame img{width:100%;display:block;}
+/* === COMIC FRAME — base + atmospheric per-panel backgrounds + halftone overlay === */
+.frame{position:relative;background:#000;border:3px solid var(--purple);overflow:hidden;box-shadow:0 0 30px rgba(168,85,247,.25),0 8px 30px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.06);min-height:340px;display:flex;align-items:center;justify-content:center;}
+.frame img{position:relative;z-index:3;width:auto;max-width:88%;max-height:88%;height:auto;display:block;filter:drop-shadow(0 12px 30px rgba(0,0,0,.7));}
+/* halftone dots — the classic comic texture */
+.frame::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;background-image:radial-gradient(circle, rgba(255,255,255,.18) 1.2px, transparent 1.6px);background-size:7px 7px;mix-blend-mode:overlay;opacity:.55;}
+/* paper-grain inside frame */
+.frame::before{content:"";position:absolute;inset:0;z-index:1;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/></svg>");opacity:.12;mix-blend-mode:overlay;}
+
+/* PANEL ATMOSPHERES — each panel gets its own scene */
+.panel[data-num="01"] .frame{background:
+  radial-gradient(ellipse at 50% 120%, rgba(168,85,247,.5), transparent 60%),
+  radial-gradient(ellipse at 20% 0%, rgba(255,138,61,.18), transparent 50%),
+  linear-gradient(180deg, #1a0830 0%, #08000f 100%);}
+.panel[data-num="01"] .frame::before{background-image:
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><g fill='%23120a26'><rect x='40' y='220' width='28' height='160'/><rect x='80' y='180' width='40' height='200'/><rect x='130' y='250' width='32' height='130'/><rect x='180' y='200' width='44' height='180'/><rect x='240' y='240' width='28' height='140'/><rect x='290' y='160' width='52' height='220'/><rect x='360' y='230' width='34' height='150'/><rect x='410' y='200' width='40' height='180'/><rect x='470' y='250' width='30' height='130'/><rect x='520' y='220' width='42' height='160'/></g></svg>");
+  background-size:cover;background-position:bottom;opacity:.6;mix-blend-mode:normal;}
+
+.panel[data-num="02"] .frame{background:
+  radial-gradient(circle at 70% 35%, rgba(255,235,180,.4), rgba(168,85,247,.2) 30%, transparent 60%),
+  radial-gradient(ellipse at 50% 100%, rgba(91,33,182,.55), transparent 70%),
+  linear-gradient(180deg, #0a0420 0%, #1a0830 100%);}
+.panel[data-num="02"] .frame::before{background-image:
+  radial-gradient(circle at 70% 35%, rgba(255,235,180,.4), transparent 18%);
+  opacity:1;mix-blend-mode:normal;}
+
+.panel[data-num="03"] .frame{background:
+  radial-gradient(circle at 50% 50%, rgba(203,102,255,.6), rgba(91,33,182,.3) 40%, #08000f 80%);}
+.panel[data-num="03"] .frame::before{background:
+  repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,138,61,.04) 0deg 10deg, transparent 10deg 20deg);
+  opacity:.7;mix-blend-mode:screen;}
+
+.panel[data-num="04"] .frame{background:
+  linear-gradient(105deg, rgba(255,138,61,.25) 0%, rgba(168,85,247,.35) 50%, #08000f 100%);}
+.panel[data-num="04"] .frame::before{background-image:
+  repeating-linear-gradient(105deg, transparent 0px, transparent 18px, rgba(255,138,61,.35) 18px, rgba(255,138,61,.35) 22px);
+  opacity:.65;mix-blend-mode:screen;}
+
+.panel[data-num="05"] .frame{background:
+  radial-gradient(ellipse at 50% 110%, rgba(203,102,255,.5), transparent 65%),
+  linear-gradient(180deg, #0a0420 0%, #160a30 50%, #08000f 100%);}
+.panel[data-num="05"] .frame::before{background-image:
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><g stroke='%23cb66ff' stroke-width='1.5' fill='none' opacity='.55'><path d='M0 320 L600 280'/><path d='M0 340 L600 290'/><path d='M0 360 L600 305'/></g><g fill='%23120a26'><rect x='50' y='160' width='36' height='200'/><rect x='110' y='130' width='44' height='230'/><rect x='180' y='180' width='40' height='180'/><rect x='250' y='150' width='48' height='210'/><rect x='340' y='170' width='38' height='190'/><rect x='400' y='140' width='52' height='220'/><rect x='480' y='180' width='40' height='180'/><rect x='540' y='160' width='36' height='200'/></g></svg>");
+  background-size:cover;background-position:bottom;opacity:.7;mix-blend-mode:normal;}
+
+.panel[data-num="06"] .frame{background:
+  radial-gradient(ellipse at 50% 100%, rgba(255,138,61,.4), transparent 60%),
+  linear-gradient(180deg, #1a0830 0%, #0a0420 100%);}
+.panel[data-num="06"] .frame::before{background-image:
+  repeating-linear-gradient(90deg, rgba(255,138,61,.0) 0px, rgba(255,138,61,.0) 36px, rgba(255,138,61,.25) 36px, rgba(255,138,61,.25) 40px);
+  opacity:.55;mix-blend-mode:screen;}
+
+.panel[data-num="07"] .frame{background:
+  radial-gradient(circle at 50% 60%, rgba(203,102,255,.65), rgba(91,33,182,.3) 40%, #08000f 85%);}
+.panel[data-num="07"] .frame::before{background:
+  radial-gradient(circle at 50% 60%, transparent 18%, rgba(255,255,255,.08) 22%, transparent 26%, rgba(255,255,255,.06) 32%, transparent 36%, rgba(255,255,255,.04) 44%, transparent 50%);
+  opacity:.9;mix-blend-mode:screen;}
+
+.panel[data-num="08"] .frame{background:
+  radial-gradient(circle at 50% 30%, rgba(255,235,180,.4), rgba(203,102,255,.4) 25%, rgba(91,33,182,.4) 50%, #08000f 90%);min-height:440px;}
+.panel[data-num="08"] .frame::before{background:
+  conic-gradient(from 0deg at 50% 50%, rgba(255,235,180,.25) 0deg, transparent 12deg, transparent 18deg, rgba(255,235,180,.18) 30deg, transparent 36deg, transparent 60deg, rgba(255,138,61,.2) 72deg, transparent 78deg, transparent 90deg, rgba(255,235,180,.18) 102deg, transparent 108deg, transparent 150deg, rgba(255,138,61,.2) 162deg, transparent 168deg, transparent 360deg);
+  opacity:.5;mix-blend-mode:screen;}
 
 .tab{position:absolute;top:8px;right:8px;z-index:5;background:linear-gradient(135deg,var(--purple),var(--orange));color:#fff;font-family:var(--display);font-size:13px;letter-spacing:1.5px;padding:5px 10px 4px;text-transform:uppercase;border:1.5px solid var(--bg);box-shadow:0 0 10px rgba(168,85,247,.5);transform:rotate(3deg);}
 

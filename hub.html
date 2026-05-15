@@ -189,6 +189,85 @@ a{color:inherit;text-decoration:none;}
   font-weight:700;letter-spacing:.18em;padding:6px 14px;border-radius:99px;
   background:rgba(245,194,66,.15);color:var(--gold);border:1px solid rgba(245,194,66,.4);}
 
+/* PACK SCAN / STALK controls */
+.scan-controls{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
+.scan-input{
+  flex:1;min-width:200px;padding:11px 14px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff;
+  background:rgba(22,10,38,.6);border:1.5px solid var(--border);border-radius:10px;
+  outline:none;transition:.15s;
+}
+.scan-input:focus{border-color:var(--purple);background:rgba(22,10,38,.9);
+  box-shadow:0 0 0 3px rgba(168,85,247,.18);}
+.scan-input::placeholder{color:var(--text-3);}
+.scan-input-sm{max-width:160px;flex:0;}
+.scan-btn{padding:11px 18px;font-family:'Bungee',cursive;font-size:11px;letter-spacing:1.2px;
+  border-radius:10px;background:var(--grad);color:#fff;cursor:pointer;
+  transition:.15s;border:none;}
+.scan-btn:hover{transform:translateY(-1px);box-shadow:0 10px 20px -6px rgba(168,85,247,.5);}
+.scan-btn.ghost{background:rgba(168,85,247,.1);border:1px solid var(--border);color:var(--text-2);}
+.scan-btn.ghost:hover{background:rgba(168,85,247,.18);color:#fff;}
+
+/* Pack-scan result list */
+.scan-summary{padding:18px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(245,194,66,.08),rgba(168,85,247,.05));
+  border:1.5px solid rgba(245,194,66,.3);margin-bottom:14px;display:flex;
+  gap:18px;flex-wrap:wrap;align-items:center;}
+.scan-summary-stat{display:flex;flex-direction:column;}
+.scan-summary-stat .l{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;
+  color:var(--text-3);text-transform:uppercase;margin-bottom:2px;}
+.scan-summary-stat .v{font-family:'Bungee',cursive;font-size:18px;}
+.scan-summary-stat .v.green{color:var(--green);}
+.scan-summary-stat .v.red{color:var(--red);}
+.scan-summary-stat .v.gold{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;}
+
+.pos-list{display:grid;gap:8px;}
+.pos-row{display:grid;grid-template-columns:42px 1fr auto auto;gap:14px;
+  padding:12px 14px;border-radius:12px;background:var(--panel);
+  border:1px solid var(--border);align-items:center;transition:.15s;}
+.pos-row:hover{border-color:var(--purple);transform:translateX(2px);}
+.pos-row .img{width:42px;height:42px;border-radius:50%;background:var(--grad-cyber);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  font-family:'Bungee',cursive;font-size:13px;color:#fff;}
+.pos-row .img img{width:100%;height:100%;object-fit:cover;}
+.pos-row .meta-l .sym{font-family:'Bungee',cursive;font-size:13px;letter-spacing:1px;}
+.pos-row .meta-l .name{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);}
+.pos-row .bal{text-align:right;}
+.pos-row .bal .amt{font-family:'Bungee',cursive;font-size:13px;}
+.pos-row .bal .usd{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);}
+.pos-row .pnl{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;min-width:80px;}
+.pos-row .pnl.up{color:var(--green);} .pos-row .pnl.down{color:var(--red);}
+.pos-row .pnl .l{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);font-weight:600;letter-spacing:.08em;}
+
+/* STALK — per-wallet card */
+.stalk-card{padding:16px;border-radius:14px;background:var(--panel);border:1.5px solid var(--border);
+  display:flex;flex-direction:column;gap:10px;}
+.stalk-card:hover{border-color:var(--purple);}
+.stalk-card-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stalk-card-h .tag{font-family:'Bungee',cursive;font-size:14px;letter-spacing:1px;}
+.stalk-card-h .addr{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);}
+.stalk-card-h .total{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);
+  margin-left:auto;font-weight:700;}
+.stalk-card-h .remove{font-size:14px;color:var(--text-3);cursor:pointer;line-height:1;}
+.stalk-card-h .remove:hover{color:var(--red);}
+.stalk-top{display:flex;gap:8px;flex-wrap:wrap;}
+.stalk-pill{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:99px;
+  background:rgba(168,85,247,.08);border:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);}
+.stalk-pill img{width:16px;height:16px;border-radius:50%;}
+.stalk-pill .v{color:var(--gold);font-weight:700;}
+
+/* Bonding progress bar (for NEW PUPS cards) */
+.bond-bar{margin-top:8px;height:6px;border-radius:99px;background:rgba(168,85,247,.15);overflow:hidden;}
+.bond-bar-fill{height:100%;background:var(--grad-gold);transition:width .6s ease;}
+.bond-bar-lbl{display:flex;justify-content:space-between;margin-top:4px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.08em;}
+.bond-bar-lbl .pct{color:var(--gold);font-weight:700;}
+.market-badge{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;
+  padding:2px 6px;border-radius:99px;letter-spacing:.1em;margin-left:6px;
+  background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.3);}
+.market-badge.grad{background:rgba(245,194,66,.12);color:var(--gold);border-color:rgba(245,194,66,.4);}
+
 /* PACK CARD (floating, when connected) */
 .pack-card{position:fixed;bottom:20px;right:20px;z-index:90;width:280px;padding:16px;border-radius:18px;
   background:linear-gradient(135deg,var(--panel) 0%,var(--panel-2) 100%);border:1.5px solid var(--gold);
@@ -326,70 +405,68 @@ a{color:inherit;text-decoration:none;}
     <div class="panel-h">
       <div class="panel-h-l">
         <h2>🌑 NEW PUPS</h2>
-        <div class="panel-sub">fresh tokens bonding on nad.fun · pre-grad curves + graduated DEX pairs</div>
+        <div class="panel-sub" id="pupsSub">freshest tokens bonding on nad.fun · live from api.nad.fun · click NEW / MCAP / ACTIVE to re-sort</div>
       </div>
       <div class="panel-h-r">
-        <button class="chip active">🆕 NEW</button>
-        <button class="chip">📈 MCAP</button>
-        <button class="chip">🔥 ABOUT TO GRAD</button>
+        <button class="chip active" data-pups-sort="creation_time">🆕 NEW</button>
+        <button class="chip" data-pups-sort="market_cap">📈 MCAP</button>
+        <button class="chip" data-pups-sort="latest_trade">🔥 ACTIVE</button>
+        <button class="chip" id="pupsRefresh">↺ REFRESH</button>
       </div>
     </div>
-    <div class="soon-panel">
-      <div class="icon">🌑</div>
-      <h3>NEW PUPS — wiring in next push</h3>
-      <p>Live nad.fun feed → pre-grad bonding curves + graduated DEX pairs · sort by new / mcap / about-to-grad · same pattern as Chogi hub launches feed.</p>
-      <span class="badge">SHIPS IN SESSION 2</span>
-    </div>
+    <div class="token-grid" id="pupsGrid"></div>
   </div>
 
   <div class="panel" id="panel-trending">
     <div class="panel-h">
       <div class="panel-h-l">
         <h2>🦴 HUNTING GROUNDS</h2>
-        <div class="panel-sub">all Monad memes · live USD prices · sorted by market cap · powered by Monorail data API</div>
+        <div class="panel-sub" id="trendSub">top graduated tokens by market cap · live from api.nad.fun · 27K+ tokens indexed</div>
       </div>
       <div class="panel-h-r">
-        <button class="chip active">📊 MCAP</button>
-        <button class="chip">👥 HOLDERS</button>
-        <button class="chip">💎 NEW</button>
+        <button class="chip active" data-trend-sort="market_cap">📊 MCAP</button>
+        <button class="chip" data-trend-sort="latest_trade">🔥 ACTIVE</button>
+        <button class="chip" data-trend-filter="graduated">💎 GRADUATED</button>
+        <button class="chip" data-trend-filter="all">ALL</button>
+        <button class="chip" id="trendRefresh">↺ REFRESH</button>
       </div>
     </div>
-    <div class="soon-panel">
-      <div class="icon">🦴</div>
-      <h3>HUNTING GROUNDS — wiring in next push</h3>
-      <p>500 trending Monad memes pulled from Monorail's data API · each rendered as a Pack Card with tier badge, swap action, copy contract, view chart. Becomes a discovery surface for the whole memecoin ecosystem on Monad.</p>
-      <span class="badge">SHIPS IN SESSION 2</span>
-    </div>
+    <div class="token-grid" id="trendGrid"></div>
   </div>
 
   <div class="panel" id="panel-scan">
     <div class="panel-h">
       <div class="panel-h-l">
         <h2>🐺 PACK SCAN</h2>
-        <div class="panel-sub">paste any wallet → scan their Monad memecoin bags · compare up to 8 wolves · find cross-holders</div>
+        <div class="panel-sub">paste any wallet → see their full Monad memecoin bag with live PnL · powered by api.nad.fun</div>
       </div>
     </div>
-    <div class="soon-panel">
-      <div class="icon">🐺</div>
-      <h3>PACK SCAN — wiring in next push</h3>
-      <p>Paste a wallet → multicall all 8 ecosystem token balances + USD value · compare up to 8 wallets side-by-side · spotlight cross-holders (wallets in multiple packs). Same pattern as Chogi's wallet compare tool.</p>
-      <span class="badge">SHIPS IN SESSION 2</span>
+    <div class="scan-controls">
+      <input id="scanAddr" class="scan-input" placeholder="0x… wallet address" spellcheck="false" autocomplete="off">
+      <button class="scan-btn" id="scanGo">⌗ SCAN</button>
+      <button class="scan-btn ghost" id="scanSample">+ SAMPLE</button>
+      <button class="scan-btn ghost" id="scanClear">↺ CLEAR</button>
     </div>
+    <div id="scanResult"></div>
   </div>
 
   <div class="panel" id="panel-stalk">
     <div class="panel-h">
       <div class="panel-h-l">
         <h2>👁 STALK</h2>
-        <div class="panel-sub">tag up to 10 alpha wolves · live multicall balances · auto-poll every 90s</div>
+        <div class="panel-sub">tag up to 10 alpha wolves · live nad.fun position data · auto-refresh on tab open</div>
+      </div>
+      <div class="panel-h-r">
+        <button class="chip" id="stalkRefresh">↺ REFRESH ALL</button>
+        <button class="chip" id="stalkClear">🗑 CLEAR ALL</button>
       </div>
     </div>
-    <div class="soon-panel">
-      <div class="icon">👁</div>
-      <h3>STALK — wiring in next push</h3>
-      <p>Add up to 10 wallets to a personal watchlist · auto-poll their balances every 90s · alert when a tracked wolf accumulates or dumps a position. Persisted to localStorage. Same pattern as Chogi tracker.</p>
-      <span class="badge">SHIPS IN SESSION 2</span>
+    <div class="scan-controls">
+      <input id="stalkAddr" class="scan-input" placeholder="0x… wallet to stalk" spellcheck="false" autocomplete="off">
+      <input id="stalkTag"  class="scan-input scan-input-sm" placeholder="tag (optional)" spellcheck="false" autocomplete="off">
+      <button class="scan-btn" id="stalkAdd">+ TAG WOLF</button>
     </div>
+    <div id="stalkGrid" class="token-grid"></div>
   </div>
 
 </div>
@@ -422,7 +499,13 @@ a{color:inherit;text-decoration:none;}
 'use strict';
 
 // CONFIG
-const RPC          = 'https://rpc.monad.xyz';
+// Alchemy Monad mainnet — used for all on-chain reads (burn memorial,
+// pack card balance, howling-now Swap events, future multicalls).
+// SECURITY: this key is visible in client-side JS — lock it down in the
+// Alchemy dashboard to allowed domains: monwolf.vercel.app, monwolf.xyz,
+// www.monwolf.xyz. Without those restrictions anyone can scrape and reuse it.
+const RPC          = 'https://monad-mainnet.g.alchemy.com/v2/_ZfKSl1YD2Yur6eajfKkN';
+const NAD_API      = 'https://api.nad.fun';  // mainnet bot-api server
 const EXPLORER     = 'https://monadexplorer.com';
 const DEAD         = '0x000000000000000000000000000000000000dEaD';
 const MONWOLF      = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
@@ -741,6 +824,343 @@ $('packClose').addEventListener('click', () => {
   $('connectCard').classList.remove('hidden');
 });
 $('terrRefresh').addEventListener('click', refreshTerritory);
+
+// ════════════════════════════════════════════════════════════════════
+// NAD.FUN API helpers — used by NEW PUPS, HUNTING GROUNDS, PACK SCAN, STALK
+// ════════════════════════════════════════════════════════════════════
+async function nadFetch(path){
+  try{
+    const r = await fetch(NAD_API + path);
+    if (!r.ok) return null;
+    return await r.json();
+  }catch(e){ console.warn('nad api', path, e); return null; }
+}
+
+// Token card renderer for nad.fun-shape data (NEW PUPS + HUNTING GROUNDS)
+function renderNadCard(item){
+  const ti = item.token_info || {};
+  const mi = item.market_info || {};
+  const pct = item.percent;  // bonding curve progress
+  const addr = ti.token_id;
+  const img = ti.image_uri;
+  const sym = ti.symbol || '???';
+  const name = ti.name || sym;
+  const graduated = ti.is_graduated;
+  const priceUsd = parseFloat(mi.price_usd || 0);
+  const totalSupply = parseFloat(mi.total_supply || 0) / 1e18;
+  const mcap = priceUsd * totalSupply;
+  const holders = mi.holder_count || 0;
+  const marketType = mi.market_type || 'CURVE';
+  const tier = tierForMcap(mcap);
+
+  const created = ti.created_at ? Math.floor((Date.now()/1000) - ti.created_at) : null;
+  const createdStr = created != null
+    ? (created < 3600 ? Math.floor(created/60)+'m'
+       : created < 86400 ? Math.floor(created/3600)+'h'
+       : Math.floor(created/86400)+'d') + ' ago'
+    : '—';
+
+  const showBondBar = !graduated && pct != null;
+  const bondBarHtml = showBondBar ? `
+    <div class="bond-bar"><div class="bond-bar-fill" style="width:${Math.min(100, pct).toFixed(1)}%"></div></div>
+    <div class="bond-bar-lbl"><span>BONDING</span><span class="pct">${pct.toFixed(1)}%</span></div>
+  ` : '';
+
+  const marketBadge = graduated
+    ? `<span class="market-badge grad">DEX</span>`
+    : `<span class="market-badge">CURVE</span>`;
+
+  const featuredCls = (sym === 'MONWOLF') ? 'featured' : '';
+
+  return `<div class="tcard ${featuredCls}" data-addr="${addr}">
+    <div class="tc-h">
+      <div class="tc-logo">${img ? `<img src="${img}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${sym[0]||'?'}'))">` : (sym[0]||'?')}</div>
+      <div class="tc-meta">
+        <div class="tc-sym">$${sym}${marketBadge}</div>
+        <div class="tc-name">${name.length > 24 ? name.slice(0,24)+'…' : name}</div>
+      </div>
+      <div class="tc-tier ${tier.cls}">${tier.label}</div>
+    </div>
+    <div class="tc-price">${fmtPrice(priceUsd)}</div>
+    <div class="tc-change up">⏱ ${createdStr}</div>
+    ${bondBarHtml}
+    <div class="tc-stats">
+      <div><div class="tc-stat-l">MCAP</div><div class="tc-stat-v">${mcap ? '$'+fmtNum(mcap) : '—'}</div></div>
+      <div><div class="tc-stat-l">HOLDERS</div><div class="tc-stat-v">${holders ? fmtNum(holders, 0) : '—'}</div></div>
+      <div><div class="tc-stat-l">SUPPLY</div><div class="tc-stat-v">${totalSupply ? fmtNum(totalSupply, 0) : '—'}</div></div>
+    </div>
+    <div class="tc-actions">
+      <a class="tc-btn primary" href="https://nad.fun/token/${addr}" target="_blank">TRADE</a>
+      <a class="tc-btn" href="${EXPLORER}/address/${addr}" target="_blank">EXPL</a>
+      <button class="tc-btn copyBtn" data-addr="${addr}">COPY</button>
+    </div>
+  </div>`;
+}
+
+function wireCopyButtons(scope){
+  scope.querySelectorAll('.copyBtn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      navigator.clipboard.writeText(btn.dataset.addr).then(() => {
+        const old = btn.textContent; btn.textContent = '✓ COPIED';
+        setTimeout(() => btn.textContent = old, 1500);
+      });
+    });
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// NEW PUPS · /order/creation_time
+// ════════════════════════════════════════════════════════════════════
+let pupsSort = 'creation_time';
+let pupsLoaded = false;
+
+async function loadPups(){
+  const grid = $('pupsGrid');
+  grid.innerHTML = '<div class="soon-panel"><div class="icon">⟳</div><h3>Tracking the pack…</h3><p>Pulling fresh launches from nad.fun</p></div>';
+  const data = await nadFetch(`/order/${pupsSort}?page=1&limit=24`);
+  if (!data || !data.tokens){
+    grid.innerHTML = '<div class="soon-panel"><div class="icon">⚠️</div><h3>nad.fun API quiet</h3><p>Couldn\'t reach api.nad.fun — try refresh in a moment.</p></div>';
+    return;
+  }
+  grid.innerHTML = data.tokens.map(renderNadCard).join('');
+  wireCopyButtons(grid);
+  $('pupsSub').textContent = `${data.total_count?.toLocaleString() || '—'} tokens on nad.fun · sorted by ${pupsSort.replace('_',' ')} · click NEW / MCAP / ACTIVE to re-sort`;
+  pupsLoaded = true;
+}
+
+document.querySelectorAll('[data-pups-sort]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-pups-sort]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    pupsSort = btn.dataset.pupsSort;
+    loadPups();
+  });
+});
+$('pupsRefresh').addEventListener('click', loadPups);
+
+// ════════════════════════════════════════════════════════════════════
+// HUNTING GROUNDS · /order/market_cap (graduated only by default)
+// ════════════════════════════════════════════════════════════════════
+let trendSort = 'market_cap';
+let trendFilter = 'graduated';
+let trendLoaded = false;
+
+async function loadTrending(){
+  const grid = $('trendGrid');
+  grid.innerHTML = '<div class="soon-panel"><div class="icon">⟳</div><h3>Surveying the hunting grounds…</h3><p>Pulling top tokens from nad.fun</p></div>';
+  const data = await nadFetch(`/order/${trendSort}?page=1&limit=48`);
+  if (!data || !data.tokens){
+    grid.innerHTML = '<div class="soon-panel"><div class="icon">⚠️</div><h3>nad.fun API quiet</h3><p>Couldn\'t reach api.nad.fun — try refresh in a moment.</p></div>';
+    return;
+  }
+  let toks = data.tokens;
+  if (trendFilter === 'graduated') toks = toks.filter(t => t.token_info?.is_graduated);
+  grid.innerHTML = toks.slice(0, 24).map(renderNadCard).join('') || '<div class="soon-panel"><div class="icon">🐾</div><h3>No matches</h3><p>Try a different filter.</p></div>';
+  wireCopyButtons(grid);
+  $('trendSub').textContent = `${data.total_count?.toLocaleString() || '—'} tokens indexed on nad.fun · showing ${trendFilter === 'graduated' ? 'graduated only' : 'all'} · sorted by ${trendSort.replace('_',' ')}`;
+  trendLoaded = true;
+}
+
+document.querySelectorAll('[data-trend-sort]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-trend-sort]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    trendSort = btn.dataset.trendSort;
+    loadTrending();
+  });
+});
+document.querySelectorAll('[data-trend-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-trend-filter]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    trendFilter = btn.dataset.trendFilter;
+    loadTrending();
+  });
+});
+$('trendRefresh').addEventListener('click', loadTrending);
+
+// ════════════════════════════════════════════════════════════════════
+// PACK SCAN · /account/position/{addr}
+// ════════════════════════════════════════════════════════════════════
+function renderPositions(data, addr){
+  const positions = (data && data.positions) || [];
+  if (!positions.length){
+    return `<div class="soon-panel"><div class="icon">🐺</div><h3>No nad.fun positions for ${shortAddr(addr)}</h3><p>This wolf hasn't traded on nad.fun yet, or the wallet is empty.</p></div>`;
+  }
+  let totalUsd = 0, totalPnl = 0, openCount = 0;
+  const rows = positions.map(p => {
+    const t = p.token || {};
+    const pos = p.position || {};
+    const m = p.market || {};
+    const price = parseFloat(m.price || 0);
+    const amt = parseFloat(pos.current_token_amount || 0) / 1e18;
+    const usdVal = amt * price;
+    const pnl = parseFloat(pos.total_pnl || 0);
+    const pnlPct = pos.realized_pnl != null && pos.unrealized_pnl != null
+      ? pnl : 0;
+    if (amt > 0) openCount++;
+    totalUsd += usdVal;
+    totalPnl += pnl;
+    const pnlCls = pnl >= 0 ? 'up' : 'down';
+    const pnlSign = pnl >= 0 ? '+' : '';
+    return `<div class="pos-row">
+      <div class="img">${t.image_uri ? `<img src="${t.image_uri}" loading="lazy" onerror="this.replaceWith(document.createTextNode('${(t.symbol||'?')[0]}'))">` : (t.symbol||'?')[0]}</div>
+      <div class="meta-l">
+        <div class="sym">$${t.symbol||'?'} <span class="market-badge ${m.market_type==='DEX'?'grad':''}">${m.market_type||'CURVE'}</span></div>
+        <div class="name">${(t.name||'').slice(0,28)} · ${shortAddr(t.token_address||'')}</div>
+      </div>
+      <div class="bal">
+        <div class="amt">${fmtNum(amt, 2)}</div>
+        <div class="usd">$${fmtNum(usdVal, 2)}</div>
+      </div>
+      <div class="pnl ${pnlCls}">
+        <div class="l">PNL</div>
+        ${pnlSign}$${fmtNum(Math.abs(pnl), 2)}
+      </div>
+    </div>`;
+  }).join('');
+
+  const totalCls = totalPnl >= 0 ? 'green' : 'red';
+  const totalSign = totalPnl >= 0 ? '+' : '';
+
+  return `
+    <div class="scan-summary">
+      <div class="scan-summary-stat">
+        <div class="l">Wallet</div>
+        <div class="v"><a href="${EXPLORER}/address/${addr}" target="_blank" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-2);">${shortAddr(addr)}</a></div>
+      </div>
+      <div class="scan-summary-stat">
+        <div class="l">Positions</div>
+        <div class="v">${positions.length}</div>
+      </div>
+      <div class="scan-summary-stat">
+        <div class="l">Bag Value</div>
+        <div class="v gold">$${fmtNum(totalUsd, 2)}</div>
+      </div>
+      <div class="scan-summary-stat">
+        <div class="l">Total PnL</div>
+        <div class="v ${totalCls}">${totalSign}$${fmtNum(Math.abs(totalPnl), 2)}</div>
+      </div>
+    </div>
+    <div class="pos-list">${rows}</div>
+  `;
+}
+
+async function runPackScan(){
+  const addr = $('scanAddr').value.trim();
+  if (!/^0x[a-fA-F0-9]{40}$/.test(addr)){
+    $('scanResult').innerHTML = '<div class="soon-panel"><div class="icon">⚠️</div><h3>Invalid address</h3><p>Paste a 0x… wallet address (40 hex chars).</p></div>';
+    return;
+  }
+  $('scanResult').innerHTML = '<div class="soon-panel"><div class="icon">⟳</div><h3>Scanning the wolf…</h3><p>Pulling all nad.fun positions for ' + shortAddr(addr) + '</p></div>';
+  const data = await nadFetch(`/account/position/${addr}?position_type=open&page=1&limit=50`);
+  $('scanResult').innerHTML = renderPositions(data, addr);
+}
+
+$('scanGo').addEventListener('click', runPackScan);
+$('scanAddr').addEventListener('keydown', e => { if (e.key === 'Enter') runPackScan(); });
+$('scanSample').addEventListener('click', () => {
+  // Sample: a known active trader (MONWOLF deployer)
+  $('scanAddr').value = '0x8db14E35BBcE16A392277a1354c01E2835fBB919';
+  runPackScan();
+});
+$('scanClear').addEventListener('click', () => {
+  $('scanAddr').value = '';
+  $('scanResult').innerHTML = '';
+});
+
+// ════════════════════════════════════════════════════════════════════
+// STALK · multi-wallet tracker, localStorage persisted
+// ════════════════════════════════════════════════════════════════════
+const STALK_KEY = 'mw_stalk_v1';
+function loadStalkList(){
+  try{ return JSON.parse(localStorage.getItem(STALK_KEY) || '[]'); }catch{ return []; }
+}
+function saveStalkList(list){
+  localStorage.setItem(STALK_KEY, JSON.stringify(list.slice(0, 10)));
+}
+
+async function renderOneStalkCard(entry){
+  const data = await nadFetch(`/account/position/${entry.addr}?position_type=open&page=1&limit=5`);
+  const positions = (data && data.positions) || [];
+  let totalUsd = 0;
+  positions.forEach(p => {
+    const price = parseFloat(p.market?.price || 0);
+    const amt = parseFloat(p.position?.current_token_amount || 0) / 1e18;
+    totalUsd += amt * price;
+  });
+  const pills = positions.slice(0, 5).map(p => {
+    const t = p.token || {};
+    const amt = parseFloat(p.position?.current_token_amount || 0) / 1e18;
+    return `<div class="stalk-pill">
+      ${t.image_uri ? `<img src="${t.image_uri}" loading="lazy">` : ''}
+      <span>$${t.symbol||'?'}</span>
+      <span class="v">${fmtNum(amt, 1)}</span>
+    </div>`;
+  }).join('');
+  return `<div class="stalk-card" data-addr="${entry.addr}">
+    <div class="stalk-card-h">
+      <span class="tag">${entry.tag || shortAddr(entry.addr)}</span>
+      <a href="${EXPLORER}/address/${entry.addr}" target="_blank" class="addr">${shortAddr(entry.addr)}</a>
+      <span class="total">$${fmtNum(totalUsd, 2)} BAG</span>
+      <span class="remove" data-remove="${entry.addr}">✕</span>
+    </div>
+    <div class="stalk-top">${pills || '<span style="font-family:JetBrains Mono;font-size:11px;color:var(--text-3)">no positions</span>'}</div>
+  </div>`;
+}
+
+async function refreshStalk(){
+  const grid = $('stalkGrid');
+  const list = loadStalkList();
+  if (!list.length){
+    grid.innerHTML = '<div class="soon-panel"><div class="icon">👁</div><h3>No wolves stalked yet</h3><p>Paste a wallet above and tag it. Up to 10 wallets stored locally on this device.</p></div>';
+    return;
+  }
+  grid.innerHTML = '<div class="soon-panel"><div class="icon">⟳</div><h3>Stalking the pack…</h3><p>Pulling positions for ' + list.length + ' wallet' + (list.length>1?'s':'') + '</p></div>';
+  const cards = await Promise.all(list.map(renderOneStalkCard));
+  grid.innerHTML = cards.join('');
+  grid.querySelectorAll('[data-remove]').forEach(el => {
+    el.addEventListener('click', () => {
+      const a = el.dataset.remove;
+      const fresh = loadStalkList().filter(e => e.addr.toLowerCase() !== a.toLowerCase());
+      saveStalkList(fresh);
+      refreshStalk();
+    });
+  });
+}
+
+$('stalkAdd').addEventListener('click', () => {
+  const addr = $('stalkAddr').value.trim();
+  const tag = $('stalkTag').value.trim();
+  if (!/^0x[a-fA-F0-9]{40}$/.test(addr)){ alert('Invalid wallet address.'); return; }
+  const list = loadStalkList();
+  if (list.length >= 10){ alert('Stalk list full — remove one to add another.'); return; }
+  if (list.some(e => e.addr.toLowerCase() === addr.toLowerCase())){
+    alert('Already stalking this wolf.'); return;
+  }
+  list.push({ addr, tag: tag || null });
+  saveStalkList(list);
+  $('stalkAddr').value = '';
+  $('stalkTag').value = '';
+  refreshStalk();
+});
+$('stalkRefresh').addEventListener('click', refreshStalk);
+$('stalkClear').addEventListener('click', () => {
+  if (!confirm('Clear all stalked wolves?')) return;
+  saveStalkList([]);
+  refreshStalk();
+});
+
+// Lazy-load each tab on first activation (saves bandwidth on initial load)
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const t = tab.dataset.tab;
+    if (t === 'pups' && !pupsLoaded) loadPups();
+    if (t === 'trending' && !trendLoaded) loadTrending();
+    if (t === 'stalk') refreshStalk();
+  });
+});
 
 // BOOT
 (async function boot(){

@@ -285,7 +285,7 @@ input::placeholder{color:#574069;}
       <div class="mode-card" id="modeNew">
         <span class="mode-emoji">✨</span>
         <div class="mode-title">NEW TO CRYPTO</div>
-        <div class="mode-sub">Create a wallet right here. No app, no signup.</div>
+        <div class="mode-sub">Create a wallet with email + password. Works on any device.</div>
       </div>
       <div class="mode-card" id="modeWallet">
         <span class="mode-emoji">🦊</span>
@@ -304,7 +304,7 @@ input::placeholder{color:#574069;}
   <div id="screenCreate" class="hidden">
     <div class="card">
       <div class="card-h"><span class="num">1</span>CREATE YOUR PACK WALLET</div>
-      <div class="card-sub">A wallet is your personal account on Monad. We'll generate one in your browser. Anthropic-style: <b>you hold the keys, not us</b>. The MonWolf team can never touch your funds.</div>
+      <div class="card-sub">A wallet is your personal account on Monad. We'll generate one right here, encrypted with your password, and back it up to the pack vault so you can log in from <b>any device</b>. We never see your password or private key.</div>
 
       <div class="form-group">
         <label class="label">EMAIL OR USERNAME</label>
@@ -335,10 +335,10 @@ input::placeholder{color:#574069;}
       <div class="card-sub">These 12 words ARE your wallet. Write them on paper. Store them safely. Anyone with these words owns the wallet.</div>
 
       <div class="warn-box">
-        <b>⚠️ Read this before continuing:</b>
+        <b>You only need this if you forget your password.</b> Same email + password works from any device — your wallet is backed up encrypted in the pack vault. <b>BUT</b> if you ever forget your password, only this 12-word phrase can restore your funds. Write it on paper.
         <ul>
-          <li>If you clear your browser, you'll need this phrase to restore your wallet.</li>
-          <li>MonWolf cannot recover this for you. Ever.</li>
+          <li>MonWolf cannot reset your password.</li>
+          <li>Anyone with these 12 words owns your wallet.</li>
           <li>Don't screenshot. Don't store in cloud notes. Use paper.</li>
         </ul>
       </div>
@@ -360,7 +360,7 @@ input::placeholder{color:#574069;}
   <div id="screenUnlock" class="hidden">
     <div class="card">
       <div class="card-h"><span class="num">↻</span>UNLOCK YOUR WALLET</div>
-      <div class="card-sub">Enter the password you used when you created your wallet.</div>
+      <div class="card-sub">Same email + password you used last time — works from any device, any browser.</div>
 
       <div class="form-group">
         <label class="label">EMAIL OR USERNAME</label>
@@ -441,7 +441,7 @@ input::placeholder{color:#574069;}
       <button id="exportPkBtn" class="btn btn-ghost" style="margin-bottom:8px;">📋 EXPORT PRIVATE KEY</button>
       <button id="logoutBtn" class="btn btn-ghost" style="margin-bottom:8px;color:var(--red);border-color:var(--red);">LOG OUT</button>
       <div class="warn-box" style="margin-top:8px;">
-        <b>About this wallet:</b> Your private key is encrypted with your password and stored on this device only. Clearing browser data without backing up the recovery phrase = wallet lost forever.
+        <b>About this wallet:</b> Your private key is encrypted with your password and stored both on this device and in our cloud vault (encrypted — we can't read it). You can log in from any device with the same email + password. If you forget your password, only the recovery phrase can restore your funds.
       </div>
     </div>
 
@@ -544,6 +544,13 @@ const EXPLORER = 'https://monadexplorer.com';
 const MONORAIL_QUOTE = 'https://pathfinder.monorail.xyz/v4/quote';
 const MONORAIL_APP_ID = '1176408161625';
 
+// Supabase — encrypted-wallet cloud backup so users can recover from any device.
+// Anon key is public by design (it's enforced by RLS, not by secrecy).
+const SUPABASE_URL  = 'https://cuqhqcmrgpdjlhyqztnc.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1cWhxY21yZ3BkamxoeXF6dG5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjQ4NDAsImV4cCI6MjA5MjgwMDg0MH0.bsmuC_onaPutZmYZWTn9p1DvngKIA7Xx4J3YRajbf-8';
+const PBKDF2_ITERS = 600000;          // NIST 2023 recommendation
+const EMAIL_HASH_SUFFIX = 'monwolf_v1';  // namespace lookup hash so generic rainbow tables don't apply
+
 const MON_TOKEN  = { addr: NATIVE,  sym: 'MON',     name: 'Monad',   logo: 'https://monorail-static.fra1.digitaloceanspaces.com/tokens/mon-token.svg', decimals: 18 };
 const WOLF_TOKEN = { addr: MONWOLF, sym: 'MONWOLF', name: 'MonWolf', logo: '/logo.png', decimals: 18 };
 
@@ -604,7 +611,7 @@ function buf2str(b){ return new TextDecoder().decode(b); }
 async function deriveKey(password, salt){
   const baseKey = await crypto.subtle.importKey('raw', str2buf(password), 'PBKDF2', false, ['deriveKey']);
   return crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt, iterations: PBKDF2_ITERS, hash: 'SHA-256' },
     baseKey,
     { name: 'AES-GCM', length: 256 },
     false,
@@ -625,6 +632,78 @@ async function decryptJSON(password, packet){
   const key  = await deriveKey(password, salt);
   const plain = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, ct);
   return JSON.parse(buf2str(plain));
+}
+
+async function emailHash(email){
+  const normalized = (email || '').toLowerCase().trim() + '::' + EMAIL_HASH_SUFFIX;
+  const h = await crypto.subtle.digest('SHA-256', str2buf(normalized));
+  return buf2hex(h);
+}
+
+// ────── CLOUD BACKUP (Supabase) ──────
+// Table: mw_wallets
+//   email_hash text primary key
+//   ciphertext text not null  (hex AES-GCM)
+//   salt       text not null  (hex 16B PBKDF2 salt)
+//   iv         text not null  (hex 12B AES-GCM iv)
+//   address    text not null
+//   v          int default 1
+//   created_at timestamptz default now()
+// RLS: anon select=true (records are encrypted, safe to read).
+//      anon insert=true (server can't decrypt; squat-protected by client-side
+//        check before signup).
+//      anon update/delete=false (must restore from seed if you forget password).
+async function sbInsertWallet(eh, packet, address){
+  try{
+    const r = await fetch(SUPABASE_URL + '/rest/v1/mw_wallets', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        email_hash: eh,
+        ciphertext: packet.ct,
+        salt: packet.salt,
+        iv: packet.iv,
+        address: address.toLowerCase(),
+      }),
+    });
+    if (r.ok || r.status === 201) return { ok: true };
+    if (r.status === 409) return { ok: false, exists: true };
+    const txt = await r.text();
+    console.warn('[supabase] insert failed', r.status, txt);
+    return { ok: false, error: 'http ' + r.status };
+  }catch(e){
+    console.warn('[supabase] insert network error', e);
+    return { ok: false, error: 'offline' };
+  }
+}
+
+async function sbLookupWallet(eh){
+  try{
+    const r = await fetch(SUPABASE_URL + '/rest/v1/mw_wallets?email_hash=eq.' + encodeURIComponent(eh) + '&select=*&limit=1', {
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
+      },
+    });
+    if (!r.ok) return null;
+    const arr = await r.json();
+    if (!Array.isArray(arr) || !arr.length) return null;
+    const row = arr[0];
+    return {
+      ct: row.ciphertext,
+      salt: row.salt,
+      iv: row.iv,
+      address: row.address,
+    };
+  }catch(e){
+    console.warn('[supabase] lookup network error', e);
+    return null;
+  }
 }
 
 // ────── STORAGE ──────
@@ -704,27 +783,57 @@ $('createWalletBtn').onclick = async function(){
   if (!email) return setStatus('createStatus', 'error', 'Pick an email or username — anything memorable.');
   if (pw.length < 8) return setStatus('createStatus', 'error', 'Password must be at least 8 characters.');
   if (pw !== pw2) return setStatus('createStatus', 'error', 'Passwords don\'t match.');
-  if (loadWallet(email)) return setStatus('createStatus', 'error',
-    'A wallet already exists for that name on this browser. <a href="#" onclick="document.getElementById(\'unlockExisting\').click();return false;">Unlock it instead</a> or use a different username.');
 
-  this.innerHTML = '<span class="spin"></span>GENERATING WALLET…';
+  this.innerHTML = '<span class="spin"></span>CHECKING…';
   this.disabled = true;
   try{
+    const eh = await emailHash(email);
+
+    // Check both local AND cloud for existing wallet under this handle
+    if (loadWallet(email)){
+      return setStatus('createStatus', 'error',
+        'A wallet already exists for "' + email + '" on this device. <a href="#" onclick="document.getElementById(\'unlockExisting\').click();return false;">Unlock it instead</a> or use a different username.');
+    }
+    setStatus('createStatus', 'info', '<span class="spin"></span>Checking the pack vault…');
+    const existing = await sbLookupWallet(eh);
+    if (existing){
+      return setStatus('createStatus', 'error',
+        'A wallet already exists for "' + email + '" — you\'ve signed up here before. <a href="#" onclick="document.getElementById(\'unlockExisting\').click();return false;">Unlock it instead</a> or use a different username.');
+    }
+
+    setStatus('createStatus', 'info', '<span class="spin"></span>Generating your wallet… this takes 2–3 seconds (heavy encryption).');
+    this.innerHTML = '<span class="spin"></span>ENCRYPTING…';
+
     const w = ethers.Wallet.createRandom();
     const seed = w.mnemonic.phrase;
     const pk   = w.privateKey;
     const addr = w.address;
 
-    // Encrypt
+    // Encrypt with password
     const packet = await encryptJSON(pw, { privkey: pk, mnemonic: seed });
+
+    // Upload to cloud FIRST (this is the durability guarantee).
+    // If cloud fails, we still save locally and warn — user can still use the wallet,
+    // just can't recover from another device until cloud sync succeeds later.
+    this.innerHTML = '<span class="spin"></span>BACKING UP…';
+    const cloud = await sbInsertWallet(eh, packet, addr);
+
+    // Always save locally as a cache for fast unlock on this device
     saveWallet(email, packet, addr);
 
-    PENDING_WALLET = { email, password: pw, wallet: w, seed };
+    PENDING_WALLET = { email, password: pw, wallet: w, seed, cloudOk: cloud.ok };
 
-    // Show seed phrase screen
     paintSeed(seed);
     showScreen('screenSeed');
     refreshReturningVisibility();
+
+    // Show a warning bar on seed screen if cloud backup failed
+    if (!cloud.ok){
+      const warn = document.createElement('div');
+      warn.className = 'warn-box';
+      warn.innerHTML = '<b>⚠️ Cloud backup failed:</b> the encrypted backup didn\'t upload (maybe offline). Your wallet is still saved on this device, but if you clear this browser before backing it up to the cloud or writing down the recovery phrase, you\'ll lose access. <b>Write down the 12 words below.</b>';
+      $('screenSeed').querySelector('.card').insertBefore(warn, $('seedWrap'));
+    }
   }catch(e){
     console.error(e);
     setStatus('createStatus', 'error', 'Failed to create wallet: ' + (e.message || e));
@@ -764,27 +873,54 @@ $('unlockBtn').onclick = async function(){
   const email = $('unlockEmail').value.trim();
   const pw    = $('unlockPassword').value;
   if (!email || !pw) return setStatus('unlockStatus', 'error', 'Both fields required.');
-  const packet = loadWallet(email);
-  if (!packet) return setStatus('unlockStatus', 'error', 'No wallet found for "' + email + '" on this device.');
 
   this.innerHTML = '<span class="spin"></span>UNLOCKING…';
   this.disabled = true;
   try{
+    let packet = loadWallet(email);
+    let source = 'local';
+
+    // Fallback to cloud if not on this device
+    if (!packet){
+      setStatus('unlockStatus', 'info', '<span class="spin"></span>Not on this device — checking the pack vault…');
+      const eh = await emailHash(email);
+      const cloud = await sbLookupWallet(eh);
+      if (!cloud){
+        clearStatus('unlockStatus');
+        return setStatus('unlockStatus', 'error',
+          'No wallet found for "' + email + '". Is the email/username spelled right? You can also <a href="#" onclick="document.getElementById(\'restoreSeed\').click();return false;">restore from your 12-word phrase</a>.');
+      }
+      packet = { ct: cloud.ct, salt: cloud.salt, iv: cloud.iv, address: cloud.address };
+      source = 'cloud';
+    }
+
+    setStatus('unlockStatus', 'info', '<span class="spin"></span>Decrypting…');
     const obj = await decryptJSON(pw, packet);
     const w = new ethers.Wallet(obj.privkey);
     if (w.address.toLowerCase() !== packet.address.toLowerCase()){
       throw new Error('Wallet integrity check failed.');
     }
-    // Attach mnemonic for export
+
+    // If we got it from the cloud, also cache it locally for next time
+    if (source === 'cloud'){
+      saveWallet(email, packet, packet.address);
+      refreshReturningVisibility();
+    }
+
     w._mnemonic = obj.mnemonic;
     STATE.wallet = w;
     STATE.account = w.address;
     STATE.signerType = 'local';
     setSession(email, w.address);
+    clearStatus('unlockStatus');
     enterMainScreen();
   }catch(e){
     console.error(e);
-    setStatus('unlockStatus', 'error', 'Wrong password. Try again.');
+    if (e && e.name === 'OperationError'){
+      setStatus('unlockStatus', 'error', 'Wrong password. Try again, or <a href="#" onclick="document.getElementById(\'restoreSeed\').click();return false;">restore from your recovery phrase</a>.');
+    } else {
+      setStatus('unlockStatus', 'error', 'Unlock failed: ' + (e.message || e));
+    }
   }finally{
     this.innerHTML = 'UNLOCK →';
     this.disabled = false;
@@ -808,15 +944,33 @@ $('restoreBtn').onclick = async function(){
   this.disabled = true;
   try{
     const w = ethers.Wallet.fromPhrase(phrase);
+    setStatus('restoreStatus', 'info', '<span class="spin"></span>Encrypting your wallet…');
     const packet = await encryptJSON(pw, { privkey: w.privateKey, mnemonic: phrase });
+    const eh = await emailHash(email);
+
+    // Try to push to cloud — if email is already taken, restore still works locally
+    setStatus('restoreStatus', 'info', '<span class="spin"></span>Backing up to the pack vault…');
+    const cloud = await sbInsertWallet(eh, packet, w.address);
+    if (!cloud.ok && cloud.exists){
+      // The email handle is already in use in the cloud — we restored locally only.
+      // User may want to pick a different email if they want cross-device access for this restored wallet.
+      console.info('[restore] email already exists in cloud; saved locally only');
+    }
+
     saveWallet(email, packet, w.address);
     w._mnemonic = phrase;
     STATE.wallet = w;
     STATE.account = w.address;
     STATE.signerType = 'local';
     setSession(email, w.address);
-    enterMainScreen();
     refreshReturningVisibility();
+    enterMainScreen();
+
+    if (!cloud.ok && cloud.exists){
+      setTimeout(()=>{
+        alert('Heads up: the email "' + email + '" is already linked to a different wallet in the pack vault. Your restored wallet is saved on THIS device only. To get cloud backup for it, log out and restore again using a different email/username.');
+      }, 500);
+    }
   }catch(e){
     console.error(e);
     setStatus('restoreStatus', 'error', 'Invalid recovery phrase: ' + (e.message || e));

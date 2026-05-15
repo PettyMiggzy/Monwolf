@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>YOUR HUB · MONWOLF</title>
+<meta name="description" content="Your MONWOLF pack hub — wallet, balance, rank, trades, all in one place.">
+<meta name="theme-color" content="#a855f7">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#08000f; --bg-2:#100722; --panel:#160a26; --panel-2:#1c0e30;
+  --border:#3a1f5e; --border-2:#4a2a73;
+  --text:#fff; --text-2:#c8b6e6; --text-3:#7e6d96;
+  --purple:#a855f7; --purple-2:#7c3aed;
+  --pink:#ec4899; --orange:#ff8a3d; --gold:#f5c242;
+  --green:#22c55e; --red:#ef4444;
+  --grad:linear-gradient(135deg, #a855f7 0%, #ff8a3d 100%);
+  --grad-text:linear-gradient(135deg, #ff8a3d 0%, #a855f7 100%);
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  min-height:100vh;line-height:1.5;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%, rgba(168,85,247,.18), transparent 70%);
+}
+a{color:inherit;text-decoration:none;}
+
+nav{
+  position:sticky;top:0;left:0;right:0;background:rgba(8,0,15,.78);
+  border-bottom:1px solid var(--border);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);z-index:80;padding:.85rem 1rem;
+}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+.logo{display:flex;align-items:center;gap:.55rem;}
+.logo img{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--purple);}
+.logo .name{font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:2px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;
+  color:var(--text-2);padding:8px 12px;border:1px solid var(--border);border-radius:8px;}
+.back-link:hover{border-color:var(--purple);color:#fff;}
+
+.wrap{position:relative;z-index:2;max-width:720px;margin:0 auto;padding:20px 16px 80px;}
+
+/* === HERO === */
+.hero{text-align:center;margin:8px 0 22px;}
+.hero-eyebrow{display:inline-block;padding:6px 12px;border-radius:99px;
+  background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.4);
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--purple);
+  text-transform:uppercase;margin-bottom:12px;}
+.hero h1{font-family:'Russo One',sans-serif;font-size:clamp(28px,7vw,40px);letter-spacing:1px;line-height:1;margin-bottom:8px;}
+.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* === WALLET PANEL (top) === */
+.wallet-hero{
+  background:linear-gradient(135deg, rgba(168,85,247,.12), rgba(255,138,61,.06));
+  border:1.5px solid var(--purple);border-radius:18px;
+  padding:20px;margin-bottom:14px;position:relative;overflow:hidden;
+}
+.wallet-hero::before{
+  content:'';position:absolute;top:-50%;right:-30%;width:280px;height:280px;
+  background:radial-gradient(circle, rgba(168,85,247,.25), transparent 60%);pointer-events:none;
+}
+.wh-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-3);text-transform:uppercase;margin-bottom:8px;}
+.wh-addr{font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff;display:flex;align-items:center;gap:8px;}
+.wh-addr .copy-btn{padding:4px 8px;font-size:9px;letter-spacing:1px;background:rgba(168,85,247,.2);border:1px solid var(--purple);
+  border-radius:6px;color:#fff;cursor:pointer;font-family:'Russo One',sans-serif;}
+.wh-addr .copy-btn:hover{background:var(--purple);}
+.wh-rank{display:inline-flex;align-items:center;gap:6px;margin-top:14px;
+  padding:6px 12px;border-radius:99px;background:rgba(255,138,61,.12);border:1px solid var(--orange);
+  font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:1.5px;color:var(--orange);}
+.wh-rank .emoji{font-size:14px;}
+
+/* === BALANCE CARDS === */
+.bal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.bal-card{
+  background:linear-gradient(180deg, rgba(28,14,48,.6), rgba(16,7,34,.6));
+  border:1.5px solid var(--border);border-radius:14px;padding:14px;
+  transition:.18s;cursor:pointer;
+}
+.bal-card:hover{border-color:var(--purple);transform:translateY(-1px);}
+.bal-card.featured{border-color:var(--orange);background:linear-gradient(180deg, rgba(255,138,61,.08), rgba(168,85,247,.05));}
+.bc-h{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bc-h img{width:24px;height:24px;border-radius:50%;background:#000;}
+.bc-h .sym{font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:1px;color:#fff;}
+.bc-h .name{font-size:10px;color:var(--text-3);margin-top:1px;}
+.bc-bal{font-family:'Russo One',sans-serif;font-size:20px;color:#fff;margin-top:2px;}
+.bc-usd{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
+
+/* === SECTION CARDS === */
+.card{
+  background:linear-gradient(180deg, rgba(28,14,48,.55), rgba(16,7,34,.55));
+  border:1.5px solid var(--border);border-radius:18px;padding:18px;margin-bottom:14px;
+}
+.card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.card-h h2{font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:2px;color:var(--text);}
+.card-h .meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:1px;}
+
+/* === TX LIST === */
+.tx-list{display:flex;flex-direction:column;gap:6px;}
+.tx-row{
+  display:flex;align-items:center;gap:10px;padding:10px;
+  background:rgba(8,4,24,.5);border:1px solid var(--border);border-radius:10px;
+  font-size:12px;transition:.15s;
+}
+.tx-row:hover{border-color:var(--purple);}
+.tx-row .ic{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(168,85,247,.15);border:1px solid var(--purple);font-size:14px;flex-shrink:0;}
+.tx-row .ic.send{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red);}
+.tx-row .ic.recv{background:rgba(34,197,94,.1);border-color:var(--green);color:var(--green);}
+.tx-row .meta{flex:1;min-width:0;}
+.tx-row .lbl{font-family:'Russo One',sans-serif;font-size:11px;color:#fff;letter-spacing:.5px;}
+.tx-row .sub{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
+.tx-row .val{font-family:'JetBrains Mono',monospace;font-size:11px;color:#fff;text-align:right;}
+.tx-row .val.up{color:var(--green);}
+.tx-row .val.down{color:var(--red);}
+.tx-empty{text-align:center;padding:20px;color:var(--text-3);font-size:12px;}
+
+/* === QUICK ACTIONS === */
+.actions-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.action-card{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  background:rgba(168,85,247,.08);border:1.5px solid var(--purple);border-radius:12px;
+  transition:.15s;cursor:pointer;text-decoration:none;
+}
+.action-card:hover{background:rgba(168,85,247,.18);transform:translateY(-1px);}
+.action-card .emoji{font-size:20px;}
+.action-card .text{display:flex;flex-direction:column;}
+.action-card .text b{font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:1px;color:#fff;}
+.action-card .text small{font-size:9.5px;color:var(--text-2);}
+
+/* === BTN === */
+.btn{
+  display:flex;align-items:center;justify-content:center;width:100%;
+  padding:14px;border:none;border-radius:12px;
+  font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:1.5px;
+  cursor:pointer;transition:.15s;text-transform:uppercase;
+}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 8px 24px -4px rgba(168,85,247,.4);}
+.btn-primary:hover{transform:translateY(-1px);}
+.btn-ghost{background:transparent;border:1.5px solid var(--border-2);color:#fff;}
+
+/* === STATUS / PILL === */
+.connect-prompt{text-align:center;padding:34px 20px;}
+.connect-prompt .icon{font-size:54px;margin-bottom:14px;}
+.connect-prompt h2{font-family:'Russo One',sans-serif;font-size:18px;letter-spacing:1px;margin-bottom:8px;}
+.connect-prompt p{color:var(--text-2);font-size:13px;margin-bottom:18px;max-width:380px;margin-left:auto;margin-right:auto;}
+.connect-prompt .btn-row{display:flex;flex-direction:column;gap:8px;max-width:280px;margin:0 auto;}
+
+.hidden{display:none!important;}
+
+.footer{text-align:center;color:var(--text-3);font-size:11px;margin-top:20px;line-height:1.7;}
+.footer a{color:var(--purple);}
+
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;
+  border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;
+  margin-right:8px;vertical-align:-2px;}
+@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+.shimmer{background:linear-gradient(90deg, var(--panel), var(--panel-2), var(--panel));
+  background-size:200% 100%;animation:shimmer 1.2s linear infinite;color:transparent;border-radius:4px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo"><img src="/logo.png" alt=""><span class="name">MONWOLF</span></a>
+    <a href="/" class="back-link">← HOME</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="hero-eyebrow">🐺 YOUR <span style="color:var(--orange);">PACK</span> HUB</span>
+    <h1>WELCOME <span class="grad">WOLF</span></h1>
+  </div>
+
+  <!-- CONNECT PROMPT (shown when not connected) -->
+  <div id="connectPrompt" class="card connect-prompt">
+    <div class="icon">🔒</div>
+    <h2>SIGN IN TO YOUR HUB</h2>
+    <p>Connect a wallet or sign in with your Pack Wallet to see your balances, rank, and trade history.</p>
+    <div class="btn-row">
+      <a href="/buy.html" class="btn btn-primary">🐺 SIGN IN / CREATE WALLET</a>
+      <button id="connectMM" class="btn btn-ghost">🦊 CONNECT METAMASK</button>
+    </div>
+  </div>
+
+  <!-- HUB CONTENT (shown when connected) -->
+  <div id="hubContent" class="hidden">
+
+    <!-- Wallet hero -->
+    <div class="wallet-hero">
+      <div class="wh-eyebrow">▌ Connected Wallet</div>
+      <div class="wh-addr">
+        <span id="addrFull">—</span>
+        <button class="copy-btn" id="copyAddr">COPY</button>
+      </div>
+      <div class="wh-rank" id="rankPill">
+        <span class="emoji" id="rankEmoji">🐺</span>
+        <span id="rankLabel">PACK MEMBER</span>
+      </div>
+    </div>
+
+    <!-- Balance grid -->
+    <div class="bal-grid" id="balGrid">
+      <div class="bal-card">
+        <div class="bc-h">
+          <img src="https://monorail-static.fra1.digitaloceanspaces.com/tokens/mon-token.svg" alt="">
+          <div>
+            <div class="sym">MON</div>
+            <div class="name">Monad native</div>
+          </div>
+        </div>
+        <div class="bc-bal" id="monBalDisplay">—</div>
+        <div class="bc-usd" id="monUsd">—</div>
+      </div>
+      <div class="bal-card featured">
+        <div class="bc-h">
+          <img src="/logo.png" alt="">
+          <div>
+            <div class="sym">MONWOLF</div>
+            <div class="name">$WOLF — your pack rank</div>
+          </div>
+        </div>
+        <div class="bc-bal" id="wolfBalDisplay">—</div>
+        <div class="bc-usd" id="wolfUsd">—</div>
+      </div>
+    </div>
+
+    <!-- Other pack tokens -->
+    <div class="card">
+      <div class="card-h">
+        <h2>OTHER PACK HOLDINGS</h2>
+        <span class="meta" id="packMeta">scanning…</span>
+      </div>
+      <div class="bal-grid" id="packGrid">
+        <div class="bal-card"><div class="bc-h"><div class="bc-bal shimmer">loading</div></div></div>
+        <div class="bal-card"><div class="bc-h"><div class="bc-bal shimmer">loading</div></div></div>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="card">
+      <div class="card-h">
+        <h2>QUICK ACTIONS</h2>
+      </div>
+      <div class="actions-grid">
+        <a href="/buy.html" class="action-card">
+          <span class="emoji">🐺</span>
+          <div class="text"><b>BUY $MONWOLF</b><small>Stack the pack</small></div>
+        </a>
+        <a href="/swap.html" class="action-card">
+          <span class="emoji">🔁</span>
+          <div class="text"><b>UNIVERSAL SWAP</b><small>Any Monad token</small></div>
+        </a>
+        <a href="/arcade.html" class="action-card">
+          <span class="emoji">🎮</span>
+          <div class="text"><b>ARCADE</b><small>Play + climb leaderboard</small></div>
+        </a>
+        <a href="https://monadexplorer.com/address/0x0000000000000000000000000000000000000000" id="explorerLink" class="action-card" target="_blank" rel="noopener">
+          <span class="emoji">🔍</span>
+          <div class="text"><b>EXPLORER</b><small>View on-chain</small></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent activity -->
+    <div class="card">
+      <div class="card-h">
+        <h2>RECENT ACTIVITY</h2>
+        <span class="meta" id="txMeta">last 10</span>
+      </div>
+      <div class="tx-list" id="txList">
+        <div class="tx-empty">Loading transactions…</div>
+      </div>
+    </div>
+
+    <!-- Disconnect -->
+    <button id="disconnectBtn" class="btn btn-ghost" style="margin-top:8px;color:var(--red);border-color:var(--red);">DISCONNECT</button>
+
+  </div>
+
+  <div class="footer">
+    <a href="/">monwolf hub</a> · <a href="/buy.html">buy</a> · <a href="/swap.html">swap</a> · <a href="/arcade.html">arcade</a>
+    <div style="margin-top:6px;">🐺 <i>The future is ours.</i></div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+const MONWOLF = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
+const NATIVE  = '0x0000000000000000000000000000000000000000';
+const RPC     = 'https://rpc.monad.xyz';
+const EXPLORER = 'https://monadexplorer.com';
+const CHAIN_HEX = '0x8f';
+
+const $ = id => document.getElementById(id);
+
+// Pack-ecosystem tokens to scan for the user's other holdings
+const PACK_TOKENS = [
+  { addr: '0xb744f5cdb792d8187640214c4a1c9ace29af7777', sym: 'MONSHI',  name: 'Monshi',  logo: 'https://storage.nadapp.net/coin/bdf23c46-ccd6-447d-b3ed-d84a911aae7a' },
+  { addr: '0xaca86430cccedbedb35910fc8a5afef07da37777', sym: 'RENE',    name: 'Rene',    logo: 'https://storage.nadapp.net/coin/515a9ad5-e127-4e97-92af-5f8206fa9478' },
+  { addr: '0x350035555e10d9afaf1566aaebfced5ba6c27777', sym: 'CHOG',    name: 'Chog',    logo: null },
+  { addr: '0x5e1b1a14c8758104b8560514e94ab8320e587777', sym: 'CHOGI',   name: 'Chogi',   logo: null },
+  { addr: '0xb72e6262dae53caf167f0966421a0b9782977777', sym: 'MOLLY',   name: 'Molly',   logo: null },
+];
+
+// Rank tiers (MONWOLF balance → rank)
+const RANKS = [
+  { min: 10000000, name: 'APEX',   emoji: '👑' },
+  { min: 1000000,  name: 'ALPHA',  emoji: '⚡' },
+  { min: 100000,   name: 'BETA',   emoji: '🌙' },
+  { min: 10000,    name: 'SCOUT',  emoji: '🐺' },
+  { min: 1000,     name: 'PACK',   emoji: '🐺' },
+  { min: 1,        name: 'CUB',    emoji: '🐾' },
+  { min: 0,        name: 'OUTSIDER', emoji: '👀' },
+];
+
+const STATE = {
+  account: null,
+  signerType: null,  // 'local' | 'mm'
+};
+
+// ────── RPC ──────
+async function rpcCall(method, params){
+  const r = await fetch(RPC, {
+    method:'POST',headers:{'content-type':'application/json'},
+    body: JSON.stringify({jsonrpc:'2.0', id:Date.now(), method, params}),
+  });
+  if (!r.ok) throw new Error('RPC HTTP ' + r.status);
+  const j = await r.json();
+  if (j.error) throw new Error('RPC: ' + j.error.message);
+  return j.result;
+}
+const iface = new ethers.Interface([
+  'function balanceOf(address) view returns (uint256)',
+  'function decimals() view returns (uint8)',
+  'function symbol() view returns (string)',
+]);
+async function nativeBalance(addr){ return BigInt(await rpcCall('eth_getBalance', [addr, 'latest'])); }
+async function tokenBalance(token, addr){
+  const data = iface.encodeFunctionData('balanceOf', [addr]);
+  const res = await rpcCall('eth_call', [{to: token, data}, 'latest']);
+  if (!res || res === '0x') return 0n;
+  return iface.decodeFunctionResult('balanceOf', res)[0];
+}
+
+function fmt(n){
+  if (n == null || isNaN(n)) return '—';
+  const v = Number(n);
+  if (v === 0) return '0';
+  if (v < 0.0001) return v.toExponential(2);
+  if (v < 1) return v.toFixed(4);
+  if (v < 1000) return v.toFixed(2);
+  return v.toLocaleString('en-US', {maximumFractionDigits: 2});
+}
+function shortAddr(a){ return a ? a.slice(0,6) + '…' + a.slice(-4) : ''; }
+function rankFor(wolfBal){
+  for (const r of RANKS) if (wolfBal >= r.min) return r;
+  return RANKS[RANKS.length - 1];
+}
+
+// ────── PRICE (DexScreener) ──────
+async function fetchPrice(token){
+  try{
+    const r = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + token);
+    if (!r.ok) return null;
+    const j = await r.json();
+    if (!j.pairs || !j.pairs.length) return null;
+    const sorted = j.pairs.sort((a,b) => parseFloat(b.liquidity?.usd || 0) - parseFloat(a.liquidity?.usd || 0));
+    return parseFloat(sorted[0].priceUsd || 0);
+  }catch(e){ return null; }
+}
+
+// ────── DETECT SESSION ──────
+async function detectSession(){
+  // 1. Check for /buy.html session (sessionStorage key 'mw_session_v1')
+  try{
+    const s = sessionStorage.getItem('mw_session_v1');
+    if (s){
+      const obj = JSON.parse(s);
+      if (obj && obj.address){
+        STATE.account = obj.address;
+        STATE.signerType = 'local';
+        return true;
+      }
+    }
+  }catch(e){}
+  // 2. Check for homepage MetaMask connection (sessionStorage 'mw_wallet')
+  try{
+    const w = sessionStorage.getItem('mw_wallet');
+    if (w){
+      const obj = JSON.parse(w);
+      if (obj && obj.address){
+        STATE.account = obj.address;
+        STATE.signerType = 'mm';
+        return true;
+      }
+    }
+  }catch(e){}
+  // 3. Check for active MetaMask
+  if (window.ethereum && window.ethereum.selectedAddress){
+    STATE.account = window.ethereum.selectedAddress;
+    STATE.signerType = 'mm';
+    return true;
+  }
+  return false;
+}
+
+// ────── MM CONNECT ──────
+$('connectMM').onclick = async function(){
+  if (!window.ethereum){
+    alert('No wallet detected. Tap "SIGN IN / CREATE WALLET" to make one in your browser.');
+    return;
+  }
+  this.innerHTML = '<span class="spin"></span>CONNECTING…';
+  try{
+    const accs = await window.ethereum.request({method:'eth_requestAccounts'});
+    try{
+      await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId: CHAIN_HEX}]});
+    }catch(e){
+      if (e.code === 4902){
+        await window.ethereum.request({method:'wallet_addEthereumChain', params:[{
+          chainId: CHAIN_HEX, chainName: 'Monad Mainnet',
+          nativeCurrency: {name:'Monad', symbol:'MON', decimals:18},
+          rpcUrls:[RPC], blockExplorerUrls:[EXPLORER],
+        }]});
+      }
+    }
+    STATE.account = accs[0];
+    STATE.signerType = 'mm';
+    sessionStorage.setItem('mw_wallet', JSON.stringify({address: accs[0]}));
+    enterHub();
+  }catch(e){
+    this.innerHTML = '🦊 CONNECT METAMASK';
+    alert('Connect failed: ' + (e.message || e));
+  }
+};
+
+// ────── DISCONNECT ──────
+$('disconnectBtn').onclick = function(){
+  if (!confirm('Disconnect from this hub? Your wallet stays — you can sign back in anytime.')) return;
+  STATE.account = null;
+  STATE.signerType = null;
+  sessionStorage.removeItem('mw_session_v1');
+  sessionStorage.removeItem('mw_wallet');
+  $('hubContent').classList.add('hidden');
+  $('connectPrompt').classList.remove('hidden');
+};
+
+// ────── COPY ADDR ──────
+$('copyAddr').onclick = function(){
+  navigator.clipboard.writeText(STATE.account).then(()=>{
+    this.textContent = 'COPIED';
+    setTimeout(()=>this.textContent='COPY', 1500);
+  });
+};
+
+// ────── ENTER HUB ──────
+async function enterHub(){
+  $('connectPrompt').classList.add('hidden');
+  $('hubContent').classList.remove('hidden');
+  $('addrFull').textContent = shortAddr(STATE.account);
+  $('explorerLink').href = EXPLORER + '/address/' + STATE.account;
+
+  await loadBalances();
+  loadPackHoldings();
+  loadRecentActivity();
+}
+
+// ────── BALANCES ──────
+async function loadBalances(){
+  try{
+    const [mon, wolf, monPrice, wolfPrice] = await Promise.all([
+      nativeBalance(STATE.account),
+      tokenBalance(MONWOLF, STATE.account),
+      fetchPrice('0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A'),  // WMON for MON price
+      fetchPrice(MONWOLF),
+    ]);
+    const monNum  = Number(ethers.formatUnits(mon, 18));
+    const wolfNum = Number(ethers.formatUnits(wolf, 18));
+    $('monBalDisplay').textContent  = fmt(monNum);
+    $('wolfBalDisplay').textContent = fmt(wolfNum);
+    if (monPrice)  $('monUsd').textContent  = '$' + fmt(monNum * monPrice);
+    if (wolfPrice) $('wolfUsd').textContent = '$' + fmt(wolfNum * wolfPrice);
+
+    // Rank
+    const rank = rankFor(wolfNum);
+    $('rankEmoji').textContent = rank.emoji;
+    $('rankLabel').textContent = rank.name;
+  }catch(e){
+    console.warn('balance load:', e);
+  }
+}
+
+// ────── PACK HOLDINGS (other tokens) ──────
+async function loadPackHoldings(){
+  const grid = $('packGrid');
+  grid.innerHTML = '';
+  let found = 0;
+  const results = await Promise.allSettled(
+    PACK_TOKENS.map(async t => {
+      const bal = await tokenBalance(t.addr, STATE.account);
+      return { tok: t, bal };
+    })
+  );
+  for (const r of results){
+    if (r.status !== 'fulfilled') continue;
+    const { tok, bal } = r.value;
+    const balNum = Number(ethers.formatUnits(bal, 18));
+    if (balNum <= 0) continue;
+    found++;
+    const card = document.createElement('a');
+    card.className = 'bal-card';
+    card.href = '/swap.html?from=' + tok.addr;
+    card.innerHTML =
+      '<div class="bc-h">' +
+        (tok.logo ? '<img src="' + tok.logo + '" alt="">' : '<div style="width:24px;height:24px;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Russo One,sans-serif;font-size:10px;">' + tok.sym[0] + '</div>') +
+        '<div><div class="sym">' + tok.sym + '</div><div class="name">' + tok.name + '</div></div>' +
+      '</div>' +
+      '<div class="bc-bal">' + fmt(balNum) + '</div>' +
+      '<div class="bc-usd">Tap to swap →</div>';
+    grid.appendChild(card);
+  }
+  if (found === 0){
+    grid.innerHTML = '<div style="grid-column:span 2;padding:18px;text-align:center;color:var(--text-3);font-size:12px;border:1px dashed var(--border);border-radius:12px;">No other pack tokens held yet. <a href="/swap.html" style="color:var(--orange);">Buy some on /swap →</a></div>';
+  }
+  $('packMeta').textContent = found + ' token' + (found !== 1 ? 's' : '');
+}
+
+// ────── RECENT ACTIVITY ──────
+// Best-effort: query monadexplorer's API if available; fall back to a simple block scan
+async function loadRecentActivity(){
+  const list = $('txList');
+  list.innerHTML = '<div class="tx-empty">Loading transactions…</div>';
+  try{
+    // monadexplorer.com isn't a public API we control, so use the public RPC
+    // approach: get latest block, scan last N blocks for tx from/to this address.
+    // For a polished UI we'd ideally use a real indexer (Sourcify, Routescan,
+    // or Sentio) — for v1 we surface the last few inbound/outbound MON txs by
+    // scanning blocks. Skipping in favor of explorer deeplink for now.
+    list.innerHTML =
+      '<a class="tx-row" href="' + EXPLORER + '/address/' + STATE.account + '" target="_blank" rel="noopener" style="text-decoration:none;">' +
+        '<div class="ic">🔍</div>' +
+        '<div class="meta">' +
+          '<div class="lbl">VIEW FULL ACTIVITY</div>' +
+          '<div class="sub">Open on Monad Explorer →</div>' +
+        '</div>' +
+        '<div class="val">→</div>' +
+      '</a>';
+  }catch(e){
+    list.innerHTML = '<div class="tx-empty">Couldn\'t load activity. <a href="' + EXPLORER + '/address/' + STATE.account + '" target="_blank" style="color:var(--orange);">View on explorer →</a></div>';
+  }
+}
+
+// ────── BOOT ──────
+(async function boot(){
+  const ok = await detectSession();
+  if (ok) enterHub();
+})();
+
+})();
+</script>
+
+</body>
+</html>

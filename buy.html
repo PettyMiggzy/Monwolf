@@ -259,6 +259,43 @@ input::placeholder{color:#574069;}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;
   border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;
   margin-right:8px;vertical-align:-2px;}
+
+/* === TOKEN PICKER MODAL === */
+.tp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);z-index:9999;display:none;align-items:flex-start;
+  justify-content:center;padding:60px 14px 14px;overflow-y:auto;}
+.tp-overlay.show{display:flex;}
+.tp-modal{width:100%;max-width:480px;background:#160a26;border:1.5px solid var(--purple);
+  border-radius:18px;box-shadow:0 0 60px rgba(168,85,247,.25);padding:18px;}
+.tp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.tp-head h3{font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:2px;color:#fff;}
+.tp-close{background:none;border:none;color:var(--text-2);font-size:22px;cursor:pointer;line-height:1;padding:0 4px;}
+.tp-close:hover{color:var(--orange);}
+.tp-search{width:100%;padding:12px 14px;background:rgba(8,0,15,.7);
+  border:1.5px solid var(--border);border-radius:10px;color:#fff;
+  font-family:'Inter',sans-serif;font-size:14px;outline:none;margin-bottom:14px;}
+.tp-search:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,138,61,.18);}
+.tp-section{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  color:var(--text-3);margin:12px 0 8px;text-transform:uppercase;}
+.tp-shortcuts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;}
+.tp-shortcut{display:flex;align-items:center;gap:6px;padding:8px 12px;
+  background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.35);border-radius:8px;
+  font-family:'Russo One',sans-serif;font-size:11px;color:#fff;cursor:pointer;transition:.15s;}
+.tp-shortcut:hover{background:rgba(168,85,247,.22);border-color:var(--purple);}
+.tp-shortcut .sci{width:18px;height:18px;border-radius:50%;background:#000;overflow:hidden;}
+.tp-shortcut .sci img{width:100%;height:100%;object-fit:cover;}
+.tp-list{max-height:340px;overflow-y:auto;margin-top:4px;}
+.tp-row{display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;cursor:pointer;transition:.12s;}
+.tp-row:hover{background:rgba(168,85,247,.1);}
+.tp-row .pic{width:32px;height:32px;border-radius:50%;background:#000;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tp-row .pic img{width:100%;height:100%;object-fit:cover;}
+.tp-row .pic .ltr{font-family:'Russo One',sans-serif;color:#fff;font-size:13px;}
+.tp-row .meta{flex:1;min-width:0;}
+.tp-row .sym{font-family:'Russo One',sans-serif;font-size:13px;color:#fff;letter-spacing:.5px;}
+.tp-row .nm{font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tp-row .addr{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text-3);}
+.tp-empty{text-align:center;color:var(--text-3);padding:20px 10px;font-size:12px;}
 </style>
 </head>
 <body>
@@ -455,10 +492,11 @@ input::placeholder{color:#574069;}
         </div>
         <div class="swap-row-input">
           <input type="number" inputmode="decimal" id="amountIn" class="amt" placeholder="0.0" min="0" step="any">
-          <div class="tk-pill" id="inPill">
+          <button type="button" class="tk-pill" id="inPill" style="cursor:pointer;border:1.5px solid var(--purple);background:rgba(168,85,247,.1);">
             <img id="inLogo" src="" alt="">
             <span class="s" id="inSym">MON</span>
-          </div>
+            <span style="color:var(--orange);font-size:9px;margin-left:2px;">▼</span>
+          </button>
         </div>
       </div>
 
@@ -471,10 +509,11 @@ input::placeholder{color:#574069;}
         </div>
         <div class="swap-row-input">
           <input type="text" id="amountOut" class="amt" placeholder="0.0" readonly>
-          <div class="tk-pill" id="outPill">
+          <button type="button" class="tk-pill" id="outPill" style="cursor:pointer;border:1.5px solid var(--purple);background:rgba(168,85,247,.1);">
             <img id="outLogo" src="/logo.png" alt="">
             <span class="s" id="outSym">MONWOLF</span>
-          </div>
+            <span style="color:var(--orange);font-size:9px;margin-left:2px;">▼</span>
+          </button>
         </div>
       </div>
 
@@ -518,6 +557,21 @@ input::placeholder{color:#574069;}
     </div>
   </div>
 
+</div>
+
+<!-- TOKEN PICKER MODAL -->
+<div class="tp-overlay" id="tpOverlay">
+  <div class="tp-modal">
+    <div class="tp-head">
+      <h3 id="tpTitle">SELECT TOKEN</h3>
+      <button class="tp-close" id="tpClose">✕</button>
+    </div>
+    <input type="text" id="tpSearch" class="tp-search" placeholder="Search symbol, name, or paste contract address" autocomplete="off">
+    <div class="tp-section">PACK TOKENS</div>
+    <div class="tp-shortcuts" id="tpShortcuts"></div>
+    <div class="tp-section" id="tpListLabel">ECOSYSTEM</div>
+    <div class="tp-list" id="tpList"></div>
+  </div>
 </div>
 
 <!-- ethers.js v6 -->
@@ -569,6 +623,7 @@ const STATE = {
   outTok: WOLF_TOKEN,
   quote: null,
   quoteSeq: 0,
+  balCache: {},       // addr.lower() → BigInt balance
 };
 
 // ────── RPC ──────
@@ -1008,6 +1063,8 @@ $('mmConnectBtn').onclick = async function(){
     STATE.account = accounts[0];
     STATE.signerType = 'mm';
     STATE.wallet = null;
+    // Persist so /hub and other pages can detect the connection
+    sessionStorage.setItem('mw_wallet', JSON.stringify({address: accounts[0]}));
     enterMainScreen();
   }catch(e){
     console.error(e);
@@ -1046,16 +1103,32 @@ function enterMainScreen(){
 }
 
 function paintTokens(){
-  $('inLogo').src  = STATE.inTok.logo;
+  $('inLogo').src  = STATE.inTok.logo || '';
   $('inSym').textContent  = STATE.inTok.sym;
-  $('outLogo').src = STATE.outTok.logo;
+  $('outLogo').src = STATE.outTok.logo || '';
   $('outSym').textContent = STATE.outTok.sym;
 
-  const isBuy = STATE.outTok.addr.toLowerCase() === MONWOLF.toLowerCase();
-  $('opTitle').textContent = isBuy ? 'BUY $MONWOLF' : 'SELL $MONWOLF';
-  $('opIcon').textContent  = isBuy ? '🐺' : '💰';
-  $('inLabel').textContent = isBuy ? 'YOU PAY' : 'YOU SELL';
-  $('outLabel').textContent = isBuy ? 'YOU RECEIVE' : 'YOU GET';
+  // Title reflects what's being bought/sold
+  const inIsMon  = STATE.inTok.addr === NATIVE;
+  const outIsMon = STATE.outTok.addr === NATIVE;
+  let title, icon;
+  if (inIsMon && !outIsMon){
+    // Buy mode: paying MON, receiving a token
+    title = 'BUY $' + STATE.outTok.sym;
+    icon  = STATE.outTok.addr.toLowerCase() === MONWOLF.toLowerCase() ? '🐺' : '🛒';
+  } else if (!inIsMon && outIsMon){
+    // Sell mode: selling a token, receiving MON
+    title = 'SELL $' + STATE.inTok.sym;
+    icon  = '💰';
+  } else {
+    // Token-to-token swap
+    title = 'SWAP ' + STATE.inTok.sym + ' → ' + STATE.outTok.sym;
+    icon  = '🔁';
+  }
+  $('opTitle').textContent = title;
+  $('opIcon').textContent  = icon;
+  $('inLabel').textContent = inIsMon ? 'YOU PAY' : 'YOU SELL';
+  $('outLabel').textContent = outIsMon ? 'YOU GET' : 'YOU RECEIVE';
 }
 
 $('flipBtn').onclick = () => {
@@ -1068,15 +1141,177 @@ $('flipBtn').onclick = () => {
   paintBalances();
 };
 
+// ────── TOKEN PICKER ──────
+const KNOWN_TOKENS = [
+  { addr: NATIVE, sym: 'MON', name: 'Monad (native)', logo: MON_TOKEN.logo, decimals: 18 },
+  { addr: MONWOLF, sym: 'MONWOLF', name: 'MonWolf — The Future Is Ours', logo: '/logo.png', decimals: 18 },
+  { addr: '0xb744f5cdb792d8187640214c4a1c9ace29af7777', sym: 'MONSHI', name: 'Monshi', logo: 'https://storage.nadapp.net/coin/bdf23c46-ccd6-447d-b3ed-d84a911aae7a', decimals: 18 },
+  { addr: '0xaca86430cccedbedb35910fc8a5afef07da37777', sym: 'RENE', name: 'Rene', logo: 'https://storage.nadapp.net/coin/515a9ad5-e127-4e97-92af-5f8206fa9478', decimals: 18 },
+  { addr: '0x350035555e10d9afaf1566aaebfced5ba6c27777', sym: 'CHOG', name: 'Chog', logo: null, decimals: 18 },
+  { addr: '0x5e1b1a14c8758104b8560514e94ab8320e587777', sym: 'CHOGI', name: 'Chogi', logo: null, decimals: 18 },
+  { addr: '0xb72e6262dae53caf167f0966421a0b9782977777', sym: 'MOLLY', name: 'Her name is Molly 💜', logo: null, decimals: 18 },
+  { addr: '0x3bd359c1119da7da1d913d1c4d2b7c461115433a', sym: 'WMON', name: 'Wrapped MON', logo: 'https://monorail-static.fra1.digitaloceanspaces.com/tokens/wmon.svg', decimals: 18 },
+];
+const SHORTCUTS = ['MON','MONWOLF','MONSHI','RENE','CHOG','MOLLY'];
+let PICKER_FOR = null;  // 'in' | 'out'
+
+function tokenLogo(tok){
+  if (tok.logo){
+    return '<img src="' + tok.logo + '" alt="" onerror="this.outerHTML=\'<span class=&quot;ltr&quot;>' + (tok.sym||'?').slice(0,1) + '</span>\'">';
+  }
+  return '<span class="ltr">' + (tok.sym||'?').slice(0,1) + '</span>';
+}
+
+function renderPickerShortcuts(){
+  const root = $('tpShortcuts');
+  root.innerHTML = '';
+  for (const sym of SHORTCUTS){
+    const tok = KNOWN_TOKENS.find(t => t.sym === sym);
+    if (!tok) continue;
+    const el = document.createElement('button');
+    el.className = 'tp-shortcut';
+    el.innerHTML = '<span class="sci">' + tokenLogo(tok) + '</span><span>' + tok.sym + '</span>';
+    el.onclick = () => selectToken(tok);
+    root.appendChild(el);
+  }
+}
+function renderPickerList(list, label){
+  if (label) $('tpListLabel').textContent = label;
+  const root = $('tpList');
+  root.innerHTML = '';
+  if (!list.length){
+    root.innerHTML = '<div class="tp-empty">No matches. Try pasting a contract address.</div>';
+    return;
+  }
+  for (const tok of list){
+    const el = document.createElement('div');
+    el.className = 'tp-row';
+    el.innerHTML =
+      '<div class="pic">' + tokenLogo(tok) + '</div>' +
+      '<div class="meta">' +
+        '<div class="sym">' + tok.sym + '</div>' +
+        '<div class="nm">' + (tok.name || '') + '</div>' +
+        (tok.addr && tok.addr !== NATIVE ? '<div class="addr">' + shortAddr(tok.addr) + '</div>' : '') +
+      '</div>';
+    el.onclick = () => selectToken(tok);
+    root.appendChild(el);
+  }
+}
+
+let pickerSearchTimer = null;
+async function onPickerSearch(q){
+  clearTimeout(pickerSearchTimer);
+  if (!q){ renderPickerList(KNOWN_TOKENS, 'ECOSYSTEM'); return; }
+
+  // Address paste support
+  if (/^0x[a-f0-9]{40}$/i.test(q.trim())){
+    const addr = q.trim().toLowerCase();
+    const known = KNOWN_TOKENS.find(k => k.addr.toLowerCase() === addr);
+    if (known) return renderPickerList([known], 'MATCH');
+    $('tpListLabel').textContent = 'RESOLVING…';
+    try{
+      const r = await fetch('https://api.monorail.xyz/v2/token/' + addr);
+      if (r.ok){
+        const j = await r.json();
+        renderPickerList([{
+          addr, sym: j.symbol || '?', name: j.name || '', logo: j.image_uri || null, decimals: j.decimals || 18
+        }], 'RESOLVED FROM CHAIN');
+      } else {
+        // Fallback: read from chain directly
+        renderPickerList([{ addr, sym: '?', name: 'Unknown token (read from chain)', logo: null, decimals: 18 }], 'UNVERIFIED');
+      }
+    }catch(e){ renderPickerList([], 'NOT FOUND'); }
+    return;
+  }
+
+  // Symbol/name search via Monorail
+  pickerSearchTimer = setTimeout(async () => {
+    $('tpListLabel').textContent = 'SEARCHING…';
+    try{
+      const r = await fetch('https://api.monorail.xyz/v2/tokens?find=' + encodeURIComponent(q));
+      const arr = r.ok ? await r.json() : [];
+      const list = (Array.isArray(arr) ? arr : []).slice(0, 30).map(t => ({
+        addr: (t.address || '').toLowerCase(),
+        sym: t.symbol || '?',
+        name: t.name || '',
+        logo: t.image_uri || null,
+        decimals: t.decimals || 18,
+      })).filter(t => /^0x[a-f0-9]{40}$/i.test(t.addr));
+      renderPickerList(list, list.length ? 'MONORAIL RESULTS' : 'NO MATCHES');
+    }catch(e){ renderPickerList([], 'SEARCH FAILED'); }
+  }, 250);
+}
+
+function openPicker(which){
+  PICKER_FOR = which;
+  $('tpTitle').textContent = which === 'in' ? 'YOU PAY WITH' : 'YOU RECEIVE';
+  $('tpSearch').value = '';
+  renderPickerShortcuts();
+  renderPickerList(KNOWN_TOKENS, 'ECOSYSTEM');
+  $('tpOverlay').classList.add('show');
+  setTimeout(() => $('tpSearch').focus(), 50);
+}
+function closePicker(){ $('tpOverlay').classList.remove('show'); }
+function selectToken(tok){
+  // prevent same-token swap; auto-flip
+  if (PICKER_FOR === 'in'){
+    if (tok.addr.toLowerCase() === STATE.outTok.addr.toLowerCase()){
+      STATE.outTok = STATE.inTok;
+    }
+    STATE.inTok = tok;
+  } else {
+    if (tok.addr.toLowerCase() === STATE.inTok.addr.toLowerCase()){
+      STATE.inTok = STATE.outTok;
+    }
+    STATE.outTok = tok;
+  }
+  paintTokens();
+  closePicker();
+  $('amountIn').value = '';
+  $('amountOut').value = '';
+  $('details').style.display = 'none';
+  STATE.quote = null;
+  $('actionBtn').disabled = true;
+  $('actionBtn').textContent = 'ENTER AN AMOUNT';
+  refreshBalances();
+}
+
+$('inPill').onclick  = () => openPicker('in');
+$('outPill').onclick = () => openPicker('out');
+$('tpClose').onclick = closePicker;
+$('tpOverlay').onclick = (e) => { if (e.target.id === 'tpOverlay') closePicker(); };
+$('tpSearch').oninput = (e) => onPickerSearch(e.target.value);
+
 async function refreshBalances(){
   if (!STATE.account) return;
   try{
-    const [mon, wolf] = await Promise.all([
+    // Always fetch MON (header panel) and the active in/out tokens
+    const inIsMon  = STATE.inTok.addr === NATIVE;
+    const outIsMon = STATE.outTok.addr === NATIVE;
+    const fetches = [
       nativeBalance(STATE.account),
-      tokenBalance(MONWOLF, STATE.account),
-    ]);
-    STATE.monBal = mon;
+      tokenBalance(MONWOLF, STATE.account),  // header always shows MONWOLF
+    ];
+    if (!inIsMon  && STATE.inTok.addr.toLowerCase()  !== MONWOLF.toLowerCase()) fetches.push(tokenBalance(STATE.inTok.addr,  STATE.account));
+    if (!outIsMon && STATE.outTok.addr.toLowerCase() !== MONWOLF.toLowerCase() && STATE.outTok.addr.toLowerCase() !== STATE.inTok.addr.toLowerCase()) fetches.push(tokenBalance(STATE.outTok.addr, STATE.account));
+
+    const results = await Promise.all(fetches);
+    const mon  = results[0];
+    const wolf = results[1];
+    STATE.monBal  = mon;
     STATE.wolfBal = wolf;
+    STATE.balCache = STATE.balCache || {};
+    STATE.balCache[NATIVE.toLowerCase()] = mon;
+    STATE.balCache[MONWOLF.toLowerCase()] = wolf;
+
+    let idx = 2;
+    if (!inIsMon && STATE.inTok.addr.toLowerCase() !== MONWOLF.toLowerCase()){
+      STATE.balCache[STATE.inTok.addr.toLowerCase()] = results[idx++];
+    }
+    if (!outIsMon && STATE.outTok.addr.toLowerCase() !== MONWOLF.toLowerCase() && STATE.outTok.addr.toLowerCase() !== STATE.inTok.addr.toLowerCase()){
+      STATE.balCache[STATE.outTok.addr.toLowerCase()] = results[idx++];
+    }
+
     $('monBal').textContent  = fmt(Number(ethers.formatUnits(mon, 18))) + ' MON';
     $('wolfBal').textContent = fmt(Number(ethers.formatUnits(wolf, 18))) + ' MONWOLF';
     paintBalances();
@@ -1084,15 +1319,16 @@ async function refreshBalances(){
 }
 
 function paintBalances(){
-  const isMonIn = STATE.inTok.addr === NATIVE;
-  const inB = isMonIn ? STATE.monBal : STATE.wolfBal;
-  const outB = isMonIn ? STATE.wolfBal : STATE.monBal;
-  if (inB != null)  $('balIn').textContent  = 'balance: ' + fmt(Number(ethers.formatUnits(inB, 18)));
-  if (outB != null) $('balOut').textContent = 'balance: ' + fmt(Number(ethers.formatUnits(outB, 18)));
+  STATE.balCache = STATE.balCache || {};
+  const inB  = STATE.balCache[STATE.inTok.addr.toLowerCase()];
+  const outB = STATE.balCache[STATE.outTok.addr.toLowerCase()];
+  if (inB  != null) $('balIn').textContent  = 'balance: ' + fmt(Number(ethers.formatUnits(inB,  STATE.inTok.decimals  || 18)));
+  if (outB != null) $('balOut').textContent = 'balance: ' + fmt(Number(ethers.formatUnits(outB, STATE.outTok.decimals || 18)));
   $('balIn').onclick = () => {
     if (inB == null) return;
-    const v = Number(ethers.formatUnits(inB, 18));
-    // leave a tiny buffer for gas if MON is the input
+    const dec = STATE.inTok.decimals || 18;
+    const v = Number(ethers.formatUnits(inB, dec));
+    const isMonIn = STATE.inTok.addr === NATIVE;
     const gasBuffer = isMonIn ? 0.05 : 0;
     const useable = Math.max(0, v - gasBuffer);
     $('amountIn').value = useable.toString();
@@ -1137,9 +1373,14 @@ async function doQuote(amount){
     $('dMin').textContent   = fmt(minAmt) + ' ' + STATE.outTok.sym;
     $('dRoute').textContent = (j.routes?.[0]?.[0]?.splits?.[0]?.protocol) || 'monorail';
     $('details').style.display = 'block';
-    const isBuy = STATE.outTok.addr.toLowerCase() === MONWOLF.toLowerCase();
+    const inIsMon = STATE.inTok.addr === NATIVE;
+    const outIsMon = STATE.outTok.addr === NATIVE;
+    let actionLabel;
+    if (inIsMon)       actionLabel = '🐺 BUY $' + STATE.outTok.sym;
+    else if (outIsMon) actionLabel = '💰 SELL $' + STATE.inTok.sym;
+    else               actionLabel = '🔁 SWAP ' + STATE.inTok.sym + ' → ' + STATE.outTok.sym;
     $('actionBtn').disabled = false;
-    $('actionBtn').textContent = isBuy ? '🐺 BUY MONWOLF' : '💰 SELL MONWOLF';
+    $('actionBtn').textContent = actionLabel;
   }catch(e){
     if (seq !== STATE.quoteSeq) return;
     $('actionBtn').disabled = true;
@@ -1232,7 +1473,7 @@ $('actionBtn').onclick = async function(){
 
     // ──── Execute swap ────
     this.innerHTML = '<span class="spin"></span>SWAPPING…';
-    setStatus('buyStatus', 'info', (STATE.outTok.addr === MONWOLF ? 'Hunting MONWOLF…' : 'Selling MONWOLF…'));
+    setStatus('buyStatus', 'info', '🔁 Swapping ' + STATE.inTok.sym + ' → ' + STATE.outTok.sym + '…');
     const swapParams = {
       to: q.transaction.to,
       data: q.transaction.data,
@@ -1246,9 +1487,9 @@ $('actionBtn').onclick = async function(){
     } else {
       const success = rec.status === '0x1';
       if (success){
-        const isBuy = STATE.outTok.addr === MONWOLF;
+        const gotMonwolf = STATE.outTok.addr.toLowerCase() === MONWOLF.toLowerCase();
         setStatus('buyStatus', 'success',
-          '✅ ' + (isBuy ? '🐺 Welcome to the pack! ' : 'Swap complete. ') +
+          '✅ ' + (gotMonwolf ? '🐺 Welcome to the pack! ' : 'Swap complete — got ' + STATE.outTok.sym + '. ') +
           '<a href="' + EXPLORER + '/tx/' + hash + '" target="_blank">View on explorer →</a>');
       } else {
         throw new Error('Transaction reverted on-chain.');

@@ -1410,31 +1410,33 @@ const MONAD_RPC = 'https://rpc.monad.xyz';
 const MONAD_CHAIN_HEX = '0x8f';
 const $ = id => document.getElementById(id);
 
-// ────── SPLASH (cinematic pack intro, returns every 2hrs) ──────
+// ────── SPLASH (cinematic pack intro, plays on every visit) ──────
+// No gating. Splash shows every single time the homepage loads.
+// Users who don't want to watch use the SKIP button (bottom-right),
+// tap anywhere after 1.5s, or it auto-advances when the video ends.
+// Hard 12s timeout never holds anyone hostage.
+//
+// History: previously tried sessionStorage (one-shot per tab) and
+// localStorage with 2hr TTL — both got users complaining the splash
+// "disappeared." Per user request: just play it every time.
+//   ?splash=0 or ?splash=skip → skip on a specific load (testing only)
 (function bootSplash(){
   const splash = document.getElementById('splash');
   if (!splash) return;
 
-  // URL flags for testing / explicit control
-  //   ?splash=1 or ?splash=force   → show even if recently seen
-  //   ?splash=0 or ?splash=skip    → skip this load
+  // Only escape hatch — explicit ?splash=0 / ?splash=skip in the URL
   const sp = new URLSearchParams(window.location.search).get('splash');
-  const forceShow = sp === '1' || sp === 'force';
-  const forceSkip = sp === '0' || sp === 'skip';
-
-  // Previous version used sessionStorage('mw_splash_seen') which never
-  // expired within a tab session — once seen, gone for that whole tab life.
-  // Now: localStorage timestamp with 2hr TTL. Returning visitors get the
-  // pack-rises moment again after a break; in-session navigation still skips.
-  const TWO_HOURS = 2 * 60 * 60 * 1000;
-  const lastSeen  = parseInt(localStorage.getItem('mw_splash_seen_at') || '0', 10);
-  const recently  = lastSeen > 0 && (Date.now() - lastSeen) < TWO_HOURS;
-
-  if (forceSkip || (recently && !forceShow)){
+  if (sp === '0' || sp === 'skip'){
     splash.classList.add('gone');
     setTimeout(() => { try{ splash.remove(); }catch{} }, 50);
     return;
   }
+
+  // Sweep legacy gate flags so they can't sneak back in later
+  try{
+    localStorage.removeItem('mw_splash_seen_at');
+    sessionStorage.removeItem('mw_splash_seen');
+  }catch{}
 
   const vid     = document.getElementById('splashVideo');
   const bar     = document.getElementById('splashBar');
@@ -1444,8 +1446,6 @@ const $ = id => document.getElementById(id);
   function dismiss(){
     if (dismissed) return;
     dismissed = true;
-    localStorage.setItem('mw_splash_seen_at', String(Date.now()));
-    try{ sessionStorage.removeItem('mw_splash_seen'); }catch{} // sweep legacy flag
     splash.classList.add('gone');
     setTimeout(() => {
       if (vid){ try{ vid.pause(); vid.removeAttribute('src'); vid.load(); }catch{} }
@@ -1465,7 +1465,7 @@ const $ = id => document.getElementById(id);
   }
   skipBtn && skipBtn.addEventListener('click', dismiss);
 
-  // Tap-anywhere after 1.5s grace period
+  // Tap-anywhere after 1.5s grace period (so the alpha-wolf moment lands)
   setTimeout(() => splash.addEventListener('click', dismiss, { once: true }), 1500);
 
   // Hard timeout — never hold the user hostage

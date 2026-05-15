@@ -1410,25 +1410,42 @@ const MONAD_RPC = 'https://rpc.monad.xyz';
 const MONAD_CHAIN_HEX = '0x8f';
 const $ = id => document.getElementById(id);
 
-// ────── SPLASH (cinematic pack intro, once per session) ──────
+// ────── SPLASH (cinematic pack intro, returns every 2hrs) ──────
 (function bootSplash(){
   const splash = document.getElementById('splash');
   if (!splash) return;
-  // Skip if already seen this session
-  if (sessionStorage.getItem('mw_splash_seen')){
+
+  // URL flags for testing / explicit control
+  //   ?splash=1 or ?splash=force   → show even if recently seen
+  //   ?splash=0 or ?splash=skip    → skip this load
+  const sp = new URLSearchParams(window.location.search).get('splash');
+  const forceShow = sp === '1' || sp === 'force';
+  const forceSkip = sp === '0' || sp === 'skip';
+
+  // Previous version used sessionStorage('mw_splash_seen') which never
+  // expired within a tab session — once seen, gone for that whole tab life.
+  // Now: localStorage timestamp with 2hr TTL. Returning visitors get the
+  // pack-rises moment again after a break; in-session navigation still skips.
+  const TWO_HOURS = 2 * 60 * 60 * 1000;
+  const lastSeen  = parseInt(localStorage.getItem('mw_splash_seen_at') || '0', 10);
+  const recently  = lastSeen > 0 && (Date.now() - lastSeen) < TWO_HOURS;
+
+  if (forceSkip || (recently && !forceShow)){
     splash.classList.add('gone');
-    setTimeout(() => splash.remove(), 50);
+    setTimeout(() => { try{ splash.remove(); }catch{} }, 50);
     return;
   }
-  const vid = document.getElementById('splashVideo');
-  const bar = document.getElementById('splashBar');
+
+  const vid     = document.getElementById('splashVideo');
+  const bar     = document.getElementById('splashBar');
   const skipBtn = document.getElementById('splashSkip');
   let dismissed = false;
 
   function dismiss(){
     if (dismissed) return;
     dismissed = true;
-    sessionStorage.setItem('mw_splash_seen', '1');
+    localStorage.setItem('mw_splash_seen_at', String(Date.now()));
+    try{ sessionStorage.removeItem('mw_splash_seen'); }catch{} // sweep legacy flag
     splash.classList.add('gone');
     setTimeout(() => {
       if (vid){ try{ vid.pause(); vid.removeAttribute('src'); vid.load(); }catch{} }
@@ -1437,7 +1454,6 @@ const $ = id => document.getElementById(id);
   }
 
   if (vid){
-    // Progress bar tracks video timeline
     vid.addEventListener('timeupdate', () => {
       if (vid.duration > 0 && bar){
         bar.style.width = ((vid.currentTime / vid.duration) * 100) + '%';
@@ -1445,15 +1461,12 @@ const $ = id => document.getElementById(id);
     });
     vid.addEventListener('ended', dismiss);
     vid.addEventListener('error', () => setTimeout(dismiss, 600));
-    // Some browsers block autoplay even when muted — kick it
     vid.play().catch(() => setTimeout(dismiss, 1200));
   }
   skipBtn && skipBtn.addEventListener('click', dismiss);
 
-  // Tap-to-skip after a 1.5s grace period (let the first cinematic moment land)
-  setTimeout(() => {
-    splash.addEventListener('click', dismiss, { once: true });
-  }, 1500);
+  // Tap-anywhere after 1.5s grace period
+  setTimeout(() => splash.addEventListener('click', dismiss, { once: true }), 1500);
 
   // Hard timeout — never hold the user hostage
   setTimeout(() => { if (!dismissed) dismiss(); }, 12000);

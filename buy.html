@@ -498,17 +498,18 @@ input::placeholder{color:#574069;}
       <div class="help" style="text-align:center;">⚠️ ONLY send <b>MON on Monad mainnet</b>. Other chains will be lost.</div>
     </div>
 
-    <!-- ONRAMP · Buy MON directly with credit card via Transak -->
+    <!-- ONRAMP · Buy MON directly with credit card (Onramper aggregator) -->
     <div class="card onramp-card">
       <div class="card-h"><span class="num">💳</span>BUY MON WITH CARD</div>
       <div class="card-sub">
         New to crypto? Skip the bridges and exchanges.
-        <b>Transak</b> lets you buy MON with Apple&nbsp;Pay, Google&nbsp;Pay, credit card, or bank transfer — delivered straight to your wallet.
+        Powered by <b>Onramper</b> — smart-routes through MoonPay, Banxa, Coinbase, Ramp, Mercuryo and 25+ more to whichever supports MON in your country. Delivered straight to your wallet.
       </div>
       <div class="onramp-perks">
         <span>⚡ Native MON on Monad</span>
-        <span>🏛️ Bank + card + Apple Pay</span>
-        <span>🌍 64 countries</span>
+        <span>🍎 Apple Pay · Card · Bank</span>
+        <span>🌍 190+ countries</span>
+        <span>🔀 Smart routing</span>
       </div>
       <button id="onrampBtn" class="btn btn-newtocrypto" style="width:100%;margin-top:6px;">
         BUY MON WITH CARD →
@@ -1607,58 +1608,71 @@ $('logoutBtn').onclick = function(){
   refreshReturningVisibility();
 };
 
-// ────── TRANSAK ON-RAMP (fiat → MON direct to wallet) ──────
-// Transak integrated Monad on day 1 of mainnet (Nov 2025). Their on-ramp
-// accepts cards / Apple Pay / Google Pay / bank transfers in 64+ countries
-// and delivers MON natively to the user's wallet.
+// ────── ONRAMPER ON-RAMP (fiat → MON, aggregates 30+ providers) ──────
+// Why Onramper: Transak's claimed day-1 Monad support didn't actually work
+// for $MONWOLF users in testing. Onramper aggregates 30+ fiat providers
+// (MoonPay, Stripe, Banxa, Ramp, Mercuryo, Coinbase Onramp, Alchemy Pay,
+// Coinify, and more) and routes EACH transaction to whichever provider
+// supports MON on Monad in the user's region. One integration = global
+// coverage with automatic failover when a single provider doesn't have
+// the user's country/payment method.
 //
-// PARTNER FEES: To earn commission on every on-ramp, sign up at
-//   https://transak.com/partners
-// then drop the API key into TRANSAK_API_KEY below + set TRANSAK_FEE_WALLET
-// to the wallet that receives partner-side fee payouts (configured in the
-// Transak dashboard after partner approval).
-const TRANSAK_API_KEY    = '';     // ← partner key (empty = no commission, still works)
-const TRANSAK_FEE_WALLET = '';     // ← payout wallet, set in Transak dashboard
-const TRANSAK_ENV        = 'PROD'; // 'PROD' = global.transak.com · 'STAGING' for testing
+// PARTNER FEES — what King needs to do to monetize:
+//   1. Sign up at https://dashboard.onramper.com/users/sign_up
+//   2. Get an API key from the partner dashboard
+//   3. Set your fee-payout wallet in the dashboard
+//   4. Drop the key into ONRAMPER_API_KEY below
+// Without a key the widget still works (Onramper sponsors it) — just no
+// commission goes to King's wallet. With a key, partner fees route per
+// the dashboard config on every successful purchase.
+//
+// FUTURE UPGRADES (queued in /TODO.md):
+//   • Headless SDK (@onramper/sdk): native Apple Pay, no popup at all
+//   • Onramper Swaps: cross-chain swap fiat or crypto-on-other-chains
+//     directly into $MONWOLF (no bridge step)
+const ONRAMPER_API_KEY = '';  // ← partner key (empty = no commission, still works)
 
-function openTransak(){
+function openOnramp(){
   const addr = STATE.account;
   if (!addr){
-    alert('Create or unlock a wallet first — Transak needs an address to deliver MON to.');
+    alert('Create or unlock a wallet first — the onramp needs an address to deliver MON to.');
     return;
   }
-  const base = TRANSAK_ENV === 'STAGING'
-    ? 'https://global-stg.transak.com/'
-    : 'https://global.transak.com/';
   const params = new URLSearchParams({
-    productsAvailed:       'BUY',
-    network:               'monad',
-    cryptoCurrencyCode:    'MON',
-    cryptoCurrencyList:    'MON',
-    fiatCurrency:          'USD',
-    defaultFiatAmount:     '50',
-    walletAddress:         addr,
-    walletAddressLockType: 'lock',
-    disableWalletAddressForm: 'true',
-    themeColor:            'a855f7',
-    hideMenu:              'true',
-    isFeeCalculationHidden:'false',
-    redirectURL:           window.location.origin + '/buy.html?onramp=done',
+    mode:                'buy',
+    defaultFiat:         'USD',
+    defaultAmount:       '50',
+    defaultCrypto:       'mon_monad',          // MON on Monad
+    onlyCryptoNetworks:  'monad',              // restrict to Monad chain
+    wallets:             'mon_monad:' + addr,  // pre-fill, locked
+    isAddressEditable:   'false',
+    isAmountEditable:    'true',
+    // Theme — match the MonWolf cyber palette
+    themeName:           'dark',
+    containerColor:      '11082bff',
+    cardColor:           '160a26ff',
+    primaryColor:        'a855f7ff',
+    secondaryColor:      'ff8a3dff',
+    primaryTextColor:    'ffffffff',
+    secondaryTextColor:  'c8b6e6ff',
+    borderRadius:        '14px',
+    widgetBorderRadius:  '20px',
+    successRedirectUrl:  window.location.origin + '/buy.html?onramp=done',
   });
-  if (TRANSAK_API_KEY) params.set('apiKey', TRANSAK_API_KEY);
-  const url = base + '?' + params.toString();
+  if (ONRAMPER_API_KEY) params.set('apiKey', ONRAMPER_API_KEY);
+  const url = 'https://buy.onramper.com/?' + params.toString();
 
-  // Try a centered popup; fall back to same-tab nav if blocked (mobile).
+  // Centered popup; same-tab fallback if blocked (mobile Safari etc.).
   const w = 480, h = 760;
-  const left = Math.max(0,(screen.width  - w) / 2);
-  const top  = Math.max(0,(screen.height - h) / 2);
-  const win  = window.open(url,'mw_transak',
+  const left = Math.max(0, (screen.width  - w) / 2);
+  const top  = Math.max(0, (screen.height - h) / 2);
+  const win  = window.open(url, 'mw_onramper',
     `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`);
   if (!win || win.closed || typeof win.closed === 'undefined'){
     window.location.href = url; // popup blocker → same-tab
   }
 }
-$('onrampBtn').onclick = openTransak;
+$('onrampBtn').onclick = openOnramp;
 
 // Light-up the onramp card when the user came in via /buy.html?path=new
 // (i.e. "NEW TO CRYPTO?" CTA from the homepage). Scroll to it once main

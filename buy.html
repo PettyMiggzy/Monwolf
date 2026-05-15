@@ -154,25 +154,18 @@ input::placeholder{color:#574069;}
 .btn-row{display:flex;gap:8px;}
 
 /* === SEED PHRASE === */
-.seed-box{
-  background:rgba(245,194,66,.06);border:1.5px solid rgba(245,194,66,.4);border-radius:12px;
-  padding:14px;font-family:'JetBrains Mono',monospace;font-size:13px;
-  line-height:1.9;color:#fff;letter-spacing:.5px;
-  filter:blur(10px);transition:filter .2s;cursor:pointer;user-select:none;
-}
-.seed-box.revealed{filter:none;user-select:text;cursor:auto;}
-.seed-box::after{content:'TAP TO REVEAL';position:absolute;}
 .seed-wrap{position:relative;}
 .seed-wrap::before{
   content:'TAP TO REVEAL · DO NOT SCREENSHOT IN PUBLIC';
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--gold);
   text-align:center;padding:0 20px;pointer-events:none;z-index:2;
-  transition:opacity .2s;
+  transition:opacity .25s;
 }
 .seed-wrap.revealed::before{opacity:0;}
 
-.seed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.seed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;filter:blur(10px);transition:filter .25s;user-select:none;cursor:pointer;}
+.seed-wrap.revealed .seed-grid{filter:none;user-select:text;cursor:auto;}
 .seed-word{
   background:rgba(8,4,24,.5);border:1px solid var(--border);border-radius:8px;
   padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:13px;
@@ -529,8 +522,8 @@ input::placeholder{color:#574069;}
 
 <!-- ethers.js v6 -->
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
-<!-- QR code library -->
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<!-- QR code library (davidshimjs qrcodejs — single-file drop-in) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
 /* ════════════════════════════════════════════════════════════
@@ -881,9 +874,14 @@ function enterMainScreen(){
   // QR
   if (typeof QRCode !== 'undefined'){
     const qrEl = $('qrWrap');
-    qrEl.innerHTML = '<canvas id="qrCanvas"></canvas>';
-    QRCode.toCanvas($('qrCanvas'), STATE.account, { width: 180, margin: 1, color: {dark:'#08000f', light:'#ffffff'} }, function(err){
-      if (err) console.error(err);
+    qrEl.innerHTML = '';
+    new QRCode(qrEl, {
+      text: STATE.account,
+      width: 180,
+      height: 180,
+      colorDark: '#08000f',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M,
     });
   }
 

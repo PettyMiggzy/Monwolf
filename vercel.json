@@ -1,8 +1,9 @@
 {
   "rewrites": [
-    { "source": "/swap",  "destination": "/swap.html" },
-    { "source": "/buy",   "destination": "/buy.html" },
-    { "source": "/hub",   "destination": "/hub.html" },
-    { "source": "/memes", "destination": "/memes.html" }
+    { "source": "/swap",       "destination": "/swap.html" },
+    { "source": "/buy",        "destination": "/buy.html" },
+    { "source": "/hub",        "destination": "/hub.html" },
+    { "source": "/memes",      "destination": "/memes.html" },
+    { "source": "/create-key", "destination": "/create-key.html" }
   ]
 }

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CREATE API KEY · MonWolf</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#08000f">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#08000f; --panel:#160a26; --panel-2:#1c0e30;
+  --border:#3a1f5e; --border-2:#4a2a73;
+  --text:#fff; --text-2:#c8b6e6; --text-3:#7e6d96;
+  --purple:#a855f7; --pink:#ec4899; --orange:#ff8a3d;
+  --gold:#f5c242; --green:#22c55e; --red:#ef4444;
+  --grad:linear-gradient(135deg,#a855f7 0%,#ff8a3d 100%);
+  --grad-gold:linear-gradient(135deg,#f5c242 0%,#ff8a3d 100%);
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:#fff;
+  min-height:100vh;-webkit-font-smoothing:antialiased;padding:24px;}
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 800px 600px at 12% 8%,rgba(168,85,247,.18),transparent 60%),
+    radial-gradient(ellipse 700px 500px at 88% 22%,rgba(255,138,61,.12),transparent 60%);}
+a{color:var(--gold);text-decoration:none;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
+
+.wrap{max-width:560px;margin:40px auto;}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Bungee',cursive;
+  font-size:14px;letter-spacing:1.5px;justify-content:center;margin-bottom:30px;}
+.brand img{width:36px;height:36px;border-radius:8px;}
+.brand span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+
+h1{font-family:'Bungee',cursive;font-size:26px;letter-spacing:1.5px;text-align:center;margin-bottom:10px;}
+.subtitle{text-align:center;color:var(--text-2);
+  font-family:'JetBrains Mono',monospace;font-size:12px;margin-bottom:30px;
+  line-height:1.7;letter-spacing:.04em;}
+
+.card{padding:24px;border-radius:18px;
+  background:linear-gradient(135deg,var(--panel) 0%,var(--panel-2) 100%);
+  border:1.5px solid var(--border);margin-bottom:16px;}
+
+.step{display:flex;gap:14px;align-items:flex-start;padding:14px 0;
+  border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{flex-shrink:0;width:30px;height:30px;border-radius:50%;
+  font-family:'Bungee',cursive;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(168,85,247,.15);border:1px solid var(--purple);
+  color:var(--purple);}
+.step.done .step-num{background:var(--green);border-color:var(--green);color:#000;}
+.step.active .step-num{background:var(--gold);border-color:var(--gold);color:#000;
+  animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,194,66,.6);}50%{box-shadow:0 0 0 8px rgba(245,194,66,0);}}
+.step.error .step-num{background:var(--red);border-color:var(--red);}
+.step-body{flex:1;}
+.step-title{font-family:'Bungee',cursive;font-size:12px;letter-spacing:1.2px;margin-bottom:4px;}
+.step-detail{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);line-height:1.6;}
+.step-detail .addr{color:var(--gold);word-break:break-all;}
+.step-detail .err{color:var(--red);}
+
+.btn{display:block;width:100%;padding:14px;border-radius:12px;
+  font-family:'Bungee',cursive;font-size:13px;letter-spacing:1.5px;
+  background:var(--grad);color:#fff;cursor:pointer;
+  transition:.15s;border:none;margin-top:12px;}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 14px 30px -6px rgba(168,85,247,.6);}
+.btn:disabled{opacity:.4;cursor:not-allowed;background:rgba(168,85,247,.2);}
+.btn.ghost{background:rgba(168,85,247,.1);border:1px solid var(--border);}
+
+.result{padding:20px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(245,194,66,.12),rgba(34,197,94,.08));
+  border:1.5px solid var(--gold);margin-top:14px;display:none;}
+.result.show{display:block;}
+.result-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
+.result-key{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
+  background:rgba(0,0,0,.4);padding:12px 14px;border-radius:8px;
+  border:1px solid rgba(245,194,66,.4);word-break:break-all;line-height:1.6;color:#fff;}
+.result-actions{display:flex;gap:8px;margin-top:12px;}
+.result-actions button{flex:1;padding:10px;font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:700;letter-spacing:.1em;border-radius:8px;
+  background:rgba(245,194,66,.15);border:1px solid var(--gold);color:var(--gold);
+  cursor:pointer;text-transform:uppercase;}
+.result-actions button:hover{background:var(--gold);color:#000;}
+
+.warning{padding:14px;border-radius:12px;
+  background:rgba(245,194,66,.08);border:1px solid rgba(245,194,66,.3);
+  font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;
+  color:var(--text-2);margin-bottom:16px;}
+.warning b{color:var(--gold);}
+
+.input-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.input-row label{font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.12em;color:var(--text-3);text-transform:uppercase;}
+.input-row input, .input-row select{padding:11px 14px;font-family:'JetBrains Mono',monospace;
+  font-size:13px;color:#fff;background:rgba(22,10,38,.6);
+  border:1.5px solid var(--border);border-radius:10px;outline:none;}
+.input-row input:focus, .input-row select:focus{border-color:var(--purple);}
+
+.back-link{display:block;text-align:center;margin-top:30px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);
+  letter-spacing:.1em;text-transform:uppercase;}
+.back-link:hover{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brand"><img src="/logo.png" alt=""><span>MONWOLF</span></div>
+
+  <h1>🔑 CREATE NAD.FUN API KEY</h1>
+  <div class="subtitle">One-time tool — signs in to api.nad.fun with your wallet, mints an API key, displays it once. Paste it back into <code>hub.html</code> to bump from 10 → 100 req/min.</div>
+
+  <div class="warning">
+    <b>⚠️ Use the wallet that's tied to your nad.fun account.</b> If you launched MONWOLF, that's the deployer wallet. The signature proves you own the wallet — no transaction, no gas, just a one-time signed message.
+  </div>
+
+  <div class="card">
+    <div class="input-row">
+      <label>Wallet</label>
+      <select id="walletSel">
+        <option value="injected">MetaMask / injected wallet</option>
+        <option value="pack">Pack Wallet (from /buy.html)</option>
+      </select>
+    </div>
+    <div class="input-row">
+      <label>Key name</label>
+      <input id="keyName" type="text" value="MonWolf Hub" maxlength="50">
+    </div>
+    <div class="input-row">
+      <label>Expires in days (blank = never)</label>
+      <input id="keyExpiry" type="number" placeholder="365" min="1">
+    </div>
+    <button class="btn" id="goBtn">🐺 GENERATE API KEY</button>
+  </div>
+
+  <div class="card" id="progressCard" style="display:none;">
+    <div class="step" id="step-1">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">CONNECT WALLET</div>
+        <div class="step-detail" id="step-1-detail">Detecting wallet…</div>
+      </div>
+    </div>
+    <div class="step" id="step-2">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">REQUEST AUTH NONCE</div>
+        <div class="step-detail" id="step-2-detail">POST /auth/nonce → api.nad.fun</div>
+      </div>
+    </div>
+    <div class="step" id="step-3">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">SIGN MESSAGE</div>
+        <div class="step-detail" id="step-3-detail">Approve the signature request in your wallet</div>
+      </div>
+    </div>
+    <div class="step" id="step-4">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">CREATE SESSION</div>
+        <div class="step-detail" id="step-4-detail">POST /auth/session</div>
+      </div>
+    </div>
+    <div class="step" id="step-5">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">MINT API KEY</div>
+        <div class="step-detail" id="step-5-detail">POST /api-key</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-label">🔑 YOUR API KEY · SAVED ONCE ONLY</div>
+    <div class="result-key" id="resultKey"></div>
+    <div class="result-actions">
+      <button id="copyBtn">📋 COPY KEY</button>
+      <button id="testBtn">🧪 TEST KEY</button>
+    </div>
+    <div style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);line-height:1.7;">
+      <b style="color:var(--gold)">Next:</b> Send Claude this string. He'll paste it into the <code>NAD_API_KEY</code> constant in <code>hub.html</code> — 30-second deploy, rate limit becomes 100/min.
+    </div>
+  </div>
+
+  <a class="back-link" href="/hub">← BACK TO PACK DEN</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script>
+const NAD_API = 'https://api.nad.fun';
+const CHAIN_ID_DEC = 143;
+const CHAIN_ID_HEX = '0x8f';
+
+const $ = id => document.getElementById(id);
+
+function setStep(n, state, detail){
+  // state: 'active' | 'done' | 'error'
+  // clear all states from this step number forward
+  for (let i = n; i <= 5; i++){
+    const el = $('step-' + i);
+    if (el) el.classList.remove('active','done','error');
+  }
+  // mark previous as done
+  for (let i = 1; i < n; i++){
+    const el = $('step-' + i);
+    if (el) el.classList.add('done');
+  }
+  // mark current
+  const cur = $('step-' + n);
+  if (cur) cur.classList.add(state);
+  if (detail) $(`step-${n}-detail`).innerHTML = detail;
+}
+
+async function getSigner(kind){
+  if (kind === 'injected'){
+    if (!window.ethereum) throw new Error('No injected wallet found (install MetaMask).');
+    // Ensure Monad mainnet
+    const currentChain = await window.ethereum.request({ method: 'eth_chainId' });
+    if (currentChain !== CHAIN_ID_HEX){
+      try{
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: CHAIN_ID_HEX }],
+        });
+      }catch(e){
+        if (e.code === 4902){
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: CHAIN_ID_HEX,
+              chainName: 'Monad',
+              nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
+              rpcUrls: ['https://rpc.monad.xyz'],
+              blockExplorerUrls: ['https://monadexplorer.com'],
+            }],
+          });
+        } else throw e;
+      }
+    }
+    const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    if (!accs || !accs.length) throw new Error('No accounts returned.');
+    const address = accs[0];
+    return {
+      address,
+      kind: 'injected',
+      sign: async (msg) => {
+        return await window.ethereum.request({
+          method: 'personal_sign',
+          params: [msg, address],
+        });
+      },
+    };
+  } else {
+    // Pack Wallet — local privkey from /buy.html
+    let payload;
+    try{
+      const raw = localStorage.getItem('mw_session_v1') || localStorage.getItem('mw_wallet');
+      if (!raw) throw new Error('No Pack Wallet found in this browser. Create one at /buy first.');
+      payload = JSON.parse(raw);
+    }catch(e){ throw new Error('Pack Wallet not unlocked — open /buy.html, unlock, then come back.'); }
+    if (!payload.privateKey && !payload.privkey) throw new Error('Pack Wallet has no private key in storage (session may be locked).');
+    const pk = payload.privateKey || payload.privkey;
+    const wallet = new ethers.Wallet(pk);
+    return {
+      address: wallet.address,
+      kind: 'pack',
+      sign: async (msg) => wallet.signMessage(msg),
+    };
+  }
+}
+
+async function run(){
+  $('goBtn').disabled = true;
+  $('progressCard').style.display = 'block';
+  $('result').classList.remove('show');
+
+  const walletKind = $('walletSel').value;
+  const keyName    = $('keyName').value.trim() || 'MonWolf Hub';
+  const keyExpiry  = $('keyExpiry').value ? parseInt($('keyExpiry').value, 10) : null;
+
+  // Step 1: Connect
+  setStep(1, 'active', `Detecting ${walletKind === 'injected' ? 'injected wallet' : 'Pack Wallet'}…`);
+  let signer;
+  try{ signer = await getSigner(walletKind); }
+  catch(e){ setStep(1,'error',`<span class="err">${e.message}</span>`); $('goBtn').disabled=false; return; }
+  setStep(2, 'active', `Connected: <span class="addr">${signer.address}</span>`);
+
+  // Step 2: Nonce
+  let nonce;
+  try{
+    const r = await fetch(NAD_API + '/auth/nonce', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: signer.address }),
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' from /auth/nonce');
+    const data = await r.json();
+    nonce = data.nonce;
+    if (!nonce) throw new Error('Empty nonce returned');
+  }catch(e){ setStep(2,'error',`<span class="err">${e.message}</span>`); $('goBtn').disabled=false; return; }
+  setStep(3, 'active', `Sign the message in your wallet…<br><span style="color:var(--text-3);font-size:10px">(read-only signature, no gas)</span>`);
+
+  // Step 3: Sign
+  let signature;
+  try{ signature = await signer.sign(nonce); }
+  catch(e){ setStep(3,'error',`<span class="err">${e.message || 'Signature rejected.'}</span>`); $('goBtn').disabled=false; return; }
+  setStep(4, 'active', `Signed · creating session…`);
+
+  // Step 4: Session
+  try{
+    const r = await fetch(NAD_API + '/auth/session', {
+      method: 'POST',
+      credentials: 'include',  // accept the session cookie
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        signature,
+        nonce,
+        chain_id: CHAIN_ID_DEC,
+        wallet_address: null,
+      }),
+    });
+    if (!r.ok){
+      const txt = await r.text();
+      throw new Error(`HTTP ${r.status} from /auth/session — ${txt.slice(0,120)}`);
+    }
+    await r.json();  // consume the body even if we don't use it
+  }catch(e){ setStep(4,'error',`<span class="err">${e.message}</span>`); $('goBtn').disabled=false; return; }
+  setStep(5, 'active', `Session live · minting key "${keyName}"…`);
+
+  // Step 5: Create key
+  let apiKey;
+  try{
+    const body = { name: keyName, description: 'MonWolf Pack Den hub integration' };
+    if (keyExpiry) body.expires_in_days = keyExpiry;
+    const r = await fetch(NAD_API + '/api-key', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!r.ok){
+      const txt = await r.text();
+      throw new Error(`HTTP ${r.status} from /api-key — ${txt.slice(0,150)}`);
+    }
+    const data = await r.json();
+    apiKey = data.api_key;
+    if (!apiKey) throw new Error('Response missing api_key field: ' + JSON.stringify(data).slice(0,200));
+  }catch(e){
+    setStep(5,'error',`<span class="err">${e.message}</span><br><br><span style="color:var(--text-3);font-size:10px">Common causes: hit 5-key limit (delete one at nad.fun), or browser blocking third-party cookies (try Chrome / disable strict tracking protection).</span>`);
+    $('goBtn').disabled=false;
+    return;
+  }
+  setStep(5, 'done', `✓ Key created`);
+
+  // Show the key
+  $('resultKey').textContent = apiKey;
+  $('result').classList.add('show');
+  $('goBtn').disabled = false;
+  $('goBtn').textContent = '🔄 GENERATE ANOTHER';
+
+  $('copyBtn').onclick = () => {
+    navigator.clipboard.writeText(apiKey).then(() => {
+      $('copyBtn').textContent = '✓ COPIED';
+      setTimeout(() => $('copyBtn').textContent = '📋 COPY KEY', 1500);
+    });
+  };
+  $('testBtn').onclick = async () => {
+    $('testBtn').textContent = '⟳ TESTING…';
+    try{
+      const r = await fetch(NAD_API + '/order/creation_time?page=1&limit=1', {
+        headers: { 'X-API-Key': apiKey },
+      });
+      const remaining = r.headers.get('x-ratelimit-remaining');
+      const limit = r.headers.get('x-ratelimit-limit');
+      $('testBtn').textContent = r.ok ? `✓ WORKS (${remaining}/${limit})` : `✗ HTTP ${r.status}`;
+    }catch(e){
+      $('testBtn').textContent = '✗ ' + (e.message||'ERR').slice(0,20);
+    }
+    setTimeout(() => $('testBtn').textContent = '🧪 TEST KEY', 3500);
+  };
+}
+
+$('goBtn').addEventListener('click', run);
+</script>
+</body>
+</html>

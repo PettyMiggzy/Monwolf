@@ -179,6 +179,39 @@ input::placeholder{color:#574069;}
 .onramp-perks span{padding:4px 9px;border-radius:99px;
   background:rgba(255,255,255,.04);border:1px solid var(--border);}
 
+/* Coming-soon variant of the onramp card */
+.onramp-card.soon{
+  background:linear-gradient(135deg,rgba(168,85,247,.05),rgba(255,138,61,.04)) !important;
+  border-color:rgba(168,85,247,.28) !important;
+}
+.onramp-card.soon::before{
+  background:radial-gradient(circle,rgba(168,85,247,.12),transparent 60%);
+}
+.onramp-card.soon .onramp-perks{opacity:.55;}
+.onramp-card.soon .btn{
+  background:rgba(255,255,255,.05) !important;
+  color:var(--text-2) !important;
+  box-shadow:none !important;
+  border:1.5px dashed var(--border-2) !important;
+  font-family:'Bungee',cursive;letter-spacing:2px;cursor:not-allowed;
+  transform:none !important;
+}
+.soon-badge{
+  display:inline-block;margin-left:auto;
+  font-family:'JetBrains Mono',monospace;font-weight:700;
+  font-size:9.5px;letter-spacing:.22em;
+  padding:4px 10px;border-radius:99px;
+  background:rgba(245,194,66,.15);color:var(--gold,#f5c242);
+  border:1px solid rgba(245,194,66,.4);
+  text-transform:uppercase;animation:soonPulse 2.4s ease-in-out infinite;
+  vertical-align:middle;
+}
+@keyframes soonPulse{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(245,194,66,.5);}
+  50%   {opacity:.85;box-shadow:0 0 0 6px rgba(245,194,66,0);}
+}
+.card-h{position:relative;}  /* let .soon-badge anchor right */
+
 /* === SEED PHRASE === */
 .seed-wrap{position:relative;}
 .seed-wrap::before{
@@ -498,12 +531,17 @@ input::placeholder{color:#574069;}
       <div class="help" style="text-align:center;">⚠️ ONLY send <b>MON on Monad mainnet</b>. Other chains will be lost.</div>
     </div>
 
-    <!-- ONRAMP · Buy MON directly with credit card (Onramper aggregator) -->
-    <div class="card onramp-card">
-      <div class="card-h"><span class="num">💳</span>BUY MON WITH CARD</div>
+    <!-- ONRAMP · Buy MON directly with credit card (Onramper aggregator)
+         Currently in "coming soon" mode while King finalizes the Onramper
+         partner signup. Flip back to live by removing the .soon class, the
+         disabled attribute on the button, and the COMING SOON badge below. -->
+    <div class="card onramp-card soon">
+      <div class="card-h">
+        <span class="num">💳</span>BUY MON WITH CARD
+        <span class="soon-badge">COMING SOON</span>
+      </div>
       <div class="card-sub">
-        New to crypto? Skip the bridges and exchanges.
-        Powered by <b>Onramper</b> — smart-routes through MoonPay, Banxa, Coinbase, Ramp, Mercuryo and 25+ more to whichever supports MON in your country. Delivered straight to your wallet.
+        New to crypto? Soon you'll be able to buy MON with Apple Pay, credit card, or bank transfer — delivered straight to your wallet. Powered by <b>Onramper</b>, smart-routed across MoonPay, Banxa, Coinbase, Ramp, Mercuryo and 25+ providers to whichever supports MON in your country.
       </div>
       <div class="onramp-perks">
         <span>⚡ Native MON on Monad</span>
@@ -511,11 +549,11 @@ input::placeholder{color:#574069;}
         <span>🌍 190+ countries</span>
         <span>🔀 Smart routing</span>
       </div>
-      <button id="onrampBtn" class="btn btn-newtocrypto" style="width:100%;margin-top:6px;">
-        BUY MON WITH CARD →
+      <button id="onrampBtn" class="btn btn-newtocrypto" style="width:100%;margin-top:6px;" disabled>
+        COMING SOON
       </button>
       <div class="help" style="margin-top:8px;text-align:center;">
-        Already have MON? Skip to <b>BUY $MONWOLF</b> below ↓
+        In the meantime: send MON from <b>Bybit / Gate / KuCoin</b> to your wallet address above, or <b>bridge</b> from another chain via <a href="https://bridge.monad.xyz" target="_blank" rel="noopener" style="color:var(--gold);">bridge.monad.xyz ↗</a>
       </div>
     </div>
 
@@ -1672,7 +1710,13 @@ function openOnramp(){
     window.location.href = url; // popup blocker → same-tab
   }
 }
-$('onrampBtn').onclick = openOnramp;
+$('onrampBtn').onclick = function(){
+  // Coming-soon mode: bail out silently if the card is in .soon state.
+  // To go live: remove .soon from the .onramp-card div + drop the disabled
+  // attribute on this button (and the soon badge in the card header).
+  if (document.querySelector('.onramp-card.soon')) return;
+  openOnramp();
+};
 
 // Light-up the onramp card when the user came in via /buy.html?path=new
 // (i.e. "NEW TO CRYPTO?" CTA from the homepage). Scroll to it once main
@@ -1687,9 +1731,12 @@ $('onrampBtn').onclick = openOnramp;
     const card = document.querySelector('.onramp-card');
     if (main && !main.classList.contains('hidden') && card){
       card.scrollIntoView({behavior:'smooth', block:'center'});
-      card.style.transition = 'box-shadow .8s';
-      card.style.boxShadow  = '0 0 0 2px var(--gold), 0 24px 60px -10px rgba(245,194,66,.5)';
-      setTimeout(() => { card.style.boxShadow = ''; }, 2400);
+      // Skip the gold pulse if the card is in coming-soon state — would be misleading.
+      if (!card.classList.contains('soon')){
+        card.style.transition = 'box-shadow .8s';
+        card.style.boxShadow  = '0 0 0 2px var(--gold), 0 24px 60px -10px rgba(245,194,66,.5)';
+        setTimeout(() => { card.style.boxShadow = ''; }, 2400);
+      }
       return true;
     }
     return false;

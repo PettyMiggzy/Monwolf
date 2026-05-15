@@ -6,15 +6,20 @@ Living roadmap. Newest additions at the top of each section.
 
 ## 🟧 In flight · awaiting King's input
 
-### Onramper partner key + payout wallet
-- **What**: Currently `/buy.html` opens Onramper's hosted widget without an `apiKey`, so no fee commission accrues to MonWolf.
-- **Action**:
+### Onramper partner key + payout wallet — `/buy.html` is currently in COMING SOON mode
+- **Current state**: The "BUY MON WITH CARD" card on `/buy.html` is wired but rendered as a coming-soon teaser (disabled button + COMING SOON badge + pulsing gold). Marketing value of the card is preserved; the actual Onramper widget is not opened on click.
+- **To go live**:
   1. Sign up at https://dashboard.onramper.com/users/sign_up
   2. Verify partner status (Onramper KYBs orgs — usually 1–2 business days)
   3. Configure fee splits in their dashboard
   4. Set the Monad payout wallet that receives partner-side commission
   5. Send Claude the `apiKey` string + payout wallet address
-- **Wire-in**: One-line edit to `ONRAMPER_API_KEY` constant near top of the on-ramp block in `/buy.html`. Same-hour ship.
+- **Wire-in to flip live**: 3 edits in `/buy.html`:
+  - Drop the `soon` class from `.onramp-card`
+  - Drop the `disabled` attribute from `#onrampBtn`
+  - Remove the `<span class="soon-badge">` from the card header
+  - Set `ONRAMPER_API_KEY` constant
+  - Restore the original button copy (`BUY MON WITH CARD →`) and helper line
 
 ### Supabase migration for `/memes`
 - ✅ DONE — verified via REST probe: table `monwolf_memes` returns 200 + empty array, storage bucket `monwolf-memes` exists. Migration ran successfully. Wall is live at `/memes`, just waiting for the first post.

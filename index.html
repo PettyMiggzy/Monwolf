@@ -3,506 +3,708 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0a0010">
-<title>MONWOLF — The Future Is Ours · Monad's Apex Memecoin</title>
-<meta name="description" content="$MONWOLF on Monad. The pack rises. Buy in 60 seconds — no wallet needed.">
-<meta property="og:title" content="MONWOLF — The Future Is Ours">
-<meta property="og:description" content="$MONWOLF on Monad. The pack rises. Buy in 60 seconds.">
+<meta name="theme-color" content="#0a0612">
+<title>MONWOLF · The Future Is Ours</title>
+<meta name="description" content="$MONWOLF — the apex memecoin on Monad. Built by wolves.">
+<meta property="og:title" content="MONWOLF · The Future Is Ours">
+<meta property="og:description" content="$MONWOLF on Monad. The pack rises.">
 <meta property="og:image" content="site-art/wolf-hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Bungee&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
+/* ============================================================
+   MONWOLF · LANDING · v3 (premium edition)
+   Tokens — editorial. Champagne, not construction-cone.
+   ============================================================ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#08000f; --bg-2:#100722; --panel:#160a26; --panel-2:#1c0e30;
-  --border:#3a1f5e; --border-2:#4a2a73;
-  --text:#fff; --text-2:#c8b6e6; --text-3:#7e6d96;
-  --purple:#a855f7; --purple-2:#7c3aed; --purple-deep:#5a1fa2;
-  --pink:#ec4899; --orange:#ff8a3d; --ember:#ff6b00; --gold:#f5c242;
-  --green:#22c55e; --red:#ef4444;
-  --grad:linear-gradient(135deg,#a855f7 0%,#ff8a3d 100%);
-  --grad-cyber:linear-gradient(135deg,#a855f7 0%,#ec4899 50%,#ff8a3d 100%);
+  --bg:#0a0612;
+  --bg-2:#110826;
+  --surface:rgba(255,255,255,0.025);
+  --surface-2:rgba(255,255,255,0.045);
+  --border:rgba(255,255,255,0.07);
+  --border-hi:rgba(255,255,255,0.14);
+  --border-gold:rgba(212,175,55,0.32);
+  --text:#fafaf5;
+  --text-2:#a59faf;
+  --text-3:#5e5670;
+  --purple:#8b5cf6;
+  --purple-hi:#a78bfa;
+  --purple-deep:#5b21b6;
+  --gold:#d4af37;
+  --gold-hi:#e7c46e;
+  --green:#34d399;
+  --red:#f87171;
+  --grad:linear-gradient(135deg,#8b5cf6 0%,#d4af37 100%);
+  --grad-purple:linear-gradient(135deg,#a78bfa 0%,#8b5cf6 100%);
+  --grad-text:linear-gradient(180deg,#fafaf5 0%,#a59faf 100%);
+  --shadow-1:0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 8px 24px -4px rgba(0,0,0,.5);
+  --shadow-3:0 24px 60px -10px rgba(0,0,0,.6);
+  --shadow-glow:0 24px 80px -20px rgba(139,92,246,.45);
+  --r-sm:8px; --r:14px; --r-lg:20px; --r-xl:28px;
+  --ease:cubic-bezier(.2,.7,.2,1);
 }
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
 body{
-  font-family:'Inter',system-ui,-apple-system,sans-serif;
-  background:var(--bg);color:var(--text);line-height:1.55;
-  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  -webkit-tap-highlight-color:transparent;
   overflow-x:hidden;
+  font-feature-settings:"ss01","cv11";
 }
 a{color:inherit;text-decoration:none;}
-img{display:block;max-width:100%;}
-body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 3px);
-  mix-blend-mode:overlay;}
-body::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.65) 100%);}
+img,video{display:block;max-width:100%;}
+::selection{background:var(--gold);color:var(--bg);}
 
-.ticker{position:sticky;top:0;left:0;right:0;height:30px;overflow:hidden;
-  background:linear-gradient(90deg,rgba(168,85,247,.18),rgba(255,138,61,.15),rgba(168,85,247,.18));
-  border-bottom:1px solid var(--border);backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);z-index:90;display:flex;align-items:center;
-  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;}
-.ticker-track{display:inline-flex;gap:2.4rem;white-space:nowrap;
-  animation:scrollX 42s linear infinite;padding-left:100%;}
-.ticker-item{display:inline-flex;align-items:center;gap:.5rem;}
-.ticker-l{color:var(--text-3);}
-.ticker-v{color:#fff;}
-.ticker-v.up{color:var(--green);}
-.ticker-v.down{color:var(--red);}
-.ticker-v.glow{color:var(--orange);text-shadow:0 0 8px rgba(255,138,61,.6);}
-.ticker-sep{color:var(--purple);opacity:.5;}
-@keyframes scrollX{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-nav{position:sticky;top:30px;z-index:80;
-  background:rgba(8,0,15,.78);backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);padding:.85rem 1rem;}
-.nav-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
-.brand{display:flex;align-items:center;gap:.55rem;}
-.brand img{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--purple);}
-.brand .name{font-family:'Russo One',sans-serif;font-size:15px;letter-spacing:2.5px;
-  background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-.nav-actions{display:flex;align-items:center;gap:.5rem;}
-.nav-pill{font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:1.8px;
-  padding:8px 14px;border-radius:8px;color:#fff;border:1.5px solid rgba(255,255,255,.18);
-  background:rgba(168,85,247,.08);transition:.15s;}
-.nav-pill:hover{border-color:var(--purple);background:rgba(168,85,247,.18);}
-.nav-pill.primary{background:var(--grad);border:none;
-  box-shadow:0 4px 14px -4px rgba(168,85,247,.55);}
-.nav-pill.primary:hover{transform:translateY(-1px);
-  box-shadow:0 8px 22px -4px rgba(168,85,247,.7);}
-.wallet-pill{display:inline-flex;align-items:center;gap:.5rem;padding:8px 14px;
-  background:rgba(168,85,247,.1);border:1.5px solid rgba(168,85,247,.45);
-  border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:.5px;
-  color:#fff;cursor:pointer;transition:.2s;font-family:'Russo One',sans-serif;}
-.wallet-pill:hover{border-color:var(--purple);background:rgba(168,85,247,.22);}
-.wallet-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);
-  box-shadow:0 0 6px var(--orange);animation:pulseDot 2s infinite;}
-.wallet-pill.connected{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(168,85,247,.18));border-color:var(--green);}
-.wallet-pill.connected .dot{background:var(--green);box-shadow:0 0 8px var(--green);animation:none;}
-.wallet-pill .rank{color:var(--orange);font-size:9px;letter-spacing:1.5px;}
-@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
-@media (max-width:640px){
-  .nav-pill{padding:7px 11px;font-size:10px;letter-spacing:1.2px;}
-  .nav-actions{gap:.35rem;}
-  .wallet-pill .rank{display:none;}
-  .brand .name{display:none;}
+/* Subtle noise overlay for premium grain */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+  opacity:.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,transparent 20%,rgba(0,0,0,.4) 100%);
 }
 
-.wrap{position:relative;z-index:3;max-width:1280px;margin:0 auto;padding:0 1rem;}
-.section{padding:60px 0;position:relative;}
-.section-head{text-align:center;margin-bottom:36px;}
-.eyebrow{display:inline-block;padding:5px 12px;border-radius:99px;
-  background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.4);
-  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;
-  color:var(--purple);text-transform:uppercase;margin-bottom:14px;}
-.h{font-family:'Bungee',cursive;font-size:clamp(32px,7vw,72px);line-height:.95;letter-spacing:1px;}
-.h .grad{background:var(--grad-cyber);-webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 4px 30px rgba(168,85,247,.4));}
-.h-sub{font-size:clamp(15px,1.8vw,18px);color:var(--text-2);max-width:720px;
-  margin:14px auto 0;line-height:1.55;}
+/* Preloader */
+.preloader{position:fixed;inset:0;z-index:999;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .6s var(--ease),visibility 0s .6s;}
+.preloader.gone{opacity:0;visibility:hidden;}
+.preloader img{width:64px;height:64px;border-radius:50%;
+  animation:pulse 1.4s ease-in-out infinite;
+  border:2px solid var(--purple);box-shadow:0 0 40px rgba(139,92,246,.6);}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:.7}}
 
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;
-  overflow:hidden;padding:40px 1rem 80px;}
+/* ============================================================
+   TYPOGRAPHY · the centerpiece of the rebuild
+   ============================================================ */
+.display{
+  font-family:'Fraunces',Georgia,serif;
+  font-weight:300;
+  font-style:italic;
+  letter-spacing:-0.02em;
+  line-height:.96;
+  font-feature-settings:"ss01","liga","dlig";
+  font-variation-settings:"opsz" 144,"SOFT" 30;
+}
+.display-roman{
+  font-family:'Fraunces',Georgia,serif;
+  font-weight:500;
+  letter-spacing:-0.02em;
+  line-height:.96;
+  font-style:normal;
+}
+.eyebrow{display:inline-block;font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;letter-spacing:.22em;
+  color:var(--gold);text-transform:uppercase;}
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.04em;}
+
+/* Headline sizes */
+.h0{font-size:clamp(54px,11vw,156px);}      /* hero */
+.h1{font-size:clamp(40px,7vw,84px);}        /* section */
+.h2{font-size:clamp(28px,4vw,46px);}        /* sub */
+.h3{font-size:clamp(20px,2.4vw,28px);}      /* card */
+
+/* ============================================================
+   STICKY TICKER + NAV
+   ============================================================ */
+.ticker{position:sticky;top:0;height:34px;overflow:hidden;z-index:90;
+  background:rgba(10,6,18,.92);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  display:flex;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;}
+.ticker-track{display:inline-flex;gap:3rem;white-space:nowrap;
+  animation:scrollX 60s linear infinite;padding-left:100%;}
+.ticker-l{color:var(--text-3);}
+.ticker-v{color:var(--text);}
+.ticker-v.up{color:var(--green);}
+.ticker-v.down{color:var(--red);}
+.ticker-v.glow{color:var(--gold);}
+.ticker-sep{color:var(--text-3);opacity:.4;}
+@keyframes scrollX{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+nav{position:sticky;top:34px;z-index:80;
+  background:rgba(10,6,18,.65);backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  border-bottom:1px solid var(--border);padding:14px 24px;
+  transition:padding .2s var(--ease);}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;
+  justify-content:space-between;align-items:center;gap:1rem;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand img{width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--border-hi);}
+.brand .name{font-family:'Fraunces',serif;font-style:italic;
+  font-weight:400;font-size:18px;letter-spacing:-.01em;color:var(--text);}
+.nav-actions{display:flex;align-items:center;gap:6px;}
+.nav-link{font-size:12px;font-weight:500;letter-spacing:.04em;
+  padding:8px 14px;border-radius:99px;color:var(--text-2);
+  transition:.18s var(--ease);}
+.nav-link:hover{color:var(--text);background:var(--surface);}
+.nav-cta{padding:10px 18px;border-radius:99px;
+  background:var(--text);color:var(--bg);
+  font-size:12px;font-weight:600;letter-spacing:.02em;
+  transition:.18s var(--ease);}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px -8px rgba(250,250,245,.4);}
+.wallet-chip{display:inline-flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--border-hi);
+  font-size:11px;font-weight:500;letter-spacing:.04em;
+  color:var(--text-2);cursor:pointer;transition:.18s var(--ease);
+  font-family:'JetBrains Mono',monospace;}
+.wallet-chip:hover{border-color:var(--gold);color:var(--text);}
+.wallet-chip .dot{width:6px;height:6px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 6px var(--gold);}
+.wallet-chip.connected{border-color:var(--green);}
+.wallet-chip.connected .dot{background:var(--green);box-shadow:0 0 6px var(--green);}
+@media (max-width:720px){
+  .nav-link.hide-sm,.nav-cta.hide-sm{display:none;}
+  .brand .name{display:none;}
+  nav{padding:11px 16px;}
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.wrap{position:relative;z-index:3;max-width:1280px;margin:0 auto;padding:0 24px;}
+.wrap-narrow{position:relative;z-index:3;max-width:960px;margin:0 auto;padding:0 24px;}
+.section{padding:140px 0;position:relative;}
+.section.compact{padding:80px 0;}
+@media (max-width:780px){
+  .section{padding:96px 0;}
+  .section.compact{padding:56px 0;}
+}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(40px);
+  transition:opacity .9s var(--ease),transform .9s var(--ease);}
+.reveal.in{opacity:1;transform:none;}
+.reveal-delay-1{transition-delay:.08s;}
+.reveal-delay-2{transition-delay:.16s;}
+.reveal-delay-3{transition-delay:.24s;}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;}
+}
+
+/* ============================================================
+   HERO · the centerpiece
+   ============================================================ */
+.hero{position:relative;min-height:100vh;display:flex;
+  align-items:center;overflow:hidden;padding:80px 24px 120px;}
 .hero-bg{position:absolute;inset:0;z-index:1;}
-.hero-bg img,.hero-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.hero-bg video,.hero-bg img{position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover;}
 .hero-bg::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(8,0,15,.55) 0%,rgba(8,0,15,.5) 40%,rgba(8,0,15,.95) 100%),
-             radial-gradient(ellipse 80% 50% at 50% 50%,transparent 0%,rgba(8,0,15,.6) 100%);}
-.hero-content{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;text-align:center;}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;
-  padding:7px 14px;border-radius:99px;
-  background:rgba(168,85,247,.18);border:1px solid var(--purple);
-  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;
-  color:#fff;text-transform:uppercase;margin-bottom:24px;
-  backdrop-filter:blur(8px);}
-.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);
-  box-shadow:0 0 8px var(--green);}
-.hero h1{font-family:'Bungee',cursive;font-size:clamp(52px,14vw,160px);
-  line-height:.88;letter-spacing:2px;margin-bottom:16px;}
-.hero h1 .grad{background:var(--grad-cyber);-webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 8px 40px rgba(168,85,247,.5));}
-.hero .tag{font-family:'Russo One',sans-serif;font-size:clamp(14px,2.2vw,22px);
-  letter-spacing:6px;color:var(--orange);margin-bottom:24px;text-transform:uppercase;
-  text-shadow:0 0 20px rgba(255,138,61,.6);}
-.hero .lead{font-size:clamp(15px,1.8vw,19px);color:var(--text-2);max-width:580px;
-  margin:0 auto 32px;line-height:1.5;}
-.hero .lead b{color:#fff;}
-.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
-.hero-ca{display:inline-flex;align-items:center;gap:8px;
-  padding:9px 14px;border-radius:99px;
-  background:rgba(0,0,0,.5);border:1px solid var(--border);
+  background:
+    linear-gradient(180deg,rgba(10,6,18,.45) 0%,rgba(10,6,18,.4) 35%,rgba(10,6,18,.92) 92%,var(--bg) 100%),
+    radial-gradient(ellipse 100% 70% at 50% 50%,transparent 25%,rgba(10,6,18,.55) 100%);}
+.hero-inner{position:relative;z-index:3;max-width:1100px;margin:0 auto;
+  width:100%;text-align:center;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;
+  padding:8px 16px;border-radius:99px;
+  background:rgba(212,175,55,.08);
+  border:1px solid var(--border-gold);
+  backdrop-filter:blur(12px);
   font-family:'JetBrains Mono',monospace;font-size:11px;
-  color:var(--text-2);cursor:pointer;transition:.15s;}
-.hero-ca:hover{border-color:var(--purple);background:rgba(168,85,247,.1);color:#fff;}
-.hero-ca .ca-label{color:var(--orange);font-weight:700;letter-spacing:1.5px;}
-.hero-ca .ca-val{color:#fff;}
+  letter-spacing:.22em;color:var(--gold);text-transform:uppercase;
+  margin-bottom:36px;}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 8px var(--green);}
+.hero h1{margin-bottom:32px;color:var(--text);}
+.hero h1 em{font-style:italic;color:var(--gold);
+  background:linear-gradient(135deg,#e7c46e 0%,#d4af37 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 6px 24px rgba(212,175,55,.35));}
+.hero .lead{font-family:'Fraunces',serif;font-weight:300;
+  font-size:clamp(17px,1.8vw,21px);line-height:1.55;
+  color:var(--text-2);max-width:620px;margin:0 auto 44px;
+  letter-spacing:.01em;}
+.hero .lead em{font-style:italic;color:var(--text);}
 
+.hero-ctas{display:flex;gap:14px;justify-content:center;align-items:center;
+  flex-wrap:wrap;margin-bottom:38px;}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  padding:15px 26px;border-radius:12px;font-family:'Russo One',sans-serif;
-  font-size:14px;letter-spacing:2px;cursor:pointer;transition:.15s;
-  text-transform:uppercase;border:none;}
-.btn-primary{background:var(--grad);color:#fff;
-  box-shadow:0 10px 30px -6px rgba(168,85,247,.55),0 4px 14px -4px rgba(255,138,61,.4);}
+  padding:16px 32px;border-radius:99px;font-family:'Inter',sans-serif;
+  font-size:14px;font-weight:600;letter-spacing:.02em;
+  cursor:pointer;border:none;transition:.22s var(--ease);position:relative;
+  isolation:isolate;}
+.btn-primary{background:var(--text);color:var(--bg);
+  box-shadow:0 14px 36px -10px rgba(250,250,245,.35),inset 0 -1px 0 rgba(0,0,0,.1);}
 .btn-primary:hover{transform:translateY(-2px);
-  box-shadow:0 14px 38px -6px rgba(168,85,247,.7),0 6px 18px -4px rgba(255,138,61,.5);}
-.btn-ghost{background:rgba(168,85,247,.1);color:#fff;border:1.5px solid var(--purple);}
-.btn-ghost:hover{background:rgba(168,85,247,.22);border-color:var(--orange);}
-.btn-sm{padding:11px 18px;font-size:11px;letter-spacing:1.5px;}
+  box-shadow:0 22px 48px -10px rgba(250,250,245,.5);}
+.btn-gold{background:var(--gold);color:var(--bg);
+  box-shadow:0 14px 36px -10px rgba(212,175,55,.5),inset 0 -1px 0 rgba(0,0,0,.15);}
+.btn-gold:hover{transform:translateY(-2px);background:var(--gold-hi);
+  box-shadow:0 22px 56px -10px rgba(231,196,110,.6);}
+.btn-ghost{background:var(--surface);color:var(--text);
+  border:1px solid var(--border-hi);}
+.btn-ghost:hover{background:var(--surface-2);border-color:var(--text);}
+.btn-text{font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
+  color:var(--text-2);letter-spacing:.04em;cursor:pointer;
+  padding:8px 4px;transition:.18s var(--ease);
+  border-bottom:1px solid transparent;}
+.btn-text:hover{color:var(--gold);border-bottom-color:var(--gold);}
 
-.marquee{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  background:linear-gradient(90deg,rgba(168,85,247,.06),rgba(255,138,61,.06));
-  padding:18px 0;}
-.marquee-track{display:flex;gap:3rem;white-space:nowrap;
-  animation:scrollX 32s linear infinite;font-family:'Bungee',cursive;font-size:clamp(22px,3.5vw,40px);
-  letter-spacing:3px;}
-.marquee-item{color:var(--orange);}
-.marquee-item.alt{color:var(--purple);}
-.marquee-sep{color:var(--text-3);font-size:.8em;align-self:center;}
+.hero-ca{display:inline-flex;align-items:center;gap:10px;
+  padding:10px 18px;border-radius:99px;cursor:pointer;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  backdrop-filter:blur(8px);
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-2);letter-spacing:.04em;
+  transition:.2s var(--ease);}
+.hero-ca:hover{border-color:var(--gold);color:var(--text);
+  background:rgba(212,175,55,.05);}
+.hero-ca .label{color:var(--gold);text-transform:uppercase;letter-spacing:.18em;font-size:10px;}
 
-.live-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:30px;}
-.live-stat{background:linear-gradient(180deg,rgba(28,14,48,.55),rgba(16,7,34,.55));
-  border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:left;}
-.live-stat .l{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;
-  color:var(--text-3);text-transform:uppercase;}
-.live-stat .v{font-family:'Russo One',sans-serif;font-size:18px;color:#fff;margin-top:4px;word-break:break-all;}
-.live-stat .v.glow{color:var(--orange);text-shadow:0 0 12px rgba(255,138,61,.4);}
-.live-stat .d{font-size:11px;color:var(--text-2);margin-top:2px;font-family:'JetBrains Mono',monospace;}
-.live-stat .d.up{color:var(--green);}
-.live-stat .d.down{color:var(--red);}
-@media (max-width:640px){.live-bar{grid-template-columns:repeat(2,1fr);} .live-stat .v{font-size:15px;}}
+.scroll-cue{position:absolute;left:50%;bottom:32px;
+  transform:translateX(-50%);z-index:3;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.22em;color:var(--text-3);text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:6px;}
+.scroll-cue .line{width:1px;height:42px;
+  background:linear-gradient(180deg,transparent,var(--gold),transparent);
+  animation:scrollLine 2.4s ease-in-out infinite;}
+@keyframes scrollLine{
+  0%{transform:scaleY(.2);transform-origin:top;}
+  50%{transform:scaleY(1);transform-origin:top;}
+  51%{transform:scaleY(1);transform-origin:bottom;}
+  100%{transform:scaleY(.2);transform-origin:bottom;}
+}
 
-.lore{display:grid;grid-template-columns:1.1fr 1fr;gap:36px;align-items:center;}
-.lore-img{position:relative;border-radius:24px;overflow:hidden;border:1.5px solid var(--border);
-  aspect-ratio:5/4;box-shadow:0 30px 80px -20px rgba(168,85,247,.35);}
-.lore-img img{width:100%;height:100%;object-fit:cover;transition:.7s;}
-.lore-img:hover img{transform:scale(1.04);}
-.lore-img::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 60%,rgba(8,0,15,.6));}
-.lore-text h2{font-family:'Bungee',cursive;font-size:clamp(28px,5vw,52px);
-  letter-spacing:1.5px;line-height:1;margin-bottom:16px;}
-.lore-text h2 .grad{background:var(--grad-cyber);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-.lore-text p{font-size:16px;line-height:1.65;color:var(--text-2);margin-bottom:14px;}
-.lore-text p b{color:#fff;}
-.lore-quote{font-family:'Bungee',cursive;font-size:clamp(20px,2.6vw,28px);letter-spacing:1.5px;
-  background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  margin-top:14px;line-height:1.2;}
-@media (max-width:780px){.lore{grid-template-columns:1fr;gap:22px;}}
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+.marquee{padding:28px 0;overflow:hidden;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(139,92,246,.04),rgba(212,175,55,.03));}
+.marquee-track{display:flex;gap:5rem;white-space:nowrap;
+  animation:scrollX 48s linear infinite;
+  font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+  font-size:clamp(20px,3.2vw,40px);
+  letter-spacing:-.01em;color:var(--text);}
+.marquee-track .alt{color:var(--gold);}
+.marquee-sep{color:var(--text-3);align-self:center;font-size:.7em;}
 
-.ranks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
-.rank-card{position:relative;background:linear-gradient(180deg,rgba(28,14,48,.6),rgba(16,7,34,.6));
-  border:1.5px solid var(--border);border-radius:14px;padding:20px 14px;text-align:center;
-  transition:.2s;overflow:hidden;}
-.rank-card:hover{border-color:var(--purple);transform:translateY(-3px);
-  box-shadow:0 14px 32px -10px rgba(168,85,247,.4);}
-.rank-card .emoji{font-size:32px;display:block;margin-bottom:8px;
-  filter:drop-shadow(0 2px 10px rgba(255,138,61,.4));}
-.rank-card .name{font-family:'Bungee',cursive;font-size:14px;letter-spacing:1.5px;
-  background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-.rank-card .req{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);
-  margin-top:6px;letter-spacing:.5px;}
-.rank-card.apex{border-color:var(--orange);background:linear-gradient(180deg,rgba(255,138,61,.12),rgba(168,85,247,.08));}
-.rank-card.apex::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 0%,rgba(255,138,61,.25),transparent 60%);pointer-events:none;}
+/* ============================================================
+   STATS BAR (post-hero, premium minimal)
+   ============================================================ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+.stat{padding:28px 24px;background:var(--bg);position:relative;}
+.stat .l{font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.22em;color:var(--text-3);text-transform:uppercase;}
+.stat .v{font-family:'Fraunces',serif;font-weight:400;
+  font-size:30px;color:var(--text);margin-top:8px;line-height:1;letter-spacing:-.01em;}
+.stat .v.gold{color:var(--gold);}
+.stat .d{font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-2);margin-top:6px;}
+.stat .d.up{color:var(--green);}
+.stat .d.down{color:var(--red);}
+@media (max-width:780px){
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .stat .v{font-size:24px;}
+}
 
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
-.product-card{position:relative;background:linear-gradient(180deg,rgba(28,14,48,.55),rgba(16,7,34,.55));
-  border:1.5px solid var(--border);border-radius:18px;padding:22px;
-  transition:.18s;overflow:hidden;cursor:pointer;display:block;}
-.product-card:hover{transform:translateY(-3px);border-color:var(--purple);
-  box-shadow:0 18px 40px -10px rgba(168,85,247,.4);}
-.product-card.featured{border-color:var(--orange);
-  background:linear-gradient(135deg,rgba(255,138,61,.12),rgba(168,85,247,.08));
-  grid-column:1/-1;}
-.product-card .badge{display:inline-block;padding:4px 10px;border-radius:99px;
-  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;margin-bottom:12px;background:var(--grad);color:#fff;}
-.product-card.featured .badge{background:linear-gradient(135deg,var(--orange),var(--purple));}
-.product-card h3{font-family:'Bungee',cursive;font-size:24px;letter-spacing:1.2px;line-height:1;margin-bottom:10px;}
-.product-card p{font-size:14px;color:var(--text-2);line-height:1.5;}
-.product-card p b{color:#fff;}
-.product-card .arrow{position:absolute;top:18px;right:18px;
-  width:32px;height:32px;border-radius:50%;
-  background:rgba(168,85,247,.18);border:1.5px solid var(--purple);
-  display:flex;align-items:center;justify-content:center;transition:.2s;}
-.product-card:hover .arrow{background:var(--purple);transform:translate(2px,-2px);}
-.product-card .arrow svg{width:14px;height:14px;}
+/* ============================================================
+   LORE / EDITORIAL · asymmetric
+   ============================================================ */
+.lore{display:grid;grid-template-columns:1.05fr .95fr;gap:80px;
+  align-items:center;}
+.lore-figure{position:relative;border-radius:var(--r-lg);overflow:hidden;
+  aspect-ratio:5/6;background:var(--surface);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-3);}
+.lore-figure img{width:100%;height:100%;object-fit:cover;
+  transition:transform 1.4s var(--ease);}
+.lore:hover .lore-figure img{transform:scale(1.04);}
+.lore-figure::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 65%,rgba(10,6,18,.7));}
+.lore-figure .figure-cap{position:absolute;left:24px;bottom:20px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.22em;color:rgba(250,250,245,.8);text-transform:uppercase;}
+.lore-body .eyebrow{margin-bottom:24px;}
+.lore-body h2{margin-bottom:28px;color:var(--text);}
+.lore-body p{font-family:'Fraunces',serif;font-weight:300;
+  font-size:18px;line-height:1.65;color:var(--text-2);
+  margin-bottom:20px;letter-spacing:.005em;}
+.lore-body p em{color:var(--text);font-style:italic;}
+.lore-body p .gold{color:var(--gold);font-style:italic;}
+.lore-quote{font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+  font-size:clamp(22px,2.6vw,30px);line-height:1.25;letter-spacing:-.01em;
+  color:var(--text);margin-top:32px;padding-top:32px;
+  border-top:1px solid var(--border);}
+.lore-quote .gold{color:var(--gold);}
+@media (max-width:880px){.lore{grid-template-columns:1fr;gap:48px;}}
 
-.bleed{position:relative;padding:80px 1rem;overflow:hidden;}
+/* ============================================================
+   PACK RANKS · editorial list
+   ============================================================ */
+.ranks-list{max-width:760px;margin:0 auto;
+  border-top:1px solid var(--border);}
+.rank-row{display:grid;grid-template-columns:80px 1fr 140px;align-items:center;
+  padding:24px 8px;border-bottom:1px solid var(--border);
+  transition:.2s var(--ease);position:relative;cursor:default;}
+.rank-row:hover{background:var(--surface);padding-left:20px;}
+.rank-row .num{font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-3);letter-spacing:.1em;}
+.rank-row .name{font-family:'Fraunces',serif;font-weight:400;
+  font-size:clamp(22px,2.6vw,30px);letter-spacing:-.01em;color:var(--text);
+  display:flex;align-items:center;gap:14px;}
+.rank-row .name .emoji{font-size:.85em;}
+.rank-row .req{font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-2);text-align:right;letter-spacing:.06em;}
+.rank-row.apex .name{font-family:'Fraunces',serif;font-style:italic;
+  background:linear-gradient(135deg,#e7c46e,#d4af37);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.rank-row.apex .req{color:var(--gold);}
+.rank-row.apex::after{content:'★';position:absolute;left:-8px;top:50%;
+  transform:translateY(-50%);color:var(--gold);font-size:14px;}
+@media (max-width:640px){
+  .rank-row{grid-template-columns:50px 1fr;}
+  .rank-row .req{display:none;}
+}
+
+/* ============================================================
+   PRODUCTS · 2-col, refined cards
+   ============================================================ */
+.products{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.product{position:relative;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:36px 32px;
+  transition:.3s var(--ease);overflow:hidden;display:flex;
+  flex-direction:column;justify-content:space-between;min-height:260px;
+  cursor:pointer;}
+.product:hover{border-color:var(--border-hi);transform:translateY(-4px);
+  background:var(--surface-2);
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.6);}
+.product .badge{display:inline-block;padding:5px 12px;border-radius:99px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);background:rgba(212,175,55,.08);
+  border:1px solid var(--border-gold);align-self:flex-start;}
+.product h3{font-family:'Fraunces',serif;font-weight:400;
+  font-size:clamp(26px,3.2vw,38px);letter-spacing:-.01em;
+  line-height:1.05;margin:18px 0 10px;color:var(--text);}
+.product h3 em{font-style:italic;color:var(--gold);}
+.product p{font-size:14px;line-height:1.6;color:var(--text-2);margin-bottom:22px;}
+.product .arrow{width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--border-hi);background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  transition:.2s var(--ease);align-self:flex-end;}
+.product:hover .arrow{background:var(--gold);border-color:var(--gold);}
+.product:hover .arrow svg{stroke:var(--bg);}
+.product .arrow svg{width:14px;height:14px;stroke:var(--text);
+  transition:.2s var(--ease);}
+.product.featured{grid-column:1/-1;
+  background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(212,175,55,.05));
+  border-color:var(--border-gold);min-height:300px;}
+.product.featured::before{content:'';position:absolute;
+  top:-50%;right:-30%;width:60%;height:200%;
+  background:radial-gradient(circle,rgba(212,175,55,.12),transparent 60%);
+  pointer-events:none;}
+@media (max-width:780px){.products{grid-template-columns:1fr;}}
+
+/* ============================================================
+   BLEED · full-bleed sections with image bg
+   ============================================================ */
+.bleed{position:relative;padding:160px 24px;overflow:hidden;}
 .bleed-bg{position:absolute;inset:0;z-index:1;}
 .bleed-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 .bleed-bg::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(8,0,15,.88) 0%,rgba(8,0,15,.72) 50%,rgba(8,0,15,.95) 100%);}
-.bleed-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;text-align:center;}
+  background:linear-gradient(180deg,var(--bg) 0%,rgba(10,6,18,.7) 30%,rgba(10,6,18,.7) 70%,var(--bg) 100%);}
+.bleed-inner{position:relative;z-index:2;max-width:880px;margin:0 auto;text-align:center;}
+.bleed-inner h2{margin:24px 0 28px;color:var(--text);}
 
-.wcam-wrap{max-width:920px;margin:0 auto;}
-.wcam-frame{position:relative;border-radius:22px;overflow:hidden;
-  border:1.5px solid var(--border);aspect-ratio:16/9;
-  background:#000;box-shadow:0 24px 60px -20px rgba(168,85,247,.4);}
-.wcam-frame iframe{width:100%;height:100%;border:0;display:block;}
-.wcam-live{position:absolute;top:16px;left:16px;display:flex;align-items:center;gap:6px;
-  padding:6px 12px;border-radius:99px;background:rgba(0,0,0,.7);
-  border:1px solid var(--red);backdrop-filter:blur(8px);
-  font-family:'Russo One',sans-serif;font-size:10px;letter-spacing:1.5px;color:#fff;}
-.wcam-live::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);
-  animation:pulseDot 1.5s infinite;}
-.wcam-mark{position:absolute;bottom:16px;right:16px;display:flex;align-items:center;gap:8px;
-  padding:6px 12px;border-radius:99px;background:rgba(8,0,15,.78);
-  border:1px solid var(--purple);backdrop-filter:blur(8px);}
-.wcam-mark img{width:18px;height:18px;border-radius:50%;}
-.wcam-mark span{font-family:'Russo One',sans-serif;font-size:10px;letter-spacing:1.5px;color:#fff;}
-.wcam-credit{text-align:center;margin-top:14px;font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
-.wcam-credit a{color:var(--purple);}
-
-.tk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;max-width:920px;margin:0 auto;}
-.tk-card{background:linear-gradient(180deg,rgba(28,14,48,.6),rgba(16,7,34,.6));
-  border:1.5px solid var(--border);border-radius:14px;padding:18px;}
-.tk-card .l{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;
-  color:var(--text-3);text-transform:uppercase;}
-.tk-card .v{font-family:'Bungee',cursive;font-size:22px;color:#fff;margin-top:6px;line-height:1;}
-.tk-card .v.grad{background:var(--grad-cyber);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-.tk-card .s{font-size:11px;color:var(--text-2);margin-top:6px;line-height:1.4;}
-
-.road-wrap{max-width:920px;margin:0 auto;}
-.road-row{display:flex;gap:16px;padding:18px;border-radius:14px;
-  background:linear-gradient(180deg,rgba(28,14,48,.5),rgba(16,7,34,.5));
-  border:1.5px solid var(--border);margin-bottom:10px;transition:.18s;}
-.road-row:hover{border-color:var(--purple);}
-.road-row .marker{flex-shrink:0;width:42px;height:42px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Bungee',cursive;font-size:16px;
-  background:var(--grad);color:#fff;}
-.road-row.done .marker{background:linear-gradient(135deg,var(--green),var(--purple));}
-.road-row.next .marker{background:linear-gradient(135deg,var(--orange),var(--ember));}
-.road-row .body{flex:1;}
-.road-row h4{font-family:'Bungee',cursive;font-size:15px;letter-spacing:1px;color:#fff;margin-bottom:4px;}
-.road-row p{font-size:13px;color:var(--text-2);line-height:1.5;}
-.road-row .tag{display:inline-block;padding:3px 10px;border-radius:99px;
-  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
-  margin-top:8px;border:1px solid var(--border);color:var(--text-3);}
-.road-row.done .tag{background:rgba(34,197,94,.15);border-color:var(--green);color:var(--green);}
-.road-row.next .tag{background:rgba(255,138,61,.15);border-color:var(--orange);color:var(--orange);}
-
-.socials{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;}
-.social-pill{display:inline-flex;align-items:center;gap:10px;
-  padding:14px 20px;border-radius:99px;
-  background:linear-gradient(180deg,rgba(28,14,48,.6),rgba(16,7,34,.6));
-  border:1.5px solid var(--purple);
-  font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:1.5px;
-  color:#fff;transition:.15s;}
-.social-pill:hover{background:rgba(168,85,247,.2);transform:translateY(-2px);
-  box-shadow:0 8px 22px -6px rgba(168,85,247,.5);}
-.social-pill svg{width:20px;height:20px;}
-
-footer{padding:50px 1rem 30px;border-top:1px solid var(--border);
-  background:rgba(8,0,15,.5);margin-top:40px;position:relative;z-index:3;}
-.foot-grid{max-width:1280px;margin:0 auto;display:grid;
-  grid-template-columns:1.4fr repeat(3,1fr);gap:28px;}
-.foot-brand img{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--purple);}
-.foot-brand h4{font-family:'Bungee',cursive;font-size:18px;letter-spacing:1.5px;margin-top:10px;}
-.foot-brand p{font-size:13px;color:var(--text-2);margin-top:6px;}
-.foot-col h5{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;
-  color:var(--orange);text-transform:uppercase;margin-bottom:10px;}
-.foot-col a{display:block;font-size:13px;color:var(--text-2);padding:4px 0;transition:.15s;}
-.foot-col a:hover{color:#fff;}
-.foot-bot{max-width:1280px;margin:30px auto 0;padding-top:20px;border-top:1px solid var(--border);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
-  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);}
-@media (max-width:780px){.foot-grid{grid-template-columns:1fr 1fr;} .foot-brand{grid-column:span 2;}}
-
-/* === PACK IN MOTION (video gallery) === */
-.motion-section{padding:80px 0;}
-.motion-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;}
-.motion-stack{display:grid;grid-template-rows:1fr 1fr;gap:14px;}
-.motion-card{position:relative;border-radius:18px;overflow:hidden;
-  border:1.5px solid var(--border);background:#000;cursor:pointer;
-  box-shadow:0 18px 50px -16px rgba(168,85,247,.4);transition:.2s;}
-.motion-card.big{aspect-ratio:16/10;}
-.motion-card:not(.big){aspect-ratio:16/10;}
-.motion-card:hover{border-color:var(--purple);transform:translateY(-2px);
-  box-shadow:0 24px 60px -16px rgba(168,85,247,.55);}
-.motion-card .motion-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
-.motion-overlay{position:absolute;left:0;right:0;bottom:0;
-  padding:18px 20px;
-  background:linear-gradient(180deg,transparent 0%,rgba(8,0,15,.85) 80%);
-  z-index:2;}
-.motion-badge{display:inline-block;padding:4px 10px;border-radius:99px;
-  background:linear-gradient(135deg,var(--orange),var(--purple));
-  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;
-  color:#fff;text-transform:uppercase;margin-bottom:8px;}
-.motion-title{font-family:'Bungee',cursive;font-size:clamp(15px,2.2vw,22px);
-  letter-spacing:1px;color:#fff;line-height:1.1;}
-.motion-sub{font-size:12px;color:var(--text-2);margin-top:4px;
-  font-family:'JetBrains Mono',monospace;letter-spacing:.3px;}
+/* ============================================================
+   MOTION (video gallery)
+   ============================================================ */
+.motion-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;}
+.motion-stack{display:grid;grid-template-rows:1fr 1fr;gap:18px;}
+.motion-card{position:relative;border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--border);background:#000;
+  aspect-ratio:16/10;cursor:pointer;
+  box-shadow:var(--shadow-2);transition:.3s var(--ease);}
+.motion-card:hover{transform:translateY(-3px);
+  border-color:var(--border-hi);
+  box-shadow:0 30px 70px -20px rgba(139,92,246,.5);}
+.motion-card .motion-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.motion-overlay{position:absolute;left:0;right:0;bottom:0;padding:24px;
+  background:linear-gradient(180deg,transparent 0%,rgba(10,6,18,.92) 90%);z-index:2;}
+.motion-overlay .badge{display:inline-block;padding:5px 12px;border-radius:99px;
+  background:rgba(212,175,55,.18);border:1px solid var(--border-gold);
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
+.motion-overlay .title{font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+  font-size:clamp(18px,2vw,24px);color:var(--text);letter-spacing:-.01em;}
+.motion-overlay .sub{font-size:13px;color:var(--text-2);margin-top:4px;}
 @media (max-width:780px){
   .motion-grid{grid-template-columns:1fr;}
   .motion-stack{grid-template-rows:none;grid-template-columns:1fr 1fr;}
 }
-@media (max-width:520px){
-  .motion-stack{grid-template-columns:1fr;}
-}
+@media (max-width:520px){.motion-stack{grid-template-columns:1fr;}}
 
-/* === ART MARQUEE === */
-.art-marquee{overflow:hidden;margin-top:8px;
-  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 6%,#000 94%,transparent 100%);
-  mask-image:linear-gradient(to right,transparent 0%,#000 6%,#000 94%,transparent 100%);}
-.art-track{display:flex;gap:14px;width:max-content;
-  animation:artScroll 70s linear infinite;
-  will-change:transform;}
-.art-tile{flex-shrink:0;width:260px;height:200px;border-radius:14px;overflow:hidden;
-  border:1.5px solid var(--border);transition:.2s;display:block;background:#0d0420;}
-.art-tile img{width:100%;height:100%;object-fit:cover;display:block;
-  transition:.3s;}
-.art-tile:hover{border-color:var(--orange);transform:translateY(-3px);
-  box-shadow:0 14px 36px -10px rgba(255,138,61,.5);}
+/* ============================================================
+   ART MARQUEE · refined
+   ============================================================ */
+.art-rail{overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 8%,#000 92%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0%,#000 8%,#000 92%,transparent 100%);}
+.art-track{display:flex;gap:18px;width:max-content;
+  animation:artScroll 80s linear infinite;will-change:transform;}
+.art-tile{flex-shrink:0;width:340px;aspect-ratio:1.3/1;
+  border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--border);background:var(--surface);
+  transition:.3s var(--ease);position:relative;display:block;}
+.art-tile img{width:100%;height:100%;object-fit:cover;
+  transition:transform .6s var(--ease);}
+.art-tile:hover{border-color:var(--border-gold);transform:translateY(-4px);
+  box-shadow:0 20px 50px -15px rgba(212,175,55,.4);}
 .art-tile:hover img{transform:scale(1.06);}
 @keyframes artScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion: reduce){
-  .art-track{animation:none;}
-}
-@media (max-width:640px){
-  .art-tile{width:200px;height:150px;}
+@media (prefers-reduced-motion: reduce){.art-track{animation:none;}}
+@media (max-width:640px){.art-tile{width:240px;}}
+
+/* ============================================================
+   TOKENOMICS
+   ============================================================ */
+.tokens{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  max-width:1000px;margin:0 auto;
+  background:var(--border);border:1px solid var(--border);
+  border-radius:var(--r-lg);overflow:hidden;}
+.tk{padding:36px 28px;background:var(--bg);}
+.tk .l{font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.22em;color:var(--text-3);text-transform:uppercase;}
+.tk .v{font-family:'Fraunces',serif;font-weight:400;
+  font-size:clamp(28px,3vw,38px);color:var(--text);margin-top:10px;
+  line-height:1;letter-spacing:-.01em;}
+.tk .v.gold{color:var(--gold);font-style:italic;}
+.tk .s{font-size:12px;color:var(--text-2);margin-top:10px;line-height:1.5;}
+@media (max-width:780px){
+  .tokens{grid-template-columns:repeat(2,1fr);}
 }
 
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(40px);
-  background:linear-gradient(135deg,#fff,#f8f8f8);color:#000;
-  padding:12px 18px;border-radius:12px;font-family:'Russo One',sans-serif;
-  font-size:12px;letter-spacing:1px;opacity:0;pointer-events:none;
-  transition:.25s;z-index:200;
-  box-shadow:0 10px 40px -10px rgba(168,85,247,.6);max-width:340px;text-align:center;}
+/* ============================================================
+   WOLF CAM
+   ============================================================ */
+.wcam{max-width:1000px;margin:0 auto;border-radius:var(--r-xl);overflow:hidden;
+  border:1px solid var(--border);background:#000;aspect-ratio:16/9;
+  position:relative;box-shadow:var(--shadow-3);}
+.wcam iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.wcam .live-tag{position:absolute;top:18px;left:18px;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 12px;border-radius:99px;
+  background:rgba(10,6,18,.8);border:1px solid var(--red);
+  backdrop-filter:blur(8px);font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.22em;color:var(--text);text-transform:uppercase;}
+.wcam .live-tag::before{content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--red);animation:pulse 1.5s infinite;}
+.wcam-credit{text-align:center;margin-top:16px;font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--text-3);letter-spacing:.04em;}
+.wcam-credit a{color:var(--text-2);}.wcam-credit a:hover{color:var(--gold);}
+
+/* ============================================================
+   ROADMAP · refined timeline
+   ============================================================ */
+.timeline{max-width:760px;margin:0 auto;}
+.timeline-item{display:grid;grid-template-columns:auto 1fr;gap:24px;
+  padding:32px 0;border-bottom:1px solid var(--border);}
+.timeline-item:last-child{border-bottom:none;}
+.timeline-marker{width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-size:14px;
+  background:var(--surface);border:1px solid var(--border-hi);
+  color:var(--text-2);flex-shrink:0;margin-top:4px;}
+.timeline-item.done .timeline-marker{background:var(--green);
+  border-color:var(--green);color:var(--bg);font-weight:600;}
+.timeline-item.next .timeline-marker{background:var(--gold);
+  border-color:var(--gold);color:var(--bg);font-weight:600;}
+.timeline-body h4{font-family:'Fraunces',serif;font-weight:400;
+  font-size:clamp(20px,2.4vw,28px);letter-spacing:-.01em;color:var(--text);margin-bottom:6px;}
+.timeline-body p{font-size:14px;color:var(--text-2);line-height:1.6;}
+.timeline-tag{display:inline-block;padding:3px 10px;border-radius:99px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;margin-top:10px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text-3);}
+.timeline-item.done .timeline-tag{color:var(--green);border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.06);}
+.timeline-item.next .timeline-tag{color:var(--gold);border-color:var(--border-gold);background:rgba(212,175,55,.06);}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{padding:80px 24px 40px;border-top:1px solid var(--border);
+  background:var(--bg);margin-top:80px;position:relative;z-index:3;}
+.foot-grid{max-width:1280px;margin:0 auto;display:grid;
+  grid-template-columns:1.4fr repeat(3,1fr);gap:50px;}
+.foot-brand img{width:42px;height:42px;border-radius:50%;
+  border:1px solid var(--border-hi);}
+.foot-brand h4{font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+  font-size:22px;letter-spacing:-.01em;margin-top:14px;color:var(--text);}
+.foot-brand p{font-size:14px;color:var(--text-2);margin-top:8px;line-height:1.6;max-width:340px;}
+.foot-col h5{font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:18px;}
+.foot-col a{display:block;font-size:14px;color:var(--text-2);
+  padding:6px 0;transition:.18s var(--ease);}
+.foot-col a:hover{color:var(--text);}
+.foot-bot{max-width:1280px;margin:48px auto 0;padding-top:24px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);}
+@media (max-width:780px){
+  .foot-grid{grid-template-columns:1fr 1fr;gap:36px;}
+  .foot-brand{grid-column:span 2;}
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast{position:fixed;bottom:32px;left:50%;
+  transform:translateX(-50%) translateY(40px);
+  background:var(--text);color:var(--bg);
+  padding:12px 20px;border-radius:99px;
+  font-size:13px;font-weight:500;letter-spacing:.01em;
+  opacity:0;pointer-events:none;
+  transition:.3s var(--ease);z-index:200;
+  box-shadow:0 24px 60px -10px rgba(0,0,0,.6);max-width:340px;text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.err{background:linear-gradient(135deg,#fee,#fdd);}
+.toast.err{background:#fee;color:#831;}
 
-.hide-on-mobile{display:initial;}
-@media (max-width:640px){.hide-on-mobile{display:none;}}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;
-  border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;}
+.center{text-align:center;}
+.section-head{text-align:center;margin-bottom:64px;}
+.section-head .eyebrow{margin-bottom:18px;display:inline-block;}
+.section-head h2{color:var(--text);margin-bottom:18px;}
+.section-head p{font-family:'Fraunces',serif;font-weight:300;
+  font-size:18px;line-height:1.55;color:var(--text-2);
+  max-width:560px;margin:0 auto;letter-spacing:.005em;}
 </style>
 </head>
 <body>
 
+<div class="preloader" id="preloader">
+  <img src="logo.png" alt="MonWolf">
+</div>
+
+<!-- TICKER -->
 <div class="ticker">
   <div class="ticker-track">
-    <span class="ticker-item"><span class="ticker-l">$MONWOLF</span><span class="ticker-v glow" id="tkPrice">—</span></span>
+    <span><span class="ticker-l">$MONWOLF</span> <span class="ticker-v glow" id="tkPrice">—</span></span>
     <span class="ticker-sep">·</span>
-    <span class="ticker-item"><span class="ticker-l">24H</span><span class="ticker-v" id="tkChange">—</span></span>
+    <span><span class="ticker-l">24H</span> <span class="ticker-v" id="tkChange">—</span></span>
     <span class="ticker-sep">·</span>
-    <span class="ticker-item"><span class="ticker-l">VOL</span><span class="ticker-v" id="tkVol">—</span></span>
+    <span><span class="ticker-l">VOL</span> <span class="ticker-v" id="tkVol">—</span></span>
     <span class="ticker-sep">·</span>
-    <span class="ticker-item"><span class="ticker-l">LIQ</span><span class="ticker-v" id="tkLiq">—</span></span>
+    <span><span class="ticker-l">LIQ</span> <span class="ticker-v" id="tkLiq">—</span></span>
     <span class="ticker-sep">·</span>
-    <span class="ticker-item"><span class="ticker-l">MCAP</span><span class="ticker-v" id="tkMcap">—</span></span>
+    <span><span class="ticker-l">MCAP</span> <span class="ticker-v" id="tkMcap">—</span></span>
     <span class="ticker-sep">·</span>
-    <span class="ticker-item"><span class="ticker-l">CHAIN</span><span class="ticker-v">MONAD</span></span>
+    <span><span class="ticker-l">CHAIN</span> <span class="ticker-v">MONAD</span></span>
     <span class="ticker-sep">·</span>
-    <span class="ticker-item"><span class="ticker-l">STATUS</span><span class="ticker-v" style="color:var(--green);">PACK ONLINE</span></span>
+    <span><span class="ticker-l">STATUS</span> <span class="ticker-v" style="color:var(--green);">PACK ONLINE</span></span>
     <span class="ticker-sep">·</span>
   </div>
 </div>
 
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a href="/" class="brand"><img src="logo.png" alt=""><span class="name">MONWOLF</span></a>
+    <a href="/" class="brand"><img src="logo.png" alt=""><span class="name">MonWolf</span></a>
     <div class="nav-actions">
-      <a href="/buy.html" class="nav-pill primary">🐺 BUY</a>
-      <a href="/swap.html" class="nav-pill">SWAP</a>
-      <a href="/hub.html" class="nav-pill">HUB</a>
-      <a href="/arcade.html" class="nav-pill hide-on-mobile">ARCADE</a>
-      <span class="wallet-pill" id="walletPill">
+      <a href="/swap.html" class="nav-link hide-sm">Swap</a>
+      <a href="/hub.html" class="nav-link hide-sm">Hub</a>
+      <a href="/arcade.html" class="nav-link hide-sm">Arcade</a>
+      <span class="wallet-chip" id="walletChip">
         <span class="dot"></span>
-        <span class="rank" id="rankBadge"></span>
-        <span id="walletText">CONNECT</span>
+        <span id="walletText">Connect</span>
       </span>
+      <a href="/buy.html" class="nav-cta">Buy →</a>
     </div>
   </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-bg">
-    <video
-      autoplay muted loop playsinline preload="auto"
-      poster="media/storm-poster.jpg"
-      aria-hidden="true">
+    <video autoplay muted loop playsinline preload="auto"
+      poster="media/storm-poster.jpg" aria-hidden="true">
       <source src="media/storm-web.mp4" type="video/mp4">
     </video>
-    <!-- Image fallback (will only paint if video errors out) -->
     <noscript><img src="site-art/wolf-hero.jpg" alt=""></noscript>
   </div>
-  <div class="hero-content">
-    <span class="hero-badge"><span class="dot"></span> LIVE ON MONAD MAINNET</span>
-    <h1>THE <span class="grad">FUTURE</span><br>IS <span class="grad">OURS</span></h1>
-    <div class="tag">★ MONWOLF · BUILT BY WOLVES ★</div>
-    <p class="lead"><b>$MONWOLF</b> is the apex memecoin on Monad. Pack-driven. Wolf-led. <b>The underground movement that won't stay underground.</b></p>
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;">
-      <a href="/buy.html" class="btn btn-primary">🐺 BUY $MONWOLF →</a>
-      <a id="heroConnectBtn" href="/swap.html" class="btn btn-ghost">🦊 CONNECT WALLET</a>
+  <div class="hero-inner">
+    <div class="hero-eyebrow reveal">Live on Monad mainnet</div>
+    <h1 class="display h0 reveal reveal-delay-1">
+      The future<br>is <em>ours.</em>
+    </h1>
+    <p class="lead reveal reveal-delay-2">
+      $MONWOLF is the apex memecoin on Monad. <em>Pack-driven. Wolf-led.</em>
+      The underground movement that won't stay underground.
+    </p>
+    <div class="hero-ctas reveal reveal-delay-3">
+      <a href="/buy.html" class="btn btn-gold">Buy $MONWOLF</a>
+      <a href="/swap.html" id="heroConnectBtn" class="btn-text">or connect a wallet →</a>
     </div>
-    <div class="hero-ctas">
-      <button class="hero-ca" id="caCopy">
-        <span class="ca-label">CA</span>
-        <span class="ca-val" id="caShort">0x8361…7777</span>
-        <span style="color:var(--text-3);">⧉</span>
-      </button>
-      <a class="hero-ca" href="https://dexscreener.com/monad/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">
-        <span class="ca-label">📊</span>
-        <span class="ca-val">DEXSCREENER</span>
-      </a>
-      <a class="hero-ca" href="https://nad.fun/tokens/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">
-        <span class="ca-label">🚀</span>
-        <span class="ca-val">NAD.FUN</span>
-      </a>
-    </div>
+    <button class="hero-ca reveal reveal-delay-3" id="caCopy">
+      <span class="label">CA</span>
+      <span id="caShort">0x8361…7777</span>
+      <span style="opacity:.5;">⧉</span>
+    </button>
+  </div>
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <span class="line"></span>
   </div>
 </section>
 
+<!-- MARQUEE -->
 <div class="marquee">
   <div class="marquee-track">
-    <span class="marquee-item">★ THE PACK RISES</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item alt">★ THE FUTURE IS OURS</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item">★ BUILT BY WOLVES</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item alt">★ WOLVES NEVER FOLLOW</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item">★ HUMAN + MACHINE UNITED</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item alt">★ THE PACK RISES</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item">★ THE FUTURE IS OURS</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item alt">★ BUILT BY WOLVES</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item">★ WOLVES NEVER FOLLOW</span><span class="marquee-sep">⬥</span>
-    <span class="marquee-item alt">★ HUMAN + MACHINE UNITED</span><span class="marquee-sep">⬥</span>
+    <span>The pack rises</span><span class="marquee-sep">✦</span>
+    <span class="alt">The future is ours</span><span class="marquee-sep">✦</span>
+    <span>Built by wolves</span><span class="marquee-sep">✦</span>
+    <span class="alt">Wolves never follow</span><span class="marquee-sep">✦</span>
+    <span>Human + machine united</span><span class="marquee-sep">✦</span>
+    <span class="alt">The pack rises</span><span class="marquee-sep">✦</span>
+    <span>The future is ours</span><span class="marquee-sep">✦</span>
+    <span class="alt">Built by wolves</span><span class="marquee-sep">✦</span>
+    <span>Wolves never follow</span><span class="marquee-sep">✦</span>
+    <span class="alt">Human + machine united</span><span class="marquee-sep">✦</span>
   </div>
 </div>
 
-<section class="section">
+<!-- LIVE STATS -->
+<section class="section compact">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">// MARKET PULSE · LIVE</div>
-      <h2 class="h">$<span class="grad">MONWOLF</span> · LIVE</h2>
+    <div class="section-head reveal">
+      <span class="eyebrow">// Live · Market</span>
+      <h2 class="display h1">Where the <em>pack</em> stands.</h2>
     </div>
-    <div class="live-bar">
-      <div class="live-stat">
-        <div class="l">PRICE USD</div>
-        <div class="v glow" id="sPrice">$0.00000000</div>
+    <div class="stats reveal">
+      <div class="stat">
+        <div class="l">Price</div>
+        <div class="v gold" id="sPrice">$0.00000000</div>
         <div class="d" id="sDelta">—</div>
       </div>
-      <div class="live-stat">
-        <div class="l">MARKET CAP</div>
+      <div class="stat">
+        <div class="l">Market Cap</div>
         <div class="v" id="sMcap">$—</div>
         <div class="d" id="sFdv">FDV —</div>
       </div>
-      <div class="live-stat">
-        <div class="l">24H VOLUME</div>
+      <div class="stat">
+        <div class="l">24h Volume</div>
         <div class="v" id="sVol">$—</div>
         <div class="d" id="sTxns">— txns</div>
       </div>
-      <div class="live-stat">
-        <div class="l">LIQUIDITY</div>
+      <div class="stat">
+        <div class="l">Liquidity</div>
         <div class="v" id="sLiq">$—</div>
         <div class="d" id="sLiqMon">— MON</div>
       </div>
@@ -510,147 +712,174 @@ footer{padding:50px 1rem 30px;border-top:1px solid var(--border);
   </div>
 </section>
 
+<!-- LORE -->
 <section class="section">
   <div class="wrap">
     <div class="lore">
-      <div class="lore-img"><img src="site-art/wolf-cyber-car.jpg" alt="MonWolf cruising the Monad cyberpunk skyline" loading="lazy"></div>
-      <div class="lore-text">
-        <div class="eyebrow">// THE LORE</div>
-        <h2>THE PACK <span class="grad">RISES</span></h2>
-        <p>This isn't just another memecoin. <b>This is the rise of the pack.</b> An underground movement on Monad's fastest L1 — where wolves don't follow, they lead.</p>
-        <p>Built by holders, for holders. Every transaction, every game, every drop is a signal: <b>we hunt together, we move together, we ascend together.</b></p>
-        <p>Five pack ranks. One leaderboard. Endless mischief. The future of memecoin culture is <b>tribal, on-chain, and 100% wolf-led.</b></p>
-        <div class="lore-quote">"WOLVES NEVER FOLLOW.<br>THE FUTURE IS OURS."</div>
+      <div class="lore-figure reveal">
+        <img src="site-art/wolf-cyber-car.jpg" alt="MonWolf cruising Monad's cyber skyline" loading="lazy">
+        <div class="figure-cap">// The future is ours. 002.</div>
+      </div>
+      <div class="lore-body reveal reveal-delay-1">
+        <span class="eyebrow">// The Lore</span>
+        <h2 class="display h1">The pack <em>rises.</em></h2>
+        <p>This isn't another memecoin. <em>This is the rise of the pack</em> — an underground movement on Monad's fastest L1, built by wolves for wolves.</p>
+        <p>Every transaction is a signal. Every game played, every comic read, every drop minted is a declaration: <em>we hunt together, we move together, we ascend together.</em></p>
+        <p>Five pack ranks. One leaderboard. The future of memecoin culture is <span class="gold">tribal, on-chain, and 100% wolf-led.</span></p>
+        <div class="lore-quote">
+          "Wolves never follow.<br><span class="gold">The future is ours.</span>"
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- PACK RANKS -->
 <section class="section" id="ranks">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">// THE HIERARCHY</div>
-      <h2 class="h">PACK <span class="grad">RANKS</span></h2>
-      <p class="h-sub">Your $MONWOLF balance unlocks your tier. Higher tiers = louder voice in the pack.</p>
+  <div class="wrap-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow">// The Hierarchy</span>
+      <h2 class="display h1">Seven <em>ranks.</em> One pack.</h2>
+      <p>Your $MONWOLF balance unlocks your tier. Climb the hierarchy. <em>Earn your howl.</em></p>
     </div>
-    <div class="ranks-grid">
-      <div class="rank-card"><span class="emoji">👀</span><div class="name">OUTSIDER</div><div class="req">0 $MONWOLF</div></div>
-      <div class="rank-card"><span class="emoji">🐾</span><div class="name">CUB</div><div class="req">1+ $MONWOLF</div></div>
-      <div class="rank-card"><span class="emoji">🐺</span><div class="name">PACK</div><div class="req">1K+ $MONWOLF</div></div>
-      <div class="rank-card"><span class="emoji">🔍</span><div class="name">SCOUT</div><div class="req">10K+ $MONWOLF</div></div>
-      <div class="rank-card"><span class="emoji">🌙</span><div class="name">BETA</div><div class="req">100K+ $MONWOLF</div></div>
-      <div class="rank-card"><span class="emoji">⚡</span><div class="name">ALPHA</div><div class="req">1M+ $MONWOLF</div></div>
-      <div class="rank-card apex"><span class="emoji">👑</span><div class="name">APEX</div><div class="req">10M+ $MONWOLF</div></div>
+    <div class="ranks-list reveal">
+      <div class="rank-row">
+        <span class="num">— 01</span>
+        <span class="name"><span class="emoji">👀</span>Outsider</span>
+        <span class="req">0 $MONWOLF</span>
+      </div>
+      <div class="rank-row">
+        <span class="num">— 02</span>
+        <span class="name"><span class="emoji">🐾</span>Cub</span>
+        <span class="req">1+ $MONWOLF</span>
+      </div>
+      <div class="rank-row">
+        <span class="num">— 03</span>
+        <span class="name"><span class="emoji">🐺</span>Pack</span>
+        <span class="req">1K+ $MONWOLF</span>
+      </div>
+      <div class="rank-row">
+        <span class="num">— 04</span>
+        <span class="name"><span class="emoji">🔍</span>Scout</span>
+        <span class="req">10K+ $MONWOLF</span>
+      </div>
+      <div class="rank-row">
+        <span class="num">— 05</span>
+        <span class="name"><span class="emoji">🌙</span>Beta</span>
+        <span class="req">100K+ $MONWOLF</span>
+      </div>
+      <div class="rank-row">
+        <span class="num">— 06</span>
+        <span class="name"><span class="emoji">⚡</span>Alpha</span>
+        <span class="req">1M+ $MONWOLF</span>
+      </div>
+      <div class="rank-row apex">
+        <span class="num">— 07</span>
+        <span class="name"><span class="emoji">👑</span>Apex</span>
+        <span class="req">10M+ $MONWOLF</span>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- PRODUCTS -->
 <section class="section">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">// THE PACK ARSENAL</div>
-      <h2 class="h">EVERYTHING <span class="grad">IN ONE PLACE</span></h2>
-      <p class="h-sub">Buy, trade, play, manage your pack identity — all on monwolf.</p>
+    <div class="section-head reveal">
+      <span class="eyebrow">// The Arsenal</span>
+      <h2 class="display h1">Everything <em>in one place.</em></h2>
+      <p>Buy, trade, play, manage your pack identity — refined, fast, on-chain.</p>
     </div>
-    <div class="products">
-      <a href="/buy.html" class="product-card featured">
-        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-        <span class="badge">★ 60 SECONDS · NO WALLET NEEDED</span>
-        <h3>🐺 BUY $MONWOLF</h3>
-        <p>Never used crypto? Doesn't matter. Email + password creates your wallet right here. Buy $MONWOLF (or any Monad token) in under a minute. <b>Powered by Monorail.</b></p>
+    <div class="products reveal">
+      <a href="/buy.html" class="product featured">
+        <span class="badge">— 60 Seconds · No Wallet Needed</span>
+        <h3>Buy <em>$MONWOLF</em></h3>
+        <p>Never used crypto? Email plus password creates your wallet right here. Buy $MONWOLF — or any Monad token — in under a minute. Cloud-recoverable from any device. Powered by Monorail.</p>
+        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
       </a>
-      <a href="/swap.html" class="product-card">
-        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-        <span class="badge">FOR WALLET HOLDERS</span>
-        <h3>🔁 UNIVERSAL SWAP</h3>
-        <p>Connect MetaMask, Phantom, Rabby, or any browser wallet. Trade any Monad token for any other — routed across every major Monad DEX for best price.</p>
+      <a href="/swap.html" class="product">
+        <span class="badge">— For Wallet Holders</span>
+        <h3>Universal <em>swap</em></h3>
+        <p>MetaMask, Phantom, Rabby, or any browser wallet. Trade any Monad token to any other — best price across every major DEX.</p>
+        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
       </a>
-      <a href="/hub.html" class="product-card">
-        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-        <span class="badge">YOUR DASHBOARD</span>
-        <h3>📊 PACK HUB</h3>
-        <p>See your $MONWOLF balance, pack rank, all your token holdings, and quick-trade buttons. One screen, everything that matters.</p>
+      <a href="/hub.html" class="product">
+        <span class="badge">— Your Dashboard</span>
+        <h3>Pack <em>Hub</em></h3>
+        <p>Balance, pack rank, all your holdings, one-tap trade buttons. Everything that matters, on a single screen.</p>
+        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
       </a>
-      <a href="/arcade.html" class="product-card">
-        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-        <span class="badge">PLAY · COMPETE</span>
-        <h3>🎮 THE ARCADE</h3>
-        <p>Five wolf-themed games. Cyborg Charge, Skate Storm, Hellcat Drift, Pack Hunt, Rocket Ride. Live leaderboards. Higher pack rank = more bragging rights.</p>
+      <a href="/arcade.html" class="product">
+        <span class="badge">— Play · Compete</span>
+        <h3>The <em>Arcade</em></h3>
+        <p>Five wolf-themed games. Live leaderboards. Higher pack rank earns louder bragging rights.</p>
+        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
       </a>
-      <a href="/comic.html" class="product-card">
-        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-        <span class="badge">LORE · SAGA</span>
-        <h3>📖 COMIC SERIES</h3>
-        <p>Three issues of MonWolf canon. Born A Wolf · The Pack Hunts · The Comeback. The origin story of the pack — illustrated, narrated, on-chain.</p>
-      </a>
-      <a href="/wolves.html" class="product-card">
-        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-        <span class="badge">LIVE · REAL WOLVES</span>
-        <h3>📹 WOLF CAM</h3>
-        <p>24/7 stream from the International Wolf Center in Minnesota. Real pack. Real wolves. Real time. The wild reminds us who we are.</p>
+      <a href="/comic.html" class="product">
+        <span class="badge">— Lore · Saga</span>
+        <h3>Comic <em>series</em></h3>
+        <p>Three issues of MonWolf canon. Born A Wolf · The Pack Hunts · The Comeback. Illustrated, narrated, on-chain.</p>
+        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
       </a>
     </div>
   </div>
 </section>
 
-<section class="bleed" id="manifesto">
+<!-- BLEED · MANIFESTO -->
+<section class="bleed">
   <div class="bleed-bg"><img src="site-art/wolf-flag.jpg" alt="" loading="lazy"></div>
-  <div class="bleed-inner">
-    <div class="eyebrow">// THE MANIFESTO</div>
-    <h2 class="h" style="margin-bottom:24px;">WOLVES <span class="grad">NEVER</span> FOLLOW</h2>
-    <p class="h-sub" style="margin-bottom:30px;">We're not asking permission. We're not following trends. We're not waiting for the next pump. <b style="color:#fff;">We're building the pack — one wolf at a time.</b></p>
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
-      <a href="/buy.html" class="btn btn-primary">🐺 JOIN THE PACK</a>
-      <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener" class="btn btn-ghost">FOLLOW ON X</a>
+  <div class="bleed-inner reveal">
+    <span class="eyebrow">// The Manifesto</span>
+    <h2 class="display h1">Wolves <em>never</em> follow.</h2>
+    <p style="font-family:'Fraunces',serif;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.55;color:var(--text-2);max-width:580px;margin:0 auto 36px;">
+      We're not asking permission. We're not following trends. <em style="color:var(--text);">We're building the pack — one wolf at a time.</em>
+    </p>
+    <div class="hero-ctas">
+      <a href="/buy.html" class="btn btn-gold">Join the pack</a>
+      <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener" class="btn btn-ghost">Follow on X</a>
     </div>
   </div>
 </section>
 
-<!-- PACK IN MOTION — video gallery -->
-<section class="section motion-section">
+<!-- PACK IN MOTION -->
+<section class="section">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">// PACK IN MOTION · CINEMATIC</div>
-      <h2 class="h">THROUGH THE <span class="grad">STORM</span></h2>
-      <p class="h-sub">The pack doesn't wait for the weather to clear. We drive through it.</p>
+    <div class="section-head reveal">
+      <span class="eyebrow">// Pack in Motion</span>
+      <h2 class="display h1">Through the <em>storm.</em></h2>
+      <p>The pack doesn't wait for the weather to clear. We drive through it.</p>
     </div>
-    <div class="motion-grid">
-      <div class="motion-card big">
+    <div class="motion-grid reveal">
+      <div class="motion-card">
         <video muted loop playsinline preload="metadata"
-               poster="media/storm-poster.jpg"
-               class="motion-video"
-               data-lazy>
+          poster="media/storm-poster.jpg" class="motion-video" data-lazy>
           <source data-src="media/storm-web.mp4" type="video/mp4">
         </video>
         <div class="motion-overlay">
-          <div class="motion-badge">★ FEATURE</div>
-          <div class="motion-title">THE HELLCAT THROUGH THE STORM</div>
-          <div class="motion-sub">Wolves don't wait for the road to clear.</div>
+          <span class="badge">Feature</span>
+          <div class="title">The Hellcat through the storm</div>
+          <div class="sub">Wolves don't wait for the road to clear.</div>
         </div>
       </div>
       <div class="motion-stack">
         <div class="motion-card">
           <video muted loop playsinline preload="metadata"
-                 poster="media/skater-poster.jpg"
-                 class="motion-video"
-                 data-lazy>
+            poster="media/skater-poster.jpg" class="motion-video" data-lazy>
             <source data-src="media/skater-web.mp4" type="video/mp4">
           </video>
           <div class="motion-overlay">
-            <div class="motion-badge">SKATE</div>
-            <div class="motion-title">PURPLE TUNNEL</div>
+            <span class="badge">Skate</span>
+            <div class="title">Purple tunnel</div>
           </div>
         </div>
         <div class="motion-card">
           <video muted loop playsinline preload="metadata"
-                 poster="site-art/wolf-rocket-monad.jpg"
-                 class="motion-video"
-                 data-lazy>
+            poster="site-art/wolf-rocket-monad.jpg" class="motion-video" data-lazy>
             <source data-src="media/hero.mp4" type="video/mp4">
           </video>
           <div class="motion-overlay">
-            <div class="motion-badge">LAUNCH</div>
-            <div class="motion-title">PACK TAKES OFF</div>
+            <span class="badge">Launch</span>
+            <div class="title">Pack takes off</div>
           </div>
         </div>
       </div>
@@ -658,16 +887,15 @@ footer{padding:50px 1rem 30px;border-top:1px solid var(--border);
   </div>
 </section>
 
-<!-- PACK ART · scrolling gallery -->
-<section class="section">
+<!-- ART GALLERY -->
+<section class="section compact">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">// PACK ART · ON-CHAIN CANON</div>
-      <h2 class="h">THE <span class="grad">VIBE</span></h2>
-      <p class="h-sub">Community art. Pack-generated. Wolf-approved. The visual identity of the rise.</p>
+    <div class="section-head reveal">
+      <span class="eyebrow">// Pack Canon · Art</span>
+      <h2 class="display h1">The <em>vibe.</em></h2>
     </div>
   </div>
-  <div class="art-marquee">
+  <div class="art-rail reveal">
     <div class="art-track">
       <a class="art-tile" href="site-art/wolf-hero.jpg" target="_blank"><img src="site-art/wolf-hero.jpg" alt="" loading="lazy"></a>
       <a class="art-tile" href="site-art/wolf-cyber-car.jpg" target="_blank"><img src="site-art/wolf-cyber-car.jpg" alt="" loading="lazy"></a>
@@ -676,69 +904,70 @@ footer{padding:50px 1rem 30px;border-top:1px solid var(--border);
       <a class="art-tile" href="site-art/wolf-planets.jpg" target="_blank"><img src="site-art/wolf-planets.jpg" alt="" loading="lazy"></a>
       <a class="art-tile" href="site-art/wolf-morning.jpg" target="_blank"><img src="site-art/wolf-morning.jpg" alt="" loading="lazy"></a>
       <a class="art-tile" href="site-art/wolf-vote-pedro.jpg" target="_blank"><img src="site-art/wolf-vote-pedro.jpg" alt="" loading="lazy"></a>
-      <!-- duplicate for seamless loop -->
-      <a class="art-tile" href="site-art/wolf-hero.jpg" target="_blank"><img src="site-art/wolf-hero.jpg" alt="" loading="lazy" aria-hidden="true"></a>
-      <a class="art-tile" href="site-art/wolf-cyber-car.jpg" target="_blank"><img src="site-art/wolf-cyber-car.jpg" alt="" loading="lazy" aria-hidden="true"></a>
-      <a class="art-tile" href="site-art/wolf-rocket-monad.jpg" target="_blank"><img src="site-art/wolf-rocket-monad.jpg" alt="" loading="lazy" aria-hidden="true"></a>
-      <a class="art-tile" href="site-art/wolf-flag.jpg" target="_blank"><img src="site-art/wolf-flag.jpg" alt="" loading="lazy" aria-hidden="true"></a>
-      <a class="art-tile" href="site-art/wolf-planets.jpg" target="_blank"><img src="site-art/wolf-planets.jpg" alt="" loading="lazy" aria-hidden="true"></a>
-      <a class="art-tile" href="site-art/wolf-morning.jpg" target="_blank"><img src="site-art/wolf-morning.jpg" alt="" loading="lazy" aria-hidden="true"></a>
-      <a class="art-tile" href="site-art/wolf-vote-pedro.jpg" target="_blank"><img src="site-art/wolf-vote-pedro.jpg" alt="" loading="lazy" aria-hidden="true"></a>
+      <!-- duplicate for loop -->
+      <a class="art-tile" href="site-art/wolf-hero.jpg" target="_blank" aria-hidden="true"><img src="site-art/wolf-hero.jpg" alt="" loading="lazy"></a>
+      <a class="art-tile" href="site-art/wolf-cyber-car.jpg" target="_blank" aria-hidden="true"><img src="site-art/wolf-cyber-car.jpg" alt="" loading="lazy"></a>
+      <a class="art-tile" href="site-art/wolf-rocket-monad.jpg" target="_blank" aria-hidden="true"><img src="site-art/wolf-rocket-monad.jpg" alt="" loading="lazy"></a>
+      <a class="art-tile" href="site-art/wolf-flag.jpg" target="_blank" aria-hidden="true"><img src="site-art/wolf-flag.jpg" alt="" loading="lazy"></a>
+      <a class="art-tile" href="site-art/wolf-planets.jpg" target="_blank" aria-hidden="true"><img src="site-art/wolf-planets.jpg" alt="" loading="lazy"></a>
+      <a class="art-tile" href="site-art/wolf-morning.jpg" target="_blank" aria-hidden="true"><img src="site-art/wolf-morning.jpg" alt="" loading="lazy"></a>
+      <a class="art-tile" href="site-art/wolf-vote-pedro.jpg" target="_blank" aria-hidden="true"><img src="site-art/wolf-vote-pedro.jpg" alt="" loading="lazy"></a>
     </div>
   </div>
 </section>
 
+<!-- TOKENOMICS -->
 <section class="section">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">// THE NUMBERS</div>
-      <h2 class="h">TOKEN<span class="grad">OMICS</span></h2>
-      <p class="h-sub">No tax. No team allocation games. Just clean memecoin math on the fastest L1.</p>
+    <div class="section-head reveal">
+      <span class="eyebrow">// The Numbers</span>
+      <h2 class="display h1"><em>Tokenomics</em></h2>
+      <p>No tax. No team allocation games. Just clean memecoin math on the fastest L1.</p>
     </div>
-    <div class="tk-grid">
-      <div class="tk-card">
-        <div class="l">TOTAL SUPPLY</div>
-        <div class="v grad">1,000,000,000</div>
+    <div class="tokens reveal">
+      <div class="tk">
+        <div class="l">Total Supply</div>
+        <div class="v gold">1,000,000,000</div>
         <div class="s">Fixed. No mint function. What's there is what's there.</div>
       </div>
-      <div class="tk-card">
-        <div class="l">BUY/SELL TAX</div>
-        <div class="v grad">0% / 0%</div>
+      <div class="tk">
+        <div class="l">Buy / Sell Tax</div>
+        <div class="v gold">0% / 0%</div>
         <div class="s">No tax. No friction. Just trade.</div>
       </div>
-      <div class="tk-card">
-        <div class="l">LIQUIDITY</div>
-        <div class="v grad">LOCKED</div>
+      <div class="tk">
+        <div class="l">Liquidity</div>
+        <div class="v gold">Locked</div>
         <div class="s">LP burned. Bonded on nad.fun. Permanent.</div>
       </div>
-      <div class="tk-card">
-        <div class="l">CHAIN</div>
-        <div class="v">MONAD</div>
+      <div class="tk">
+        <div class="l">Chain</div>
+        <div class="v">Monad</div>
         <div class="s">Mainnet. Chain ID 143. The fastest EVM L1.</div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:24px;">
-      <a href="https://monadexplorer.com/token/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">VIEW ON MONAD EXPLORER →</a>
+    <div class="center" style="margin-top:36px;">
+      <a href="https://monadexplorer.com/token/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener" class="btn-text">View on Monad explorer →</a>
     </div>
   </div>
 </section>
 
+<!-- WOLF CAM -->
 <section class="section">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">// FROM THE WILD · LIVE</div>
-      <h2 class="h">REAL <span class="grad">WOLVES</span></h2>
-      <p class="h-sub">Live feed from the Exhibit Pack at the International Wolf Center · Ely, Minnesota.</p>
+    <div class="section-head reveal">
+      <span class="eyebrow">// From the Wild · Live</span>
+      <h2 class="display h1">Real <em>wolves.</em></h2>
+      <p>Live feed from the Exhibit Pack at the International Wolf Center, Ely, Minnesota.</p>
     </div>
-    <div class="wcam-wrap">
-      <div class="wcam-frame">
+    <div class="reveal">
+      <div class="wcam">
         <iframe
           src="https://www.youtube.com/embed/CYl_uPm7yto?autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1"
           title="Live Wolf Cam · International Wolf Center"
           allow="autoplay; encrypted-media; picture-in-picture"
           allowfullscreen loading="lazy"></iframe>
-        <div class="wcam-live">LIVE</div>
-        <div class="wcam-mark"><img src="logo.png" alt=""><span>MONWOLF</span></div>
+        <div class="live-tag">Live</div>
       </div>
       <div class="wcam-credit">
         Stream by <a href="https://explore.org/wolves" target="_blank" rel="noopener">explore.org</a> · International Wolf Center · USDA-licensed sanctuary
@@ -747,111 +976,107 @@ footer{padding:50px 1rem 30px;border-top:1px solid var(--border);
   </div>
 </section>
 
+<!-- ROADMAP -->
 <section class="section" id="roadmap">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">// THE HUNT</div>
-      <h2 class="h">WHAT'S <span class="grad">NEXT</span></h2>
+  <div class="wrap-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow">// The Hunt</span>
+      <h2 class="display h1">What's <em>next.</em></h2>
     </div>
-    <div class="road-wrap">
-      <div class="road-row done">
-        <div class="marker">✓</div>
-        <div class="body">
-          <h4>FAIR LAUNCH ON NAD.FUN</h4>
-          <p>$MONWOLF launched bonded on nad.fun. LP locked. 0/0 tax. The pack was forged.</p>
-          <span class="tag">SHIPPED</span>
+    <div class="timeline reveal">
+      <div class="timeline-item done">
+        <div class="timeline-marker">✓</div>
+        <div class="timeline-body">
+          <h4>Fair launch on nad.fun</h4>
+          <p>$MONWOLF launched bonded. LP locked. 0/0 tax. The pack was forged.</p>
+          <span class="timeline-tag">Shipped</span>
         </div>
       </div>
-      <div class="road-row done">
-        <div class="marker">✓</div>
-        <div class="body">
-          <h4>THE ARCADE · 5 GAMES LIVE</h4>
+      <div class="timeline-item done">
+        <div class="timeline-marker">✓</div>
+        <div class="timeline-body">
+          <h4>The Arcade · five games live</h4>
           <p>Cyborg Charge, Skate Storm, Hellcat Drift, Pack Hunt, Rocket Ride — all playable, all on leaderboard.</p>
-          <span class="tag">SHIPPED</span>
+          <span class="timeline-tag">Shipped</span>
         </div>
       </div>
-      <div class="road-row done">
-        <div class="marker">✓</div>
-        <div class="body">
-          <h4>COMIC SAGA · 3 ISSUES</h4>
+      <div class="timeline-item done">
+        <div class="timeline-marker">✓</div>
+        <div class="timeline-body">
+          <h4>Comic saga · three issues</h4>
           <p>Born A Wolf · The Pack Hunts · The Comeback. The MonWolf canon, illustrated.</p>
-          <span class="tag">SHIPPED</span>
+          <span class="timeline-tag">Shipped</span>
         </div>
       </div>
-      <div class="road-row done">
-        <div class="marker">✓</div>
-        <div class="body">
-          <h4>EMBEDDED WALLET ONBOARDING</h4>
-          <p>Buy $MONWOLF in 60 seconds with just email + password. No app install. No seed phrase nightmare. Cloud-recoverable from any device.</p>
-          <span class="tag">SHIPPED</span>
+      <div class="timeline-item done">
+        <div class="timeline-marker">✓</div>
+        <div class="timeline-body">
+          <h4>Embedded wallet onboarding</h4>
+          <p>Buy $MONWOLF in 60 seconds with just email + password. No app install. Cloud-recoverable.</p>
+          <span class="timeline-tag">Shipped</span>
         </div>
       </div>
-      <div class="road-row next">
-        <div class="marker">→</div>
-        <div class="body">
-          <h4>THE BOUNCER · GATED PACK ACCESS</h4>
-          <p>Vouch-in onboarding. Existing holders burn $MONWOLF to vouch new members. Public reputation. The pack curates itself.</p>
-          <span class="tag">NEXT</span>
+      <div class="timeline-item next">
+        <div class="timeline-marker">→</div>
+        <div class="timeline-body">
+          <h4>The Bouncer · gated pack access</h4>
+          <p>Vouch-in onboarding. Existing holders burn $MONWOLF to vouch new members. The pack curates itself.</p>
+          <span class="timeline-tag">Next</span>
         </div>
       </div>
-      <div class="road-row next">
-        <div class="marker">→</div>
-        <div class="body">
-          <h4>HOWL WALL · BURN-TO-POST ALPHA</h4>
-          <p>Burn $MONWOLF to publish alpha on a public wall. Pack reacts. Top howls get amplified. Crypto Twitter without Twitter.</p>
-          <span class="tag">NEXT</span>
+      <div class="timeline-item next">
+        <div class="timeline-marker">→</div>
+        <div class="timeline-body">
+          <h4>Howl Wall · burn-to-post</h4>
+          <p>Burn $MONWOLF to publish alpha. Pack reacts. Top howls get amplified.</p>
+          <span class="timeline-tag">Next</span>
         </div>
       </div>
-      <div class="road-row next">
-        <div class="marker">→</div>
-        <div class="body">
-          <h4>MOON HUNT EVENTS</h4>
-          <p>Every full moon, the pack hunts together. Coordinated raids, rituals, on-chain rewards for active members.</p>
-          <span class="tag">NEXT</span>
+      <div class="timeline-item next">
+        <div class="timeline-marker">→</div>
+        <div class="timeline-body">
+          <h4>Moon Hunt events</h4>
+          <p>Every full moon, the pack hunts together. Coordinated raids, rituals, on-chain rewards.</p>
+          <span class="timeline-tag">Next</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="bleed" id="join">
+<!-- BLEED · JOIN -->
+<section class="bleed">
   <div class="bleed-bg"><img src="site-art/wolf-morning.jpg" alt="" loading="lazy"></div>
-  <div class="bleed-inner">
-    <div class="eyebrow">// JOIN THE PACK</div>
-    <h2 class="h" style="margin-bottom:18px;">THE PACK <span class="grad">HUNTS</span><br>TOGETHER</h2>
-    <p class="h-sub" style="margin-bottom:28px;">Find us where wolves gather. The community moves fast on X. The pack convenes on Telegram.</p>
-    <div class="socials">
-      <a class="social-pill" href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        FOLLOW ON X
-      </a>
-      <a class="social-pill" href="https://t.me/MonWolfMonad" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-        JOIN TELEGRAM
-      </a>
-      <a class="social-pill" href="https://dexscreener.com/monad/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">
-        📊 LIVE CHART
-      </a>
+  <div class="bleed-inner reveal">
+    <span class="eyebrow">// Join the Pack</span>
+    <h2 class="display h1">The pack <em>hunts</em><br>together.</h2>
+    <p style="font-family:'Fraunces',serif;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.55;color:var(--text-2);max-width:580px;margin:0 auto 36px;">
+      Find us where wolves gather. <em style="color:var(--text);">Move fast on X.</em> The pack convenes on Telegram.
+    </p>
+    <div class="hero-ctas">
+      <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener" class="btn btn-gold">Follow on X</a>
+      <a href="https://t.me/MonWolfMonad" target="_blank" rel="noopener" class="btn btn-ghost">Join Telegram</a>
     </div>
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
   <div class="foot-grid">
     <div class="foot-brand">
       <img src="logo.png" alt="">
-      <h4>MONWOLF</h4>
-      <p>The apex memecoin on Monad. Built by the pack, for the pack. <b style="color:#fff;">The future is ours.</b></p>
+      <h4>MonWolf</h4>
+      <p>The apex memecoin on Monad. Built by the pack, for the pack. <em style="color:var(--text);">The future is ours.</em></p>
     </div>
     <div class="foot-col">
-      <h5>TRADE</h5>
+      <h5>Trade</h5>
       <a href="/buy.html">Buy $MONWOLF</a>
       <a href="/swap.html">Universal Swap</a>
       <a href="/hub.html">Pack Hub</a>
       <a href="https://dexscreener.com/monad/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">DexScreener ↗</a>
     </div>
     <div class="foot-col">
-      <h5>EXPLORE</h5>
+      <h5>Explore</h5>
       <a href="/arcade.html">Arcade</a>
       <a href="/comic.html">Comic № 1</a>
       <a href="/comic-2.html">Comic № 2</a>
@@ -859,7 +1084,7 @@ footer{padding:50px 1rem 30px;border-top:1px solid var(--border);
       <a href="/wolves.html">Wolf Cam</a>
     </div>
     <div class="foot-col">
-      <h5>SOCIALS</h5>
+      <h5>Socials</h5>
       <a href="https://x.com/MonWolfMonad" target="_blank" rel="noopener">X / Twitter ↗</a>
       <a href="https://t.me/MonWolfMonad" target="_blank" rel="noopener">Telegram ↗</a>
       <a href="https://nad.fun/tokens/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">nad.fun ↗</a>
@@ -867,8 +1092,8 @@ footer{padding:50px 1rem 30px;border-top:1px solid var(--border);
     </div>
   </div>
   <div class="foot-bot">
-    <span>$MONWOLF · 0x8361a59d340466211ad4aB41C09a32e4530a7777 · Monad Chain ID 143</span>
-    <span>🐺 The future is ours.</span>
+    <span>$MONWOLF · 0x8361…7777 · Monad Chain ID 143</span>
+    <span><em style="font-family:'Fraunces',serif;font-style:italic;color:var(--text-2);">The future is ours.</em></span>
   </div>
 </footer>
 
@@ -887,6 +1112,12 @@ const MONAD_RPC = 'https://rpc.monad.xyz';
 const MONAD_CHAIN_HEX = '0x8f';
 const $ = id => document.getElementById(id);
 
+// Preloader
+window.addEventListener('load', () => {
+  setTimeout(() => $('preloader').classList.add('gone'), 380);
+});
+
+// Toast
 function toast(msg, isErr){
   const t = $('toast');
   t.textContent = msg;
@@ -895,22 +1126,24 @@ function toast(msg, isErr){
   setTimeout(() => t.classList.remove('show'), 3200);
 }
 
+// CA copy
 $('caCopy').onclick = async () => {
   try{
     await navigator.clipboard.writeText(MONWOLF_CA);
     toast('Contract copied');
-    const v = $('caCopy').querySelector('.ca-val');
-    v.textContent = 'COPIED ✓';
-    setTimeout(() => { v.textContent = '0x8361…7777'; }, 1500);
+    const sp = $('caShort');
+    sp.textContent = 'COPIED ✓';
+    setTimeout(() => { sp.textContent = '0x8361…7777'; }, 1500);
   }catch{ toast('Copy failed', true); }
 };
 
-function fmt(n, dec){
+// Formatting helpers
+function fmt(n){
   if (n == null || isNaN(n)) return '—';
   const v = Number(n);
   if (v === 0) return '0';
   if (v < 0.0001) return v.toExponential(2);
-  if (v < 1) return v.toFixed(dec || 4);
+  if (v < 1) return v.toFixed(4);
   if (v < 1000) return v.toFixed(2);
   if (v < 1e6) return (v/1e3).toFixed(1) + 'K';
   if (v < 1e9) return (v/1e6).toFixed(2) + 'M';
@@ -923,12 +1156,13 @@ function fmtPrice(p){
   if (p < 0.0001){
     const s = p.toFixed(20).replace(/0+$/, '');
     const m = s.match(/^0\.(0+)(\d+)/);
-    if (m) return '$0.0<sub>' + m[1].length + '</sub>' + m[2].slice(0,4);
+    if (m) return '$0.0<sub>'+m[1].length+'</sub>'+m[2].slice(0,4);
   }
   if (p < 1) return '$' + p.toFixed(6);
   return '$' + p.toFixed(4);
 }
 
+// DexScreener live data
 async function loadDexscreener(){
   try{
     const r = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + MONWOLF_CA);
@@ -943,45 +1177,37 @@ async function loadDexscreener(){
     const liqMon= parseFloat(pair.liquidity?.base || 0);
     const mcap  = parseFloat(pair.marketCap || 0);
     const fdv   = parseFloat(pair.fdv || 0);
-    const txnsBuy  = parseInt(pair.txns?.h24?.buys || 0);
-    const txnsSell = parseInt(pair.txns?.h24?.sells || 0);
+    const txns  = parseInt(pair.txns?.h24?.buys || 0) + parseInt(pair.txns?.h24?.sells || 0);
     const arrow = ch24 > 0 ? '▲ ' : ch24 < 0 ? '▼ ' : '';
-    const upDown = ch24 > 0 ? 'up' : ch24 < 0 ? 'down' : '';
-
+    const upDown= ch24 > 0 ? 'up' : ch24 < 0 ? 'down' : '';
     $('tkPrice').innerHTML = fmtPrice(price);
     $('tkChange').textContent = arrow + Math.abs(ch24).toFixed(2) + '%';
     $('tkChange').className = 'ticker-v ' + upDown;
     $('tkVol').textContent  = fmtUsd(vol24);
     $('tkLiq').textContent  = fmtUsd(liqUsd);
     $('tkMcap').textContent = fmtUsd(mcap);
-
     $('sPrice').innerHTML = fmtPrice(price);
     $('sDelta').textContent = arrow + Math.abs(ch24).toFixed(2) + '% · 24h';
     $('sDelta').className = 'd ' + upDown;
     $('sMcap').textContent = fmtUsd(mcap);
     $('sFdv').textContent  = 'FDV ' + fmtUsd(fdv);
     $('sVol').textContent  = fmtUsd(vol24);
-    $('sTxns').textContent = (txnsBuy + txnsSell).toLocaleString() + ' txns';
+    $('sTxns').textContent = txns.toLocaleString() + ' txns';
     $('sLiq').textContent  = fmtUsd(liqUsd);
     $('sLiqMon').textContent = fmt(liqMon) + ' MON';
-  }catch(e){ console.warn('dexscreener:', e); }
+  }catch(e){ console.warn('dex:', e); }
 }
 loadDexscreener();
 setInterval(loadDexscreener, 20000);
 
-let wcProvider = null;
-let wallet = null;
+// Wallet
+let wcProvider = null, wallet = null;
 const RANKS = [
-  {min:10000000, name:'APEX'},
-  {min:1000000,  name:'ALPHA'},
-  {min:100000,   name:'BETA'},
-  {min:10000,    name:'SCOUT'},
-  {min:1000,     name:'PACK'},
-  {min:1,        name:'CUB'},
-  {min:0,        name:'OUTSIDER'},
+  {min:10000000,name:'APEX'},{min:1000000,name:'ALPHA'},{min:100000,name:'BETA'},
+  {min:10000,name:'SCOUT'},{min:1000,name:'PACK'},{min:1,name:'CUB'},{min:0,name:'OUTSIDER'}
 ];
 function rankFor(b){ for (const r of RANKS) if (b >= r.min) return r; return RANKS[RANKS.length-1]; }
-async function readWolfBalance(addr){
+async function readBal(addr){
   try{
     const data = '0x70a08231' + addr.slice(2).toLowerCase().padStart(64,'0');
     const r = await fetch(MONAD_RPC,{method:'POST',headers:{'Content-Type':'application/json'},
@@ -989,19 +1215,19 @@ async function readWolfBalance(addr){
     const j = await r.json();
     if (!j.result) return 0;
     return Number(BigInt(j.result)/(10n**16n))/100;
-  }catch{ return 0; }
+  }catch{return 0;}
 }
-async function getWCProvider(){
+async function getWC(){
   if (wcProvider) return wcProvider;
-  if (!window.EthereumProvider){ await new Promise(r => setTimeout(r, 500)); if (!window.EthereumProvider) throw new Error('WalletConnect failed to load'); }
+  if (!window.EthereumProvider){ await new Promise(r=>setTimeout(r,500)); if (!window.EthereumProvider) throw new Error('WC failed'); }
   wcProvider = await window.EthereumProvider.init({
     projectId: WC_PROJECT_ID, chains:[143], rpcMap:{143:MONAD_RPC}, showQrModal:true,
-    qrModalOptions:{themeMode:'dark', themeVariables:{'--wcm-z-index':'300','--wcm-accent-color':'#a855f7'}},
-    metadata:{name:'MONWOLF',description:'MonWolf on Monad',url:window.location.origin,icons:[window.location.origin+'/logo.png']},
+    qrModalOptions:{themeMode:'dark',themeVariables:{'--wcm-z-index':'300','--wcm-accent-color':'#d4af37'}},
+    metadata:{name:'MonWolf',description:'MonWolf on Monad',url:window.location.origin,icons:[window.location.origin+'/logo.png']},
   });
   return wcProvider;
 }
-async function connectWallet(){
+async function connect(){
   try{
     let provider, addr;
     if (window.ethereum){
@@ -1013,80 +1239,72 @@ async function connectWallet(){
         if (e.code === 4902){
           try{ await provider.request({method:'wallet_addEthereumChain', params:[{
             chainId:MONAD_CHAIN_HEX, chainName:'Monad', nativeCurrency:{name:'Monad',symbol:'MON',decimals:18},
-            rpcUrls:[MONAD_RPC], blockExplorerUrls:['https://monadexplorer.com']
-          }]});}catch{}
+            rpcUrls:[MONAD_RPC], blockExplorerUrls:['https://monadexplorer.com']}]});}catch{}
         }
       }
     } else {
       toast('Opening wallet picker…');
-      const wc = await getWCProvider();
+      const wc = await getWC();
       if (!wc.session) await wc.connect();
       provider = wc; addr = wc.accounts?.[0];
     }
     if (!addr) return;
-    const bal = await readWolfBalance(addr);
+    const bal = await readBal(addr);
     const rank = rankFor(bal);
     wallet = { address: addr, balance: bal, rank: rank.name };
     sessionStorage.setItem('mw_wallet', JSON.stringify(wallet));
-    renderWallet();
+    render();
     toast('Connected · ' + rank.name);
-  }catch(e){
-    toast((e?.message || 'Connect failed').slice(0, 80), true);
-  }
+  }catch(e){ toast((e?.message||'Connect failed').slice(0,80), true); }
 }
-function renderWallet(){
-  const pill = $('walletPill');
-  if (!wallet){ pill.classList.remove('connected'); $('rankBadge').textContent=''; $('walletText').textContent='CONNECT'; return; }
-  pill.classList.add('connected');
-  $('rankBadge').textContent = wallet.rank;
-  $('walletText').textContent = wallet.address.slice(0,6)+'…'+wallet.address.slice(-4);
+function render(){
+  const chip = $('walletChip');
+  if (!wallet){ chip.classList.remove('connected'); $('walletText').textContent = 'Connect'; return; }
+  chip.classList.add('connected');
+  $('walletText').textContent = wallet.address.slice(0,6) + '…' + wallet.address.slice(-4);
 }
-$('walletPill').onclick = connectWallet;
+$('walletChip').onclick = connect;
 $('heroConnectBtn').onclick = async (e) => {
   e.preventDefault();
-  await connectWallet();
-  if (wallet && wallet.address){ setTimeout(()=>{ window.location.href='/swap.html'; }, 600); }
+  await connect();
+  if (wallet && wallet.address) setTimeout(() => { window.location.href = '/swap.html'; }, 600);
 };
 const cached = sessionStorage.getItem('mw_wallet');
-if (cached) try{ wallet = JSON.parse(cached); renderWallet(); }catch{}
+if (cached) try{ wallet = JSON.parse(cached); render(); }catch{}
 
-// ────── LAZY VIDEOS (motion gallery) ──────
-// Load video sources only when scrolled into view; auto-play in-viewport,
-// pause when out. Saves bandwidth on mobile.
-const lazyVideos = document.querySelectorAll('video[data-lazy]');
-if (lazyVideos.length){
-  const swapAndPlay = (vid) => {
-    if (vid.dataset.loaded) return;
-    vid.dataset.loaded = '1';
-    vid.querySelectorAll('source[data-src]').forEach(s => {
-      s.src = s.dataset.src;
-      s.removeAttribute('data-src');
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+if (reveals.length && 'IntersectionObserver' in window){
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
     });
-    vid.load();
-    vid.play().catch(()=>{ /* autoplay blocked on some mobiles; user can tap */ });
+  }, { rootMargin:'-10% 0px', threshold:0.12 });
+  reveals.forEach(el => io.observe(el));
+} else {
+  reveals.forEach(el => el.classList.add('in'));
+}
+
+// Lazy videos
+const lazyV = document.querySelectorAll('video[data-lazy]');
+if (lazyV.length){
+  const swap = (v) => {
+    if (v.dataset.loaded) return;
+    v.dataset.loaded = '1';
+    v.querySelectorAll('source[data-src]').forEach(s => { s.src = s.dataset.src; s.removeAttribute('data-src'); });
+    v.load();
+    v.play().catch(()=>{});
   };
   if ('IntersectionObserver' in window){
     const io = new IntersectionObserver((entries) => {
-      for (const e of entries){
-        if (e.isIntersecting){
-          swapAndPlay(e.target);
-        } else {
-          // Pause if out of view to save battery/bandwidth
-          if (e.target.dataset.loaded) e.target.pause();
-        }
-      }
-    }, { rootMargin: '120px 0px', threshold: 0.15 });
-    lazyVideos.forEach(v => io.observe(v));
-  } else {
-    // Fallback: just swap them in immediately
-    lazyVideos.forEach(swapAndPlay);
-  }
-  // Tap-to-toggle for users who want to manually scrub
-  lazyVideos.forEach(v => {
-    v.addEventListener('click', () => {
-      if (v.paused) v.play().catch(()=>{}); else v.pause();
-    });
-  });
+      entries.forEach(e => {
+        if (e.isIntersecting) swap(e.target);
+        else if (e.target.dataset.loaded) e.target.pause();
+      });
+    }, { rootMargin:'120px 0px', threshold:0.15 });
+    lazyV.forEach(v => io.observe(v));
+  } else { lazyV.forEach(swap); }
+  lazyV.forEach(v => { v.addEventListener('click', () => { if (v.paused) v.play().catch(()=>{}); else v.pause(); }); });
 }
 
 })();

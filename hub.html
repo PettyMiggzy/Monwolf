@@ -611,7 +611,7 @@ function tierForMcap(mc){
   return                  {label:'COMMON',   cls:'tier-common'};
 }
 
-function renderCard(t, d){
+function renderCard(t, d, nadInfo){
   const feat = t.featured ? 'featured' : '';
   const price = d ? parseFloat(d.priceUsd || 0) : null;
   const change = d ? parseFloat(d.priceChange?.h24 || 0) : null;
@@ -622,9 +622,22 @@ function renderCard(t, d){
   const cCls = change == null ? '' : (change >= 0 ? 'up' : 'down');
   const cSign = change == null ? '' : (change >= 0 ? '▲' : '▼');
   const cText = change == null ? '—' : Math.abs(change).toFixed(2) + '%';
+
+  // Prefer the real token image from nad.fun; fall back to emoji
+  const img = nadInfo?.token_info?.image_uri || nadInfo?.image_uri || null;
+  const logo = img
+    ? `<img src="${img}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${(t.emoji||t.sym[0])}'))">`
+    : (t.emoji || t.sym[0]);
+
+  // Prefer real holder count from nad.fun market_info
+  const holders = nadInfo?.market_info?.holder_count;
+  const holderRow = holders
+    ? `<div><div class="tc-stat-l">HOLDERS</div><div class="tc-stat-v">${fmtNum(holders, 0)}</div></div>`
+    : `<div><div class="tc-stat-l">VOL 24H</div><div class="tc-stat-v">${vol ? '$'+fmtNum(vol) : '—'}</div></div>`;
+
   return `<div class="tcard ${feat}" data-addr="${t.addr}">
     <div class="tc-h">
-      <div class="tc-logo">${t.emoji || t.sym[0]}</div>
+      <div class="tc-logo">${logo}</div>
       <div class="tc-meta">
         <div class="tc-sym">$${t.sym}</div>
         <div class="tc-name">${t.name}</div>
@@ -636,7 +649,7 @@ function renderCard(t, d){
     <div class="tc-stats">
       <div><div class="tc-stat-l">MCAP</div><div class="tc-stat-v">${mcap ? '$'+fmtNum(mcap) : '—'}</div></div>
       <div><div class="tc-stat-l">LIQ</div><div class="tc-stat-v">${liq ? '$'+fmtNum(liq) : '—'}</div></div>
-      <div><div class="tc-stat-l">VOL 24H</div><div class="tc-stat-v">${vol ? '$'+fmtNum(vol) : '—'}</div></div>
+      ${holderRow}
     </div>
     <div class="tc-actions">
       <a class="tc-btn primary" href="/swap?from=MON&to=${t.addr}">SWAP</a>
@@ -654,8 +667,19 @@ async function refreshTerritory(){
         <div class="tc-meta"><div class="tc-sym">$${t.sym}</div><div class="tc-name">⟳ loading…</div></div>
       </div><div class="tc-price">⟳</div></div>`).join('');
   }
-  const results = await Promise.allSettled(PACK_TOKENS.map(t => fetchDex(t.addr)));
-  grid.innerHTML = PACK_TOKENS.map((t,i) => renderCard(t, results[i].status==='fulfilled' ? results[i].value : null)).join('');
+  // Fetch DexScreener (price/mcap/liq/24h) AND nad.fun (real image, holders) in parallel
+  // nadFetch is cached, so the rate budget gets hit once and shared across panels
+  const [dexResults, nadResults] = await Promise.all([
+    Promise.allSettled(PACK_TOKENS.map(t => fetchDex(t.addr))),
+    Promise.allSettled(PACK_TOKENS.map(t => nadFetch(`/token/${t.addr}`))),
+  ]);
+  grid.innerHTML = PACK_TOKENS.map((t,i) => {
+    const dex = dexResults[i].status==='fulfilled' ? dexResults[i].value : null;
+    const nad = nadResults[i].status==='fulfilled' ? nadResults[i].value : null;
+    // nad.fun /token/ returns either nested {token_info, market_info} or flat — handle both
+    const nadInfo = nad && (nad.token_info || nad.market_info ? nad : null);
+    return renderCard(t, dex, nadInfo);
+  }).join('');
 
   // Wire copy buttons
   grid.querySelectorAll('.copyBtn').forEach(btn => {
@@ -669,7 +693,8 @@ async function refreshTerritory(){
   });
 
   // Update top stats with MONWOLF
-  const d = results[0].status === 'fulfilled' ? results[0].value : null;
+  const d = dexResults[0].status === 'fulfilled' ? dexResults[0].value : null;
+  const monwolfNad = nadResults[0].status === 'fulfilled' ? nadResults[0].value : null;
   if (d){
     const p = parseFloat(d.priceUsd || 0);
     const c = parseFloat(d.priceChange?.h24 || 0);
@@ -683,8 +708,14 @@ async function refreshTerritory(){
     $('statMcap').textContent = mc ? '$' + fmtNum(mc) : '—';
     $('statLiq').textContent  = lq ? 'liq $' + fmtNum(lq) : '—';
     $('statVol').textContent  = vl ? '24h vol $' + fmtNum(vl) : '—';
-    const tx = (d.txns?.h24?.buys || 0) + (d.txns?.h24?.sells || 0);
-    $('statHolders').textContent = fmtNum(tx);
+    // Use real holder count from nad.fun if we got it
+    const realHolders = monwolfNad?.market_info?.holder_count;
+    if (realHolders){
+      $('statHolders').textContent = fmtNum(realHolders, 0);
+    } else {
+      const tx = (d.txns?.h24?.buys || 0) + (d.txns?.h24?.sells || 0);
+      $('statHolders').textContent = fmtNum(tx);
+    }
   }
 }
 
@@ -828,12 +859,45 @@ $('terrRefresh').addEventListener('click', refreshTerritory);
 // ════════════════════════════════════════════════════════════════════
 // NAD.FUN API helpers — used by NEW PUPS, HUNTING GROUNDS, PACK SCAN, STALK
 // ════════════════════════════════════════════════════════════════════
-async function nadFetch(path){
+// Without an API key, nad.fun rate-limits external origins to 10 req/min.
+// Creating a key (free) bumps that to 100/min — paste it into NAD_API_KEY.
+// Sign up: https://nad.fun, connect wallet, settings → API Keys → Create.
+const NAD_API_KEY = '';  // ← paste 'nadfun_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' here
+
+// In-memory response cache so we don't burn the rate budget on repeat
+// renders. Keyed by full path. Most feeds tolerate 60s staleness fine.
+const _nadCache = new Map();
+const NAD_CACHE_TTL = 60_000;  // 60s
+
+async function nadFetch(path, { cache = true } = {}){
+  const now = Date.now();
+  if (cache){
+    const hit = _nadCache.get(path);
+    if (hit && (now - hit.t) < NAD_CACHE_TTL) return hit.v;
+  }
   try{
-    const r = await fetch(NAD_API + path);
+    const headers = {};
+    if (NAD_API_KEY) headers['X-API-Key'] = NAD_API_KEY;
+    const r = await fetch(NAD_API + path, { headers });
+    if (r.status === 429){
+      const remaining = r.headers.get('x-ratelimit-remaining');
+      console.warn('nad.fun rate-limited', path, 'remaining:', remaining);
+      return { _rateLimited: true };
+    }
     if (!r.ok) return null;
-    return await r.json();
+    const data = await r.json();
+    _nadCache.set(path, { t: now, v: data });
+    return data;
   }catch(e){ console.warn('nad api', path, e); return null; }
+}
+
+// Empty/error state renderer with helpful message
+function renderEmpty(emoji, title, body){
+  return `<div class="soon-panel"><div class="icon">${emoji}</div><h3>${title}</h3><p>${body}</p></div>`;
+}
+function renderRateLimited(){
+  return renderEmpty('⏳', 'Rate limited',
+    `nad.fun caps anonymous traffic at 10 req/min — King needs to drop in an API key. <br><br>Create one at <a href="https://nad.fun" target="_blank" style="color:var(--gold);text-decoration:underline">nad.fun</a> → settings → API Keys, then paste it into <code style="background:rgba(245,194,66,.1);padding:2px 6px;border-radius:4px;font-size:11px">NAD_API_KEY</code> in /hub.html.`);
 }
 
 // Token card renderer for nad.fun-shape data (NEW PUPS + HUNTING GROUNDS)
@@ -917,10 +981,11 @@ let pupsLoaded = false;
 
 async function loadPups(){
   const grid = $('pupsGrid');
-  grid.innerHTML = '<div class="soon-panel"><div class="icon">⟳</div><h3>Tracking the pack…</h3><p>Pulling fresh launches from nad.fun</p></div>';
+  grid.innerHTML = renderEmpty('⟳', 'Tracking the pack…', 'Pulling fresh launches from nad.fun');
   const data = await nadFetch(`/order/${pupsSort}?page=1&limit=24`);
+  if (data && data._rateLimited){ grid.innerHTML = renderRateLimited(); return; }
   if (!data || !data.tokens){
-    grid.innerHTML = '<div class="soon-panel"><div class="icon">⚠️</div><h3>nad.fun API quiet</h3><p>Couldn\'t reach api.nad.fun — try refresh in a moment.</p></div>';
+    grid.innerHTML = renderEmpty('⚠️', 'nad.fun API quiet', 'Couldn\'t reach api.nad.fun — try refresh in a moment.');
     return;
   }
   grid.innerHTML = data.tokens.map(renderNadCard).join('');
@@ -948,15 +1013,16 @@ let trendLoaded = false;
 
 async function loadTrending(){
   const grid = $('trendGrid');
-  grid.innerHTML = '<div class="soon-panel"><div class="icon">⟳</div><h3>Surveying the hunting grounds…</h3><p>Pulling top tokens from nad.fun</p></div>';
+  grid.innerHTML = renderEmpty('⟳', 'Surveying the hunting grounds…', 'Pulling top tokens from nad.fun');
   const data = await nadFetch(`/order/${trendSort}?page=1&limit=48`);
+  if (data && data._rateLimited){ grid.innerHTML = renderRateLimited(); return; }
   if (!data || !data.tokens){
-    grid.innerHTML = '<div class="soon-panel"><div class="icon">⚠️</div><h3>nad.fun API quiet</h3><p>Couldn\'t reach api.nad.fun — try refresh in a moment.</p></div>';
+    grid.innerHTML = renderEmpty('⚠️', 'nad.fun API quiet', 'Couldn\'t reach api.nad.fun — try refresh in a moment.');
     return;
   }
   let toks = data.tokens;
   if (trendFilter === 'graduated') toks = toks.filter(t => t.token_info?.is_graduated);
-  grid.innerHTML = toks.slice(0, 24).map(renderNadCard).join('') || '<div class="soon-panel"><div class="icon">🐾</div><h3>No matches</h3><p>Try a different filter.</p></div>';
+  grid.innerHTML = toks.slice(0, 24).map(renderNadCard).join('') || renderEmpty('🐾', 'No matches', 'Try a different filter.');
   wireCopyButtons(grid);
   $('trendSub').textContent = `${data.total_count?.toLocaleString() || '—'} tokens indexed on nad.fun · showing ${trendFilter === 'graduated' ? 'graduated only' : 'all'} · sorted by ${trendSort.replace('_',' ')}`;
   trendLoaded = true;
@@ -1167,9 +1233,13 @@ document.querySelectorAll('.tab').forEach(tab => {
   refreshTerritory();
   refreshBurn();
   refreshTicker();
-  setInterval(refreshTerritory, 30_000);
+  // Auto-refresh cadence tuned to live within nad.fun's 10 req/min anon
+  // limit. Territory hits 7 nad endpoints per refresh + 7 DexScreener.
+  // 90s here means ~5 req/min on Territory alone. Bumps to 30s once
+  // King drops in the API key (100/min budget = plenty of headroom).
+  setInterval(refreshTerritory, 90_000);
   setInterval(refreshBurn,      60_000);
-  setInterval(refreshTicker,    15_000);
+  setInterval(refreshTicker,    30_000);
   const acc = await detectAccount();
   if (acc){ STATE.account = acc; renderPackCard(); }
 })();

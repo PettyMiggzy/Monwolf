@@ -130,19 +130,21 @@ nav {
 .nav-actions { display:flex; align-items:center; gap:.6rem; }
 .wallet-pill {
   display:inline-flex; align-items:center; gap:.5rem;
-  padding:.45rem .8rem;
-  background:rgba(0,0,0,.5);
-  border:1px solid var(--border);
+  padding:.55rem 1rem;
+  background:rgba(168,85,247,.1);
+  border:1.5px solid rgba(168,85,247,.45);
   border-radius:9999px;
-  font-size:.82rem; font-weight:600;
-  color:var(--text-2);
+  font-size:.78rem; font-weight:700; letter-spacing:.5px;
+  color:#fff;
   cursor:pointer;
-  transition:border-color .2s;
+  transition:.2s;
 }
-.wallet-pill:hover { border-color:var(--purple); }
-.wallet-pill .dot { width:7px; height:7px; border-radius:50%; background:#71727f; }
-.wallet-pill.connected .dot { background:var(--green); box-shadow:0 0 6px var(--green); }
-.wallet-pill .rank { font-family:'Russo One'; color:var(--gold); font-size:.72rem; letter-spacing:.1em; }
+.wallet-pill:hover { border-color:var(--purple); background:rgba(168,85,247,.2); box-shadow:0 0 14px -4px rgba(168,85,247,.5); }
+.wallet-pill .dot { width:8px; height:8px; border-radius:50%; background:var(--orange); box-shadow:0 0 6px var(--orange); animation:pulseDot 2s infinite; }
+.wallet-pill.connected { background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(168,85,247,.18)); border-color:var(--green); }
+.wallet-pill.connected .dot { background:var(--green); box-shadow:0 0 8px var(--green); animation:none; }
+.wallet-pill .rank { font-family:'Russo One',sans-serif; color:var(--orange); font-size:.7rem; letter-spacing:.12em; }
+@keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.4} }
 
 /* === BUTTONS === */
 .btn {
@@ -656,10 +658,13 @@ footer a:hover { color:var(--purple); }
   <div class="hero-content">
     <span class="hero-badge"><span class="dot"></span> MONAD-7 · LIVE NOW</span>
     <h1>THE FUTURE<br><span class="grad">IS OURS.</span></h1>
-    <p>The official $MONWOLF hub on Monad. Buy $MONWOLF in 60 seconds — no wallet needed, we'll set you up. Play five arcade games, join the pack.</p>
+    <p>The official $MONWOLF hub on Monad. New to crypto? <b>BUY</b> sets you up in 60 seconds. Already have a wallet? Hit <b>CONNECT</b> and trade any Monad token.</p>
     <div class="hero-ctas">
       <a id="buyBtn" href="/buy.html" class="btn btn-primary btn-lg">🐺 BUY $MONWOLF →</a>
-      <a href="arcade.html" class="btn btn-ghost btn-lg">PLAY THE ARCADE</a>
+      <a id="heroConnectBtn" href="/swap.html" class="btn btn-ghost btn-lg" style="border:1.5px solid var(--purple);background:rgba(168,85,247,.08);">🦊 CONNECT WALLET</a>
+    </div>
+    <div style="margin-top:14px;">
+      <a href="arcade.html" style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--text-3);text-decoration:none;border-bottom:1px dashed var(--text-3);padding-bottom:2px;">PLAY THE ARCADE →</a>
     </div>
   </div>
 </section>
@@ -998,8 +1003,9 @@ async function fetchPrice() {
     $('tkLiq').textContent = fmt(liqUsd);
     $('tkMcap').textContent = fmt(mcap);
 
-    // Buy button → DEX pair
-    if (pair.url) $('buyBtn').href = pair.url;
+    // Keep /buy.html as the buy destination (no DexScreener override).
+    // The in-house /buy flow has email-onboarding + Monorail-powered swap
+    // and the 1% pack fee — DexScreener kept users off-site and paid us nothing.
 
     // Pulse on price change
     if (lastPrice != null && lastPrice !== price) {
@@ -1149,6 +1155,19 @@ function renderWallet() {
   $('walletText').textContent = wallet.address.slice(0,6) + '…' + wallet.address.slice(-4);
 }
 $('walletPill').onclick = connectWallet;
+
+// Hero "CONNECT WALLET" button: trigger the wallet popup first, then send to /swap
+$('heroConnectBtn').onclick = async (e) => {
+  e.preventDefault();
+  await connectWallet();
+  // If connect succeeded, wallet is set — go to swap
+  if (wallet && wallet.address) {
+    setTimeout(() => { window.location.href = '/swap.html'; }, 600);
+  } else {
+    // connect failed or user cancelled — still let them try /swap manually
+    toast('Tap "CONNECT WALLET" on the swap page if needed');
+  }
+};
 
 // Restore session
 const cached = sessionStorage.getItem('mw_wallet');

@@ -3,14 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>YOUR HUB · MONWOLF</title>
-<meta name="description" content="Your MONWOLF pack hub — wallet, balance, rank, trades, all in one place.">
-<meta name="theme-color" content="#a855f7">
+<title>PACK DEN · MONWOLF Trader Hub</title>
+<meta name="description" content="MONWOLF Pack Den — live prices across the Monad pack, new pups, trending memes, wallet hunting. The Monad memecoin terminal, wolf-coded.">
+<meta name="theme-color" content="#08000f">
 <link rel="icon" type="image/png" href="/logo.png">
 <link rel="apple-touch-icon" href="/logo.png">
+<meta property="og:title" content="PACK DEN · MONWOLF Trader Hub">
+<meta property="og:description" content="Live prices · New pups · Trending memes · Pack scan · Stalk wallets. Monad memecoin command center.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://monwolf.fun/og-banner.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -19,285 +24,396 @@
   --border:#3a1f5e; --border-2:#4a2a73;
   --text:#fff; --text-2:#c8b6e6; --text-3:#7e6d96;
   --purple:#a855f7; --purple-2:#7c3aed;
-  --pink:#ec4899; --orange:#ff8a3d; --gold:#f5c242;
-  --green:#22c55e; --red:#ef4444;
-  --grad:linear-gradient(135deg, #a855f7 0%, #ff8a3d 100%);
-  --grad-text:linear-gradient(135deg, #ff8a3d 0%, #a855f7 100%);
+  --pink:#ec4899; --orange:#ff8a3d; --ember:#ff6b00; --gold:#f5c242;
+  --green:#22c55e; --red:#ef4444; --blue:#60a5fa;
+  --grad:linear-gradient(135deg,#a855f7 0%,#ff8a3d 100%);
+  --grad-cyber:linear-gradient(135deg,#a855f7 0%,#ec4899 50%,#ff8a3d 100%);
+  --grad-gold:linear-gradient(135deg,#f5c242 0%,#ff8a3d 100%);
 }
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
 body{
   font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
-  min-height:100vh;line-height:1.5;overflow-x:hidden;
+  min-height:100vh;overflow-x:hidden;
 }
 body::before{
-  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse 60% 40% at 50% 0%, rgba(168,85,247,.18), transparent 70%);
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(ellipse 800px 600px at 12% 8%,rgba(168,85,247,.18),transparent 60%),
+    radial-gradient(ellipse 700px 500px at 88% 22%,rgba(255,138,61,.12),transparent 60%),
+    radial-gradient(ellipse 900px 700px at 50% 110%,rgba(236,72,153,.10),transparent 60%);
 }
+img{max-width:100%;display:block;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 a{color:inherit;text-decoration:none;}
 
-nav{
-  position:sticky;top:0;left:0;right:0;background:rgba(8,0,15,.78);
-  border-bottom:1px solid var(--border);backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);z-index:80;padding:.85rem 1rem;
+/* NAV (matches site) */
+.nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  background:rgba(8,0,15,.78);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1480px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:18px;}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Bungee',cursive;font-size:14px;letter-spacing:1.5px;}
+.brand img{width:32px;height:32px;border-radius:8px;}
+.brand-name{background:var(--grad-cyber);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-links{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap;}
+.nav-links a{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:700;letter-spacing:.08em;
+  color:var(--text-2);text-transform:uppercase;border:1px solid transparent;transition:.18s;}
+.nav-links a:hover{color:#fff;border-color:var(--border);background:rgba(168,85,247,.08);}
+.nav-links a.active{color:var(--gold);border-color:rgba(245,194,66,.4);background:rgba(245,194,66,.08);}
+
+/* STATS STRIP */
+.stats-strip{max-width:1480px;margin:24px auto 0;padding:0 22px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.stat-card{position:relative;padding:18px 20px;border-radius:18px;
+  background:linear-gradient(135deg,var(--panel) 0%,var(--panel-2) 100%);
+  border:1px solid var(--border);overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:-30%;right:-15%;width:50%;height:160%;
+  background:radial-gradient(circle,rgba(168,85,247,.15),transparent 60%);pointer-events:none;}
+.stat-card.burn::before{background:radial-gradient(circle,rgba(255,107,0,.18),transparent 60%);}
+.stat-card.live::before{background:radial-gradient(circle,rgba(34,197,94,.15),transparent 60%);}
+.stat-card.holders::before{background:radial-gradient(circle,rgba(245,194,66,.15),transparent 60%);}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.18em;
+  color:var(--text-3);text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.stat-label .dot{width:7px;height:7px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:livePulse 2s infinite;}
+@keyframes livePulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.6);}50%{box-shadow:0 0 0 6px rgba(34,197,94,0);}}
+.stat-value{font-family:'Bungee',cursive;font-size:24px;letter-spacing:.5px;line-height:1.1;}
+.stat-value.green{color:var(--green);}
+.stat-value.gold{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.stat-value.ember{color:var(--ember);}
+.stat-sub{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--text-2);margin-top:4px;}
+.stat-sub .up{color:var(--green);}
+.stat-sub .down{color:var(--red);}
+
+/* HOWLING NOW TICKER */
+.ticker{max-width:1480px;margin:18px auto 0;padding:0 22px;}
+.ticker-inner{display:flex;align-items:center;gap:14px;padding:12px 18px;
+  background:linear-gradient(90deg,rgba(168,85,247,.12),rgba(255,138,61,.06));
+  border:1px solid rgba(168,85,247,.3);border-radius:14px;overflow:hidden;position:relative;}
+.ticker-label{flex-shrink:0;font-family:'Bungee',cursive;font-size:11px;letter-spacing:1.2px;
+  padding:5px 10px;border-radius:99px;background:var(--ember);color:#fff;display:flex;align-items:center;gap:6px;}
+.ticker-label .dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:livePulse 1.5s infinite;}
+.ticker-track{flex:1;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);}
+.ticker-rail{display:flex;gap:36px;animation:ticker 60s linear infinite;
+  font-family:'JetBrains Mono',monospace;font-size:13px;white-space:nowrap;}
+.ticker-rail:hover{animation-play-state:paused;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ticker-item{display:inline-flex;align-items:center;gap:6px;color:var(--text-2);}
+.ticker-item .amt{color:var(--green);font-weight:700;}
+.ticker-item .tok{color:var(--gold);font-weight:700;}
+.ticker-item .addr{color:var(--text-3);font-size:11px;}
+.ticker-item .ago{color:var(--text-3);font-size:11px;}
+.ticker-item.big .amt{color:var(--gold);text-shadow:0 0 12px rgba(245,194,66,.5);}
+
+/* TABS */
+.tabs-wrap{max-width:1480px;margin:24px auto 0;padding:0 22px;}
+.tabs{display:flex;gap:4px;padding:6px;border:1px solid var(--border);
+  border-radius:14px;background:rgba(22,10,38,.6);overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:1;min-width:max-content;padding:11px 18px;font-family:'Bungee',cursive;font-size:12px;
+  letter-spacing:1.2px;color:var(--text-3);border-radius:10px;transition:.18s;
+  display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;}
+.tab:hover{color:var(--text-2);background:rgba(168,85,247,.06);}
+.tab.active{color:#fff;background:var(--grad-cyber);box-shadow:0 8px 24px -8px rgba(168,85,247,.6);}
+
+/* PANELS */
+.panels{max-width:1480px;margin:18px auto 60px;padding:0 22px;}
+.panel{display:none;}
+.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.panel-h{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+.panel-h-l h2{font-family:'Bungee',cursive;font-size:22px;letter-spacing:1.5px;}
+.panel-h-l .panel-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);
+  margin-top:6px;letter-spacing:.04em;}
+.panel-h-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;
+  padding:6px 12px;border-radius:99px;background:rgba(168,85,247,.1);border:1px solid var(--border);
+  color:var(--text-2);text-transform:uppercase;cursor:pointer;transition:.15s;}
+.chip:hover{border-color:var(--purple);color:#fff;}
+.chip.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+
+/* TERRITORY token cards */
+.token-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.tcard{position:relative;padding:18px;border-radius:18px;
+  background:linear-gradient(135deg,var(--panel) 0%,var(--panel-2) 100%);
+  border:1.5px solid var(--border);overflow:hidden;transition:.2s;}
+.tcard:hover{border-color:var(--purple);transform:translateY(-2px);
+  box-shadow:0 16px 40px -12px rgba(168,85,247,.5);}
+.tcard.loading{opacity:.5;}
+.tcard.featured{border-color:rgba(245,194,66,.4);
+  background:linear-gradient(135deg,rgba(245,194,66,.06) 0%,var(--panel-2) 60%);}
+.tcard.featured::before{content:'';position:absolute;top:-30%;right:-20%;width:60%;height:160%;
+  background:radial-gradient(circle,rgba(245,194,66,.18),transparent 60%);pointer-events:none;}
+.tc-h{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.tc-logo{width:42px;height:42px;border-radius:50%;flex-shrink:0;background:var(--grad-cyber);
+  display:flex;align-items:center;justify-content:center;font-family:'Bungee',cursive;font-size:14px;
+  color:#fff;border:1.5px solid var(--border-2);overflow:hidden;}
+.tc-logo img{width:100%;height:100%;object-fit:cover;}
+.tc-meta{flex:1;min-width:0;}
+.tc-sym{font-family:'Bungee',cursive;font-size:14px;letter-spacing:1.2px;}
+.tc-name{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.06em;}
+.tc-tier{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;
+  padding:3px 8px;border-radius:99px;letter-spacing:.1em;}
+.tier-common{background:rgba(126,109,150,.15);color:var(--text-3);border:1px solid var(--text-3);}
+.tier-uncommon{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.4);}
+.tier-rare{background:rgba(96,165,250,.12);color:var(--blue);border:1px solid rgba(96,165,250,.4);}
+.tier-epic{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid var(--purple);}
+.tier-legend{background:rgba(245,194,66,.15);color:var(--gold);border:1px solid var(--gold);}
+.tier-mythic{background:linear-gradient(135deg,rgba(245,194,66,.2),rgba(236,72,153,.2),rgba(168,85,247,.2));
+  color:#fff;border:1px solid var(--gold);animation:mythicShine 3s linear infinite;background-size:200% 200%;}
+@keyframes mythicShine{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+.tc-price{font-family:'Bungee',cursive;font-size:22px;line-height:1.1;margin-bottom:4px;}
+.tc-change{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;}
+.tc-change.up{color:var(--green);} .tc-change.down{color:var(--red);}
+.tc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;
+  padding-top:12px;border-top:1px solid var(--border);}
+.tc-stat-l{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;}
+.tc-stat-v{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--text-2);}
+.tc-actions{display:flex;gap:6px;margin-top:12px;}
+.tc-btn{flex:1;padding:8px 6px;font-family:'JetBrains Mono',monospace;font-size:10px;
+  font-weight:700;letter-spacing:.08em;border-radius:8px;text-align:center;
+  background:rgba(168,85,247,.1);border:1px solid var(--border);color:var(--text-2);
+  transition:.15s;text-transform:uppercase;}
+.tc-btn:hover{background:var(--purple);color:#fff;border-color:var(--purple);}
+.tc-btn.primary{background:var(--grad);color:#fff;border-color:transparent;}
+.tc-btn.primary:hover{transform:translateY(-1px);box-shadow:0 8px 16px -6px rgba(168,85,247,.5);}
+
+/* SOON state */
+.soon-panel{padding:60px 30px;border-radius:18px;background:var(--panel);
+  border:1.5px dashed var(--border-2);text-align:center;}
+.soon-panel .icon{font-size:48px;margin-bottom:16px;opacity:.6;}
+.soon-panel h3{font-family:'Bungee',cursive;font-size:18px;letter-spacing:1.2px;margin-bottom:10px;}
+.soon-panel p{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-2);
+  max-width:560px;margin:0 auto 18px;line-height:1.7;}
+.soon-panel .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;
+  font-weight:700;letter-spacing:.18em;padding:6px 14px;border-radius:99px;
+  background:rgba(245,194,66,.15);color:var(--gold);border:1px solid rgba(245,194,66,.4);}
+
+/* PACK CARD (floating, when connected) */
+.pack-card{position:fixed;bottom:20px;right:20px;z-index:90;width:280px;padding:16px;border-radius:18px;
+  background:linear-gradient(135deg,var(--panel) 0%,var(--panel-2) 100%);border:1.5px solid var(--gold);
+  box-shadow:0 20px 50px -10px rgba(0,0,0,.6),0 0 0 1px rgba(245,194,66,.2);
+  transform:translateY(20px);opacity:0;pointer-events:none;transition:.3s;}
+.pack-card.show{transform:translateY(0);opacity:1;pointer-events:auto;}
+.pack-card-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.pack-card-tier{font-family:'Bungee',cursive;font-size:14px;letter-spacing:1.2px;
+  background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.pack-card-rank{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);
+  margin-left:auto;letter-spacing:.08em;}
+.pack-card-bal{font-family:'Bungee',cursive;font-size:20px;line-height:1.1;}
+.pack-card-usd{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);margin-top:2px;}
+.pack-card-actions{display:flex;gap:6px;margin-top:12px;}
+.pack-card-actions a, .pack-card-actions button{flex:1;padding:7px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;
+  border-radius:7px;text-align:center;background:rgba(168,85,247,.12);border:1px solid var(--border);
+  color:var(--text-2);transition:.15s;text-transform:uppercase;}
+.pack-card-actions a:hover, .pack-card-actions button:hover{background:var(--purple);color:#fff;}
+.pack-card .close{position:absolute;top:8px;right:10px;font-size:18px;color:var(--text-3);
+  background:none;border:none;cursor:pointer;line-height:1;}
+.pack-card .close:hover{color:var(--text);}
+.connect-card{position:fixed;bottom:20px;right:20px;z-index:90;padding:12px 18px;border-radius:99px;
+  background:var(--grad);color:#fff;font-family:'Bungee',cursive;font-size:12px;letter-spacing:1.2px;
+  cursor:pointer;box-shadow:0 14px 30px -6px rgba(168,85,247,.6);transition:.2s;}
+.connect-card:hover{transform:translateY(-2px);box-shadow:0 18px 40px -6px rgba(168,85,247,.7);}
+.hidden{display:none !important;}
+
+/* FOOTER */
+.footer{max-width:1480px;margin:60px auto 30px;padding:30px 22px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);}
+.footer a{color:var(--text-2);} .footer a:hover{color:var(--gold);}
+
+/* RESPONSIVE */
+@media (max-width:880px){
+  .stats-strip{grid-template-columns:repeat(2,1fr);}
+  .stat-value{font-size:18px;}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;}
+  .tab{padding:10px 14px;font-size:11px;}
+  .pack-card{left:12px;right:12px;width:auto;bottom:12px;}
+  .connect-card{left:12px;right:12px;text-align:center;bottom:12px;}
 }
-.nav-inner{max-width:720px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
-.logo{display:flex;align-items:center;gap:.55rem;}
-.logo img{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--purple);}
-.logo .name{font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:2px;}
-.back-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;
-  color:var(--text-2);padding:8px 12px;border:1px solid var(--border);border-radius:8px;}
-.back-link:hover{border-color:var(--purple);color:#fff;}
-
-.wrap{position:relative;z-index:2;max-width:720px;margin:0 auto;padding:20px 16px 80px;}
-
-/* === HERO === */
-.hero{text-align:center;margin:8px 0 22px;}
-.hero-eyebrow{display:inline-block;padding:6px 12px;border-radius:99px;
-  background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.4);
-  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--purple);
-  text-transform:uppercase;margin-bottom:12px;}
-.hero h1{font-family:'Russo One',sans-serif;font-size:clamp(28px,7vw,40px);letter-spacing:1px;line-height:1;margin-bottom:8px;}
-.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-
-/* === WALLET PANEL (top) === */
-.wallet-hero{
-  background:linear-gradient(135deg, rgba(168,85,247,.12), rgba(255,138,61,.06));
-  border:1.5px solid var(--purple);border-radius:18px;
-  padding:20px;margin-bottom:14px;position:relative;overflow:hidden;
+@media (max-width:540px){
+  .nav-inner{padding:12px 14px;gap:10px;}
+  .nav-links{gap:3px;}
+  .nav-links a{padding:6px 10px;font-size:11px;}
+  .brand{font-size:12px;}
+  .brand img{width:28px;height:28px;}
+  .stats-strip,.ticker,.tabs-wrap,.panels{padding-left:14px;padding-right:14px;}
+  .ticker-inner{padding:10px 12px;gap:10px;}
+  .ticker-label{font-size:10px;padding:4px 8px;}
+  .ticker-rail{font-size:11px;gap:24px;}
 }
-.wallet-hero::before{
-  content:'';position:absolute;top:-50%;right:-30%;width:280px;height:280px;
-  background:radial-gradient(circle, rgba(168,85,247,.25), transparent 60%);pointer-events:none;
-}
-.wh-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-3);text-transform:uppercase;margin-bottom:8px;}
-.wh-addr{font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff;display:flex;align-items:center;gap:8px;}
-.wh-addr .copy-btn{padding:4px 8px;font-size:9px;letter-spacing:1px;background:rgba(168,85,247,.2);border:1px solid var(--purple);
-  border-radius:6px;color:#fff;cursor:pointer;font-family:'Russo One',sans-serif;}
-.wh-addr .copy-btn:hover{background:var(--purple);}
-.wh-rank{display:inline-flex;align-items:center;gap:6px;margin-top:14px;
-  padding:6px 12px;border-radius:99px;background:rgba(255,138,61,.12);border:1px solid var(--orange);
-  font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:1.5px;color:var(--orange);}
-.wh-rank .emoji{font-size:14px;}
-
-/* === BALANCE CARDS === */
-.bal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
-.bal-card{
-  background:linear-gradient(180deg, rgba(28,14,48,.6), rgba(16,7,34,.6));
-  border:1.5px solid var(--border);border-radius:14px;padding:14px;
-  transition:.18s;cursor:pointer;
-}
-.bal-card:hover{border-color:var(--purple);transform:translateY(-1px);}
-.bal-card.featured{border-color:var(--orange);background:linear-gradient(180deg, rgba(255,138,61,.08), rgba(168,85,247,.05));}
-.bc-h{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.bc-h img{width:24px;height:24px;border-radius:50%;background:#000;}
-.bc-h .sym{font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:1px;color:#fff;}
-.bc-h .name{font-size:10px;color:var(--text-3);margin-top:1px;}
-.bc-bal{font-family:'Russo One',sans-serif;font-size:20px;color:#fff;margin-top:2px;}
-.bc-usd{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
-
-/* === SECTION CARDS === */
-.card{
-  background:linear-gradient(180deg, rgba(28,14,48,.55), rgba(16,7,34,.55));
-  border:1.5px solid var(--border);border-radius:18px;padding:18px;margin-bottom:14px;
-}
-.card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.card-h h2{font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:2px;color:var(--text);}
-.card-h .meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:1px;}
-
-/* === TX LIST === */
-.tx-list{display:flex;flex-direction:column;gap:6px;}
-.tx-row{
-  display:flex;align-items:center;gap:10px;padding:10px;
-  background:rgba(8,4,24,.5);border:1px solid var(--border);border-radius:10px;
-  font-size:12px;transition:.15s;
-}
-.tx-row:hover{border-color:var(--purple);}
-.tx-row .ic{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:rgba(168,85,247,.15);border:1px solid var(--purple);font-size:14px;flex-shrink:0;}
-.tx-row .ic.send{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red);}
-.tx-row .ic.recv{background:rgba(34,197,94,.1);border-color:var(--green);color:var(--green);}
-.tx-row .meta{flex:1;min-width:0;}
-.tx-row .lbl{font-family:'Russo One',sans-serif;font-size:11px;color:#fff;letter-spacing:.5px;}
-.tx-row .sub{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
-.tx-row .val{font-family:'JetBrains Mono',monospace;font-size:11px;color:#fff;text-align:right;}
-.tx-row .val.up{color:var(--green);}
-.tx-row .val.down{color:var(--red);}
-.tx-empty{text-align:center;padding:20px;color:var(--text-3);font-size:12px;}
-
-/* === QUICK ACTIONS === */
-.actions-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
-.action-card{
-  display:flex;align-items:center;gap:10px;padding:12px 14px;
-  background:rgba(168,85,247,.08);border:1.5px solid var(--purple);border-radius:12px;
-  transition:.15s;cursor:pointer;text-decoration:none;
-}
-.action-card:hover{background:rgba(168,85,247,.18);transform:translateY(-1px);}
-.action-card .emoji{font-size:20px;}
-.action-card .text{display:flex;flex-direction:column;}
-.action-card .text b{font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:1px;color:#fff;}
-.action-card .text small{font-size:9.5px;color:var(--text-2);}
-
-/* === BTN === */
-.btn{
-  display:flex;align-items:center;justify-content:center;width:100%;
-  padding:14px;border:none;border-radius:12px;
-  font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:1.5px;
-  cursor:pointer;transition:.15s;text-transform:uppercase;
-}
-.btn-primary{background:var(--grad);color:#fff;box-shadow:0 8px 24px -4px rgba(168,85,247,.4);}
-.btn-primary:hover{transform:translateY(-1px);}
-.btn-ghost{background:transparent;border:1.5px solid var(--border-2);color:#fff;}
-
-/* === STATUS / PILL === */
-.connect-prompt{text-align:center;padding:34px 20px;}
-.connect-prompt .icon{font-size:54px;margin-bottom:14px;}
-.connect-prompt h2{font-family:'Russo One',sans-serif;font-size:18px;letter-spacing:1px;margin-bottom:8px;}
-.connect-prompt p{color:var(--text-2);font-size:13px;margin-bottom:18px;max-width:380px;margin-left:auto;margin-right:auto;}
-.connect-prompt .btn-row{display:flex;flex-direction:column;gap:8px;max-width:280px;margin:0 auto;}
-
-.hidden{display:none!important;}
-
-.footer{text-align:center;color:var(--text-3);font-size:11px;margin-top:20px;line-height:1.7;}
-.footer a{color:var(--purple);}
-
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;
-  border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;
-  margin-right:8px;vertical-align:-2px;}
-@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
-.shimmer{background:linear-gradient(90deg, var(--panel), var(--panel-2), var(--panel));
-  background-size:200% 100%;animation:shimmer 1.2s linear infinite;color:transparent;border-radius:4px;}
 </style>
 </head>
 <body>
 
-<nav>
+<nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="logo"><img src="/logo.png" alt=""><span class="name">MONWOLF</span></a>
-    <a href="/memes.html" class="back-link" style="margin-right:8px;">MEMES</a>
-    <a href="/" class="back-link">← HOME</a>
+    <a href="/" class="brand">
+      <img src="/logo.png" alt="">
+      <span class="brand-name">MONWOLF</span>
+    </a>
+    <div class="nav-links">
+      <a href="/">HOME</a>
+      <a href="/buy">BUY</a>
+      <a href="/swap">SWAP</a>
+      <a href="/hub" class="active">PACK DEN</a>
+      <a href="/memes">MEMES</a>
+    </div>
   </div>
 </nav>
 
-<div class="wrap">
+<div class="stats-strip">
+  <div class="stat-card live">
+    <div class="stat-label"><span class="dot"></span>$MONWOLF · LIVE</div>
+    <div class="stat-value green" id="statPrice">⟳</div>
+    <div class="stat-sub" id="statChange">loading…</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">MARKET CAP</div>
+    <div class="stat-value" id="statMcap">⟳</div>
+    <div class="stat-sub" id="statLiq">liq —</div>
+  </div>
+  <div class="stat-card holders">
+    <div class="stat-label">24H ACTIVITY · TXNS</div>
+    <div class="stat-value gold" id="statHolders">⟳</div>
+    <div class="stat-sub" id="statVol">24h vol —</div>
+  </div>
+  <div class="stat-card burn">
+    <div class="stat-label">🔥 BURN MEMORIAL</div>
+    <div class="stat-value ember" id="statBurn">⟳</div>
+    <div class="stat-sub">$MONWOLF burned forever</div>
+  </div>
+</div>
 
-  <div class="hero">
-    <span class="hero-eyebrow">🐺 YOUR <span style="color:var(--orange);">PACK</span> HUB</span>
-    <h1>WELCOME <span class="grad">WOLF</span></h1>
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-label"><span class="dot"></span>HOWLING NOW</div>
+    <div class="ticker-track">
+      <div class="ticker-rail" id="tickerRail">
+        <div class="ticker-item"><span class="addr">⟳ waking the pack…</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab="territory">🐾 TERRITORY</button>
+    <button class="tab" data-tab="pups">🌑 NEW PUPS</button>
+    <button class="tab" data-tab="trending">🦴 HUNTING GROUNDS</button>
+    <button class="tab" data-tab="scan">🐺 PACK SCAN</button>
+    <button class="tab" data-tab="stalk">👁 STALK</button>
+  </div>
+</div>
+
+<div class="panels">
+
+  <div class="panel active" id="panel-territory">
+    <div class="panel-h">
+      <div class="panel-h-l">
+        <h2>🐾 THE TERRITORY</h2>
+        <div class="panel-sub">live prices across the Monad pack · auto-refresh 30s · DexScreener feed</div>
+      </div>
+      <div class="panel-h-r">
+        <button class="chip" id="terrRefresh">↺ REFRESH</button>
+      </div>
+    </div>
+    <div class="token-grid" id="terrGrid"></div>
   </div>
 
-  <!-- CONNECT PROMPT (shown when not connected) -->
-  <div id="connectPrompt" class="card connect-prompt">
-    <div class="icon">🔒</div>
-    <h2>SIGN IN TO YOUR HUB</h2>
-    <p>Connect a wallet or sign in with your Pack Wallet to see your balances, rank, and trade history.</p>
-    <div class="btn-row">
-      <a href="/buy.html" class="btn btn-primary">🐺 SIGN IN / CREATE WALLET</a>
-      <button id="connectMM" class="btn btn-ghost">🦊 CONNECT METAMASK</button>
+  <div class="panel" id="panel-pups">
+    <div class="panel-h">
+      <div class="panel-h-l">
+        <h2>🌑 NEW PUPS</h2>
+        <div class="panel-sub">fresh tokens bonding on nad.fun · pre-grad curves + graduated DEX pairs</div>
+      </div>
+      <div class="panel-h-r">
+        <button class="chip active">🆕 NEW</button>
+        <button class="chip">📈 MCAP</button>
+        <button class="chip">🔥 ABOUT TO GRAD</button>
+      </div>
+    </div>
+    <div class="soon-panel">
+      <div class="icon">🌑</div>
+      <h3>NEW PUPS — wiring in next push</h3>
+      <p>Live nad.fun feed → pre-grad bonding curves + graduated DEX pairs · sort by new / mcap / about-to-grad · same pattern as Chogi hub launches feed.</p>
+      <span class="badge">SHIPS IN SESSION 2</span>
     </div>
   </div>
 
-  <!-- HUB CONTENT (shown when connected) -->
-  <div id="hubContent" class="hidden">
-
-    <!-- Wallet hero -->
-    <div class="wallet-hero">
-      <div class="wh-eyebrow">▌ Connected Wallet</div>
-      <div class="wh-addr">
-        <span id="addrFull">—</span>
-        <button class="copy-btn" id="copyAddr">COPY</button>
+  <div class="panel" id="panel-trending">
+    <div class="panel-h">
+      <div class="panel-h-l">
+        <h2>🦴 HUNTING GROUNDS</h2>
+        <div class="panel-sub">all Monad memes · live USD prices · sorted by market cap · powered by Monorail data API</div>
       </div>
-      <div class="wh-rank" id="rankPill">
-        <span class="emoji" id="rankEmoji">🐺</span>
-        <span id="rankLabel">PACK MEMBER</span>
+      <div class="panel-h-r">
+        <button class="chip active">📊 MCAP</button>
+        <button class="chip">👥 HOLDERS</button>
+        <button class="chip">💎 NEW</button>
       </div>
     </div>
-
-    <!-- Balance grid -->
-    <div class="bal-grid" id="balGrid">
-      <div class="bal-card">
-        <div class="bc-h">
-          <img src="https://monorail-static.fra1.digitaloceanspaces.com/tokens/mon-token.svg" alt="">
-          <div>
-            <div class="sym">MON</div>
-            <div class="name">Monad native</div>
-          </div>
-        </div>
-        <div class="bc-bal" id="monBalDisplay">—</div>
-        <div class="bc-usd" id="monUsd">—</div>
-      </div>
-      <div class="bal-card featured">
-        <div class="bc-h">
-          <img src="/logo.png" alt="">
-          <div>
-            <div class="sym">MONWOLF</div>
-            <div class="name">$WOLF — your pack rank</div>
-          </div>
-        </div>
-        <div class="bc-bal" id="wolfBalDisplay">—</div>
-        <div class="bc-usd" id="wolfUsd">—</div>
-      </div>
+    <div class="soon-panel">
+      <div class="icon">🦴</div>
+      <h3>HUNTING GROUNDS — wiring in next push</h3>
+      <p>500 trending Monad memes pulled from Monorail's data API · each rendered as a Pack Card with tier badge, swap action, copy contract, view chart. Becomes a discovery surface for the whole memecoin ecosystem on Monad.</p>
+      <span class="badge">SHIPS IN SESSION 2</span>
     </div>
-
-    <!-- Other pack tokens -->
-    <div class="card">
-      <div class="card-h">
-        <h2>OTHER PACK HOLDINGS</h2>
-        <span class="meta" id="packMeta">scanning…</span>
-      </div>
-      <div class="bal-grid" id="packGrid">
-        <div class="bal-card"><div class="bc-h"><div class="bc-bal shimmer">loading</div></div></div>
-        <div class="bal-card"><div class="bc-h"><div class="bc-bal shimmer">loading</div></div></div>
-      </div>
-    </div>
-
-    <!-- Quick actions -->
-    <div class="card">
-      <div class="card-h">
-        <h2>QUICK ACTIONS</h2>
-      </div>
-      <div class="actions-grid">
-        <a href="/buy.html" class="action-card">
-          <span class="emoji">🐺</span>
-          <div class="text"><b>BUY $MONWOLF</b><small>Stack the pack</small></div>
-        </a>
-        <a href="/swap.html" class="action-card">
-          <span class="emoji">🔁</span>
-          <div class="text"><b>UNIVERSAL SWAP</b><small>Any Monad token</small></div>
-        </a>
-        <a href="/arcade.html" class="action-card">
-          <span class="emoji">🎮</span>
-          <div class="text"><b>ARCADE</b><small>Play + climb leaderboard</small></div>
-        </a>
-        <a href="https://monadexplorer.com/address/0x0000000000000000000000000000000000000000" id="explorerLink" class="action-card" target="_blank" rel="noopener">
-          <span class="emoji">🔍</span>
-          <div class="text"><b>EXPLORER</b><small>View on-chain</small></div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Recent activity -->
-    <div class="card">
-      <div class="card-h">
-        <h2>RECENT ACTIVITY</h2>
-        <span class="meta" id="txMeta">last 10</span>
-      </div>
-      <div class="tx-list" id="txList">
-        <div class="tx-empty">Loading transactions…</div>
-      </div>
-    </div>
-
-    <!-- Disconnect -->
-    <button id="disconnectBtn" class="btn btn-ghost" style="margin-top:8px;color:var(--red);border-color:var(--red);">DISCONNECT</button>
-
   </div>
 
-  <div class="footer">
-    <a href="/">monwolf hub</a> · <a href="/buy.html">buy</a> · <a href="/swap.html">swap</a> · <a href="/arcade.html">arcade</a>
-    <div style="margin-top:6px;">🐺 <i>The future is ours.</i></div>
+  <div class="panel" id="panel-scan">
+    <div class="panel-h">
+      <div class="panel-h-l">
+        <h2>🐺 PACK SCAN</h2>
+        <div class="panel-sub">paste any wallet → scan their Monad memecoin bags · compare up to 8 wolves · find cross-holders</div>
+      </div>
+    </div>
+    <div class="soon-panel">
+      <div class="icon">🐺</div>
+      <h3>PACK SCAN — wiring in next push</h3>
+      <p>Paste a wallet → multicall all 8 ecosystem token balances + USD value · compare up to 8 wallets side-by-side · spotlight cross-holders (wallets in multiple packs). Same pattern as Chogi's wallet compare tool.</p>
+      <span class="badge">SHIPS IN SESSION 2</span>
+    </div>
   </div>
 
+  <div class="panel" id="panel-stalk">
+    <div class="panel-h">
+      <div class="panel-h-l">
+        <h2>👁 STALK</h2>
+        <div class="panel-sub">tag up to 10 alpha wolves · live multicall balances · auto-poll every 90s</div>
+      </div>
+    </div>
+    <div class="soon-panel">
+      <div class="icon">👁</div>
+      <h3>STALK — wiring in next push</h3>
+      <p>Add up to 10 wallets to a personal watchlist · auto-poll their balances every 90s · alert when a tracked wolf accumulates or dumps a position. Persisted to localStorage. Same pattern as Chogi tracker.</p>
+      <span class="badge">SHIPS IN SESSION 2</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="connect-card" id="connectCard">🐺 CONNECT PACK</div>
+
+<div class="pack-card" id="packCard">
+  <button class="close" id="packClose">×</button>
+  <div class="pack-card-h">
+    <div class="pack-card-tier" id="pcTier">—</div>
+    <div class="pack-card-rank" id="pcRank"></div>
+  </div>
+  <div class="pack-card-bal" id="pcBal">— $MONWOLF</div>
+  <div class="pack-card-usd" id="pcUsd">—</div>
+  <div class="pack-card-actions">
+    <a href="/buy">BUY</a>
+    <a href="/swap">SWAP</a>
+    <button id="pcCopy">COPY</button>
+  </div>
+</div>
+
+<div class="footer">
+  <div>◆ monwolf.fun · pack den v1.0</div>
+  <div>RPC: <a href="https://rpc.monad.xyz" target="_blank">monad.xyz</a></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
@@ -305,279 +421,340 @@ nav{
 (function(){
 'use strict';
 
-const MONWOLF = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
-const NATIVE  = '0x0000000000000000000000000000000000000000';
-const RPC     = 'https://rpc.monad.xyz';
-const EXPLORER = 'https://monadexplorer.com';
-const CHAIN_HEX = '0x8f';
+// CONFIG
+const RPC          = 'https://rpc.monad.xyz';
+const EXPLORER     = 'https://monadexplorer.com';
+const DEAD         = '0x000000000000000000000000000000000000dEaD';
+const MONWOLF      = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
+const MONWOLF_PAIR = '0x97Dc05Af02cB8F55bfF839AC5F849bdc9ADd7116';
+
+const PACK_TOKENS = [
+  { addr: MONWOLF,                                       sym:'MONWOLF', name:'MonWolf',  emoji:'🐺', featured:true },
+  { addr:'0xb72e6262dae53caf167f0966421a0b9782977777',   sym:'MOLLY',   name:'Molly',    emoji:'🐶' },
+  { addr:'0x350035555e10d9afaf1566aaebfced5ba6c27777',   sym:'CHOG',    name:'Chog',     emoji:'🥩' },
+  { addr:'0x5e1b1a14c8758104b8560514e94ab8320e587777',   sym:'CHOGI',   name:'Chogi',    emoji:'🧪' },
+  { addr:'0xb744f5cdb792d8187640214c4a1c9ace29af7777',   sym:'MONSHI',  name:'Monshi',   emoji:'🐱' },
+  { addr:'0xaCA86430cCCEdbedB35910fC8A5AFEF07dA37777',   sym:'RENE',    name:'Rene',     emoji:'🐕' },
+  { addr:'0x148a3a811979e5BF8366FC279B2d67742Fe17777',   sym:'PHUCK',   name:'Phuck',    emoji:'💀' },
+];
+
+const RANKS = [
+  { min: 10000000, name:'APEX',     emoji:'👑', cls:'tier-mythic'   },
+  { min: 1000000,  name:'ALPHA',    emoji:'⚡', cls:'tier-legend'   },
+  { min: 100000,   name:'BETA',     emoji:'🌙', cls:'tier-epic'     },
+  { min: 10000,    name:'SCOUT',    emoji:'🐺', cls:'tier-rare'     },
+  { min: 1000,     name:'PACK',     emoji:'🐺', cls:'tier-uncommon' },
+  { min: 1,        name:'CUB',      emoji:'🐾', cls:'tier-common'   },
+  { min: 0,        name:'OUTSIDER', emoji:'👀', cls:'tier-common'   },
+];
 
 const $ = id => document.getElementById(id);
 
-// Pack-ecosystem tokens to scan for the user's other holdings
-const PACK_TOKENS = [
-  { addr: '0xb744f5cdb792d8187640214c4a1c9ace29af7777', sym: 'MONSHI',  name: 'Monshi',  logo: 'https://storage.nadapp.net/coin/bdf23c46-ccd6-447d-b3ed-d84a911aae7a' },
-  { addr: '0xaca86430cccedbedb35910fc8a5afef07da37777', sym: 'RENE',    name: 'Rene',    logo: 'https://storage.nadapp.net/coin/515a9ad5-e127-4e97-92af-5f8206fa9478' },
-  { addr: '0x350035555e10d9afaf1566aaebfced5ba6c27777', sym: 'CHOG',    name: 'Chog',    logo: null },
-  { addr: '0x5e1b1a14c8758104b8560514e94ab8320e587777', sym: 'CHOGI',   name: 'Chogi',   logo: null },
-  { addr: '0xb72e6262dae53caf167f0966421a0b9782977777', sym: 'MOLLY',   name: 'Molly',   logo: null },
-];
+// HELPERS
+function fmtNum(n, dp){
+  if (n == null || isNaN(n)) return '—';
+  if (n >= 1e9) return (n/1e9).toFixed(dp||2) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(dp||2) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(dp||1) + 'K';
+  return n.toFixed(dp != null ? dp : 0);
+}
+function fmtPrice(p){
+  if (p == null || isNaN(p)) return '—';
+  if (p >= 1) return '$' + p.toFixed(4);
+  if (p >= 0.001) return '$' + p.toFixed(5);
+  if (p >= 0.000001) return '$' + p.toFixed(7).replace(/0+$/,'');
+  // subscript zeros for very tiny
+  const s = p.toFixed(14);
+  const m = s.match(/^0\.0*([1-9][0-9]*)$/);
+  if (!m) return '$' + p.toExponential(2);
+  const zeros = s.indexOf(m[1]) - 2;
+  const digits = m[1].slice(0,4);
+  const sub = String(zeros).split('').map(c => '₀₁₂₃₄₅₆₇₈₉'[+c]).join('');
+  return '$0.0' + sub + digits;
+}
+function shortAddr(a){ return a.slice(0,6) + '…' + a.slice(-4); }
+function tierFor(balance){
+  for (const r of RANKS){ if (balance >= r.min) return r; }
+  return RANKS[RANKS.length-1];
+}
 
-// Rank tiers (MONWOLF balance → rank)
-const RANKS = [
-  { min: 10000000, name: 'APEX',   emoji: '👑' },
-  { min: 1000000,  name: 'ALPHA',  emoji: '⚡' },
-  { min: 100000,   name: 'BETA',   emoji: '🌙' },
-  { min: 10000,    name: 'SCOUT',  emoji: '🐺' },
-  { min: 1000,     name: 'PACK',   emoji: '🐺' },
-  { min: 1,        name: 'CUB',    emoji: '🐾' },
-  { min: 0,        name: 'OUTSIDER', emoji: '👀' },
-];
-
-const STATE = {
-  account: null,
-  signerType: null,  // 'local' | 'mm'
-};
-
-// ────── RPC ──────
-async function rpcCall(method, params){
+// RPC
+async function rpc(method, params){
   const r = await fetch(RPC, {
-    method:'POST',headers:{'content-type':'application/json'},
+    method:'POST', headers:{'content-type':'application/json'},
     body: JSON.stringify({jsonrpc:'2.0', id:Date.now(), method, params}),
   });
-  if (!r.ok) throw new Error('RPC HTTP ' + r.status);
   const j = await r.json();
-  if (j.error) throw new Error('RPC: ' + j.error.message);
+  if (j.error) throw new Error(j.error.message || 'rpc error');
   return j.result;
 }
-const iface = new ethers.Interface([
-  'function balanceOf(address) view returns (uint256)',
-  'function decimals() view returns (uint8)',
-  'function symbol() view returns (string)',
-]);
-async function nativeBalance(addr){ return BigInt(await rpcCall('eth_getBalance', [addr, 'latest'])); }
+const iface = new ethers.Interface(['function balanceOf(address) view returns (uint256)']);
 async function tokenBalance(token, addr){
   const data = iface.encodeFunctionData('balanceOf', [addr]);
-  const res = await rpcCall('eth_call', [{to: token, data}, 'latest']);
-  if (!res || res === '0x') return 0n;
-  return iface.decodeFunctionResult('balanceOf', res)[0];
+  const res = await rpc('eth_call', [{to: token, data}, 'latest']);
+  return BigInt(res || '0x0');
 }
 
-function fmt(n){
-  if (n == null || isNaN(n)) return '—';
-  const v = Number(n);
-  if (v === 0) return '0';
-  if (v < 0.0001) return v.toExponential(2);
-  if (v < 1) return v.toFixed(4);
-  if (v < 1000) return v.toFixed(2);
-  return v.toLocaleString('en-US', {maximumFractionDigits: 2});
-}
-function shortAddr(a){ return a ? a.slice(0,6) + '…' + a.slice(-4) : ''; }
-function rankFor(wolfBal){
-  for (const r of RANKS) if (wolfBal >= r.min) return r;
-  return RANKS[RANKS.length - 1];
-}
+// TABS
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    $('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
 
-// ────── PRICE (DexScreener) ──────
-async function fetchPrice(token){
+// TERRITORY · DexScreener prices
+async function fetchDex(addr){
   try{
-    const r = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + token);
+    const r = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${addr}`);
     if (!r.ok) return null;
     const j = await r.json();
     if (!j.pairs || !j.pairs.length) return null;
-    const sorted = j.pairs.sort((a,b) => parseFloat(b.liquidity?.usd || 0) - parseFloat(a.liquidity?.usd || 0));
-    return parseFloat(sorted[0].priceUsd || 0);
+    const monad = j.pairs.filter(p => (p.chainId||'').toLowerCase() === 'monad');
+    return (monad.length ? monad : j.pairs)
+      .sort((a,b) => (b.liquidity?.usd||0) - (a.liquidity?.usd||0))[0];
   }catch(e){ return null; }
 }
 
-// ────── DETECT SESSION ──────
-async function detectSession(){
-  // 1. Check for /buy.html session (sessionStorage key 'mw_session_v1')
-  try{
-    const s = sessionStorage.getItem('mw_session_v1');
-    if (s){
-      const obj = JSON.parse(s);
-      if (obj && obj.address){
-        STATE.account = obj.address;
-        STATE.signerType = 'local';
-        return true;
-      }
-    }
-  }catch(e){}
-  // 2. Check for homepage MetaMask connection (sessionStorage 'mw_wallet')
-  try{
-    const w = sessionStorage.getItem('mw_wallet');
-    if (w){
-      const obj = JSON.parse(w);
-      if (obj && obj.address){
-        STATE.account = obj.address;
-        STATE.signerType = 'mm';
-        return true;
-      }
-    }
-  }catch(e){}
-  // 3. Check for active MetaMask
-  if (window.ethereum && window.ethereum.selectedAddress){
-    STATE.account = window.ethereum.selectedAddress;
-    STATE.signerType = 'mm';
-    return true;
-  }
-  return false;
+function tierForMcap(mc){
+  if (!mc) return {label:'COMMON', cls:'tier-common'};
+  if (mc >= 50e6) return {label:'MYTHIC',  cls:'tier-mythic'};
+  if (mc >= 10e6) return {label:'LEGEND',  cls:'tier-legend'};
+  if (mc >= 2e6)  return {label:'EPIC',    cls:'tier-epic'};
+  if (mc >= 500e3)return {label:'RARE',    cls:'tier-rare'};
+  if (mc >= 100e3)return {label:'UNCOMMON',cls:'tier-uncommon'};
+  return                  {label:'COMMON',   cls:'tier-common'};
 }
 
-// ────── MM CONNECT ──────
-$('connectMM').onclick = async function(){
-  if (!window.ethereum){
-    alert('No wallet detected. Tap "SIGN IN / CREATE WALLET" to make one in your browser.');
+function renderCard(t, d){
+  const feat = t.featured ? 'featured' : '';
+  const price = d ? parseFloat(d.priceUsd || 0) : null;
+  const change = d ? parseFloat(d.priceChange?.h24 || 0) : null;
+  const mcap = d ? parseFloat(d.fdv || d.marketCap || 0) : null;
+  const vol  = d ? parseFloat(d.volume?.h24 || 0) : null;
+  const liq  = d ? parseFloat(d.liquidity?.usd || 0) : null;
+  const tier = tierForMcap(mcap);
+  const cCls = change == null ? '' : (change >= 0 ? 'up' : 'down');
+  const cSign = change == null ? '' : (change >= 0 ? '▲' : '▼');
+  const cText = change == null ? '—' : Math.abs(change).toFixed(2) + '%';
+  return `<div class="tcard ${feat}" data-addr="${t.addr}">
+    <div class="tc-h">
+      <div class="tc-logo">${t.emoji || t.sym[0]}</div>
+      <div class="tc-meta">
+        <div class="tc-sym">$${t.sym}</div>
+        <div class="tc-name">${t.name}</div>
+      </div>
+      <div class="tc-tier ${tier.cls}">${tier.label}</div>
+    </div>
+    <div class="tc-price">${fmtPrice(price)}</div>
+    <div class="tc-change ${cCls}">${cSign} ${cText} · 24h</div>
+    <div class="tc-stats">
+      <div><div class="tc-stat-l">MCAP</div><div class="tc-stat-v">${mcap ? '$'+fmtNum(mcap) : '—'}</div></div>
+      <div><div class="tc-stat-l">LIQ</div><div class="tc-stat-v">${liq ? '$'+fmtNum(liq) : '—'}</div></div>
+      <div><div class="tc-stat-l">VOL 24H</div><div class="tc-stat-v">${vol ? '$'+fmtNum(vol) : '—'}</div></div>
+    </div>
+    <div class="tc-actions">
+      <a class="tc-btn primary" href="/swap?from=MON&to=${t.addr}">SWAP</a>
+      <a class="tc-btn" href="https://dexscreener.com/monad/${t.addr}" target="_blank">CHART</a>
+      <button class="tc-btn copyBtn" data-addr="${t.addr}">COPY</button>
+    </div>
+  </div>`;
+}
+
+async function refreshTerritory(){
+  const grid = $('terrGrid');
+  if (!grid.children.length){
+    grid.innerHTML = PACK_TOKENS.map(t => `<div class="tcard loading ${t.featured?'featured':''}">
+      <div class="tc-h"><div class="tc-logo">${t.emoji}</div>
+        <div class="tc-meta"><div class="tc-sym">$${t.sym}</div><div class="tc-name">⟳ loading…</div></div>
+      </div><div class="tc-price">⟳</div></div>`).join('');
+  }
+  const results = await Promise.allSettled(PACK_TOKENS.map(t => fetchDex(t.addr)));
+  grid.innerHTML = PACK_TOKENS.map((t,i) => renderCard(t, results[i].status==='fulfilled' ? results[i].value : null)).join('');
+
+  // Wire copy buttons
+  grid.querySelectorAll('.copyBtn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      navigator.clipboard.writeText(btn.dataset.addr).then(() => {
+        btn.textContent = 'COPIED ✓';
+        setTimeout(() => btn.textContent = 'COPY', 1500);
+      });
+    });
+  });
+
+  // Update top stats with MONWOLF
+  const d = results[0].status === 'fulfilled' ? results[0].value : null;
+  if (d){
+    const p = parseFloat(d.priceUsd || 0);
+    const c = parseFloat(d.priceChange?.h24 || 0);
+    const mc = parseFloat(d.fdv || d.marketCap || 0);
+    const vl = parseFloat(d.volume?.h24 || 0);
+    const lq = parseFloat(d.liquidity?.usd || 0);
+    $('statPrice').textContent = fmtPrice(p);
+    const cs = c >= 0 ? '▲' : '▼';
+    const cc = c >= 0 ? 'up' : 'down';
+    $('statChange').innerHTML = `<span class="${cc}">${cs} ${Math.abs(c).toFixed(2)}% · 24h</span>`;
+    $('statMcap').textContent = mc ? '$' + fmtNum(mc) : '—';
+    $('statLiq').textContent  = lq ? 'liq $' + fmtNum(lq) : '—';
+    $('statVol').textContent  = vl ? '24h vol $' + fmtNum(vl) : '—';
+    const tx = (d.txns?.h24?.buys || 0) + (d.txns?.h24?.sells || 0);
+    $('statHolders').textContent = fmtNum(tx);
+  }
+}
+
+// BURN MEMORIAL · balanceOf(0xdead) on MONWOLF
+async function refreshBurn(){
+  try{
+    const raw = await tokenBalance(MONWOLF, DEAD);
+    const burned = Number(raw / 10n**14n) / 10000;
+    $('statBurn').textContent = fmtNum(burned, 2);
+  }catch(e){ console.warn('burn fetch failed', e); $('statBurn').textContent = '—'; }
+}
+
+// HOWLING NOW · eth_getLogs on MONWOLF pair (V2 Swap event)
+const SWAP_TOPIC = '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822';
+async function fetchSwaps(){
+  try{
+    const latest = parseInt(await rpc('eth_blockNumber', []), 16);
+    const fromBlock = '0x' + Math.max(0, latest - 5000).toString(16);
+    const logs = await rpc('eth_getLogs', [{
+      address: MONWOLF_PAIR, topics: [SWAP_TOPIC],
+      fromBlock, toBlock: 'latest',
+    }]);
+    if (!logs || !logs.length) return { swaps: [], latest };
+    const parsed = logs.map(log => {
+      const d = log.data.slice(2);
+      const amt0In  = BigInt('0x' + d.slice(0,   64));
+      const amt1In  = BigInt('0x' + d.slice(64,  128));
+      const amt0Out = BigInt('0x' + d.slice(128, 192));
+      const amt1Out = BigInt('0x' + d.slice(192, 256));
+      // We don't know yet which side is MONWOLF — try heuristic: the side
+      // with the larger token amounts is likely the token (not WMON which
+      // would be smaller numerical amounts at WMON's price level).
+      const isBuyToken0 = amt0Out > 0n && amt1In > 0n;
+      const isBuyToken1 = amt1Out > 0n && amt0In > 0n;
+      let amount = 0n, isBuy = false;
+      if (isBuyToken0){ amount = amt0Out; isBuy = true; }
+      else if (isBuyToken1){ amount = amt1Out; isBuy = true; }
+      const to = log.topics[2] ? '0x' + log.topics[2].slice(26) : '0x0';
+      const human = Number(amount / 10n**14n) / 10000;
+      return { block: parseInt(log.blockNumber, 16), isBuy, amount: human, addr: to };
+    });
+    const buys = parsed.filter(p => p.isBuy && p.amount > 0).sort((a,b) => b.block - a.block).slice(0, 20);
+    return { swaps: buys, latest };
+  }catch(e){
+    console.warn('swap fetch failed', e);
+    return { swaps: [], latest: 0 };
+  }
+}
+
+async function refreshTicker(){
+  const rail = $('tickerRail');
+  const { swaps, latest } = await fetchSwaps();
+  if (!swaps.length){
+    rail.innerHTML = `<div class="ticker-item"><span class="addr">— quiet pack, no recent hunts —</span></div>`;
     return;
   }
-  this.innerHTML = '<span class="spin"></span>CONNECTING…';
-  try{
-    const accs = await window.ethereum.request({method:'eth_requestAccounts'});
+  const renderItem = (s) => {
+    const big = s.amount >= 5_000_000;
+    const ago = Math.floor((latest - s.block) * 0.5);  // ~0.5s blocks on Monad
+    const agoStr = ago < 60 ? ago + 's' : Math.floor(ago/60) + 'm';
+    return `<div class="ticker-item ${big?'big':''}">
+      <span>🐺</span><span class="addr">${shortAddr(s.addr)}</span><span>ate</span>
+      <span class="amt">${fmtNum(s.amount, 1)}</span><span class="tok">$MONWOLF</span>
+      <span class="ago">· ${agoStr} ago</span>
+    </div>`;
+  };
+  const items = swaps.map(renderItem).join('');
+  rail.innerHTML = items + items;
+}
+
+// PACK CARD
+const STATE = { account: null };
+
+async function detectAccount(){
+  if (window.ethereum){
     try{
-      await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId: CHAIN_HEX}]});
-    }catch(e){
-      if (e.code === 4902){
-        await window.ethereum.request({method:'wallet_addEthereumChain', params:[{
-          chainId: CHAIN_HEX, chainName: 'Monad Mainnet',
-          nativeCurrency: {name:'Monad', symbol:'MON', decimals:18},
-          rpcUrls:[RPC], blockExplorerUrls:[EXPLORER],
-        }]});
-      }
+      const accs = await window.ethereum.request({method:'eth_accounts'});
+      if (accs && accs.length) return accs[0];
+    }catch{}
+  }
+  try{
+    const s = localStorage.getItem('mw_session_v1');
+    if (s){ const p = JSON.parse(s); if (p.address) return p.address; }
+    const w = localStorage.getItem('mw_wallet');
+    if (w){ const p = JSON.parse(w); if (p.address) return p.address; }
+  }catch{}
+  return null;
+}
+
+async function connectWallet(){
+  if (window.ethereum){
+    try{
+      const accs = await window.ethereum.request({method:'eth_requestAccounts'});
+      if (accs && accs.length){ STATE.account = accs[0]; return STATE.account; }
+    }catch{ return null; }
+  } else {
+    window.location.href = '/buy.html';
+    return null;
+  }
+}
+
+async function renderPackCard(){
+  if (!STATE.account){
+    $('connectCard').classList.remove('hidden');
+    $('packCard').classList.remove('show');
+    return;
+  }
+  $('connectCard').classList.add('hidden');
+  try{
+    const raw = await tokenBalance(MONWOLF, STATE.account);
+    const balance = Number(raw / 10n**14n) / 10000;
+    const tier = tierFor(balance);
+    $('pcTier').textContent = `${tier.emoji} ${tier.name}`;
+    $('pcBal').textContent  = fmtNum(balance, 2) + ' $MONWOLF';
+    const priceText = $('statPrice').textContent;
+    const pm = priceText.match(/\$([\d.]+)/);
+    if (pm){
+      const price = parseFloat(pm[1]);
+      $('pcUsd').textContent = '≈ $' + (balance * price).toFixed(2);
     }
-    STATE.account = accs[0];
-    STATE.signerType = 'mm';
-    sessionStorage.setItem('mw_wallet', JSON.stringify({address: accs[0]}));
-    enterHub();
-  }catch(e){
-    this.innerHTML = '🦊 CONNECT METAMASK';
-    alert('Connect failed: ' + (e.message || e));
-  }
-};
-
-// ────── DISCONNECT ──────
-$('disconnectBtn').onclick = function(){
-  if (!confirm('Disconnect from this hub? Your wallet stays — you can sign back in anytime.')) return;
-  STATE.account = null;
-  STATE.signerType = null;
-  sessionStorage.removeItem('mw_session_v1');
-  sessionStorage.removeItem('mw_wallet');
-  $('hubContent').classList.add('hidden');
-  $('connectPrompt').classList.remove('hidden');
-};
-
-// ────── COPY ADDR ──────
-$('copyAddr').onclick = function(){
-  navigator.clipboard.writeText(STATE.account).then(()=>{
-    this.textContent = 'COPIED';
-    setTimeout(()=>this.textContent='COPY', 1500);
-  });
-};
-
-// ────── ENTER HUB ──────
-async function enterHub(){
-  $('connectPrompt').classList.add('hidden');
-  $('hubContent').classList.remove('hidden');
-  $('addrFull').textContent = shortAddr(STATE.account);
-  $('explorerLink').href = EXPLORER + '/address/' + STATE.account;
-
-  await loadBalances();
-  loadPackHoldings();
-  loadRecentActivity();
+    $('pcCopy').onclick = () => {
+      navigator.clipboard.writeText(STATE.account).then(() => {
+        $('pcCopy').textContent = 'COPIED ✓';
+        setTimeout(() => $('pcCopy').textContent = 'COPY', 1500);
+      });
+    };
+    $('packCard').classList.add('show');
+  }catch(e){ console.warn('pack card render failed', e); }
 }
 
-// ────── BALANCES ──────
-async function loadBalances(){
-  try{
-    const [mon, wolf, monPrice, wolfPrice] = await Promise.all([
-      nativeBalance(STATE.account),
-      tokenBalance(MONWOLF, STATE.account),
-      fetchPrice('0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A'),  // WMON for MON price
-      fetchPrice(MONWOLF),
-    ]);
-    const monNum  = Number(ethers.formatUnits(mon, 18));
-    const wolfNum = Number(ethers.formatUnits(wolf, 18));
-    $('monBalDisplay').textContent  = fmt(monNum);
-    $('wolfBalDisplay').textContent = fmt(wolfNum);
-    if (monPrice)  $('monUsd').textContent  = '$' + fmt(monNum * monPrice);
-    if (wolfPrice) $('wolfUsd').textContent = '$' + fmt(wolfNum * wolfPrice);
+$('connectCard').addEventListener('click', async () => {
+  const a = await connectWallet();
+  if (a){ STATE.account = a; renderPackCard(); }
+});
+$('packClose').addEventListener('click', () => {
+  $('packCard').classList.remove('show');
+  $('connectCard').classList.remove('hidden');
+});
+$('terrRefresh').addEventListener('click', refreshTerritory);
 
-    // Rank
-    const rank = rankFor(wolfNum);
-    $('rankEmoji').textContent = rank.emoji;
-    $('rankLabel').textContent = rank.name;
-  }catch(e){
-    console.warn('balance load:', e);
-  }
-}
-
-// ────── PACK HOLDINGS (other tokens) ──────
-async function loadPackHoldings(){
-  const grid = $('packGrid');
-  grid.innerHTML = '';
-  let found = 0;
-  const results = await Promise.allSettled(
-    PACK_TOKENS.map(async t => {
-      const bal = await tokenBalance(t.addr, STATE.account);
-      return { tok: t, bal };
-    })
-  );
-  for (const r of results){
-    if (r.status !== 'fulfilled') continue;
-    const { tok, bal } = r.value;
-    const balNum = Number(ethers.formatUnits(bal, 18));
-    if (balNum <= 0) continue;
-    found++;
-    const card = document.createElement('a');
-    card.className = 'bal-card';
-    card.href = '/swap.html?from=' + tok.addr;
-    card.innerHTML =
-      '<div class="bc-h">' +
-        (tok.logo ? '<img src="' + tok.logo + '" alt="">' : '<div style="width:24px;height:24px;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Russo One,sans-serif;font-size:10px;">' + tok.sym[0] + '</div>') +
-        '<div><div class="sym">' + tok.sym + '</div><div class="name">' + tok.name + '</div></div>' +
-      '</div>' +
-      '<div class="bc-bal">' + fmt(balNum) + '</div>' +
-      '<div class="bc-usd">Tap to swap →</div>';
-    grid.appendChild(card);
-  }
-  if (found === 0){
-    grid.innerHTML = '<div style="grid-column:span 2;padding:18px;text-align:center;color:var(--text-3);font-size:12px;border:1px dashed var(--border);border-radius:12px;">No other pack tokens held yet. <a href="/swap.html" style="color:var(--orange);">Buy some on /swap →</a></div>';
-  }
-  $('packMeta').textContent = found + ' token' + (found !== 1 ? 's' : '');
-}
-
-// ────── RECENT ACTIVITY ──────
-// Best-effort: query monadexplorer's API if available; fall back to a simple block scan
-async function loadRecentActivity(){
-  const list = $('txList');
-  list.innerHTML = '<div class="tx-empty">Loading transactions…</div>';
-  try{
-    // monadexplorer.com isn't a public API we control, so use the public RPC
-    // approach: get latest block, scan last N blocks for tx from/to this address.
-    // For a polished UI we'd ideally use a real indexer (Sourcify, Routescan,
-    // or Sentio) — for v1 we surface the last few inbound/outbound MON txs by
-    // scanning blocks. Skipping in favor of explorer deeplink for now.
-    list.innerHTML =
-      '<a class="tx-row" href="' + EXPLORER + '/address/' + STATE.account + '" target="_blank" rel="noopener" style="text-decoration:none;">' +
-        '<div class="ic">🔍</div>' +
-        '<div class="meta">' +
-          '<div class="lbl">VIEW FULL ACTIVITY</div>' +
-          '<div class="sub">Open on Monad Explorer →</div>' +
-        '</div>' +
-        '<div class="val">→</div>' +
-      '</a>';
-  }catch(e){
-    list.innerHTML = '<div class="tx-empty">Couldn\'t load activity. <a href="' + EXPLORER + '/address/' + STATE.account + '" target="_blank" style="color:var(--orange);">View on explorer →</a></div>';
-  }
-}
-
-// ────── BOOT ──────
+// BOOT
 (async function boot(){
-  const ok = await detectSession();
-  if (ok) enterHub();
+  refreshTerritory();
+  refreshBurn();
+  refreshTicker();
+  setInterval(refreshTerritory, 30_000);
+  setInterval(refreshBurn,      60_000);
+  setInterval(refreshTicker,    15_000);
+  const acc = await detectAccount();
+  if (acc){ STATE.account = acc; renderPackCard(); }
 })();
 
 })();
 </script>
-
 </body>
 </html>

@@ -567,6 +567,69 @@ footer{padding:80px 24px 40px;border-top:1px solid var(--border);
 /* ============================================================
    TOAST
    ============================================================ */
+/* ============================================================
+   PULSE · multi-timeframe DexScreener metrics
+   ============================================================ */
+.pulse-wrap{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:24px;}
+.pulse-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:8px;}
+.pulse-updated{font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.18em;color:var(--text-3);text-transform:uppercase;}
+.pulse-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.pulse-col{background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px;position:relative;}
+.pulse-col:hover{border-color:var(--border-hi);}
+.pulse-tf{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.pulse-row{display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;font-size:12px;}
+.pulse-row span{color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:.04em;}
+.pulse-row b{color:var(--text);font-weight:500;font-family:'JetBrains Mono',monospace;}
+.pulse-row b.up{color:var(--green);}
+.pulse-row b.down{color:var(--red);}
+.pulse-v.up{color:var(--green);}
+.pulse-v.down{color:var(--red);}
+.pulse-bar{height:4px;border-radius:99px;overflow:hidden;
+  background:rgba(248,113,113,.18);margin-top:10px;
+  display:flex;}
+.pulse-bar-fill{height:100%;background:var(--green);transition:.4s var(--ease);}
+@media (max-width:780px){
+  .pulse-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* ============================================================
+   CHART + TRADE PILLS
+   ============================================================ */
+.chart-wrap{position:relative;border-radius:var(--r-xl);overflow:hidden;
+  border:1px solid var(--border);background:#0d0420;
+  aspect-ratio:16/10;box-shadow:var(--shadow-3);}
+.chart-frame{width:100%;height:100%;border:0;display:block;background:#0d0420;}
+@media (max-width:640px){.chart-wrap{aspect-ratio:4/5;}}
+
+.trade-pills{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
+.trade-pill{display:flex;align-items:center;gap:14px;
+  padding:16px 18px;border-radius:var(--r);
+  background:var(--surface);border:1px solid var(--border);
+  transition:.2s var(--ease);cursor:pointer;}
+.trade-pill:hover{border-color:var(--border-hi);background:var(--surface-2);
+  transform:translateY(-2px);}
+.trade-pill.primary{border-color:var(--border-gold);
+  background:linear-gradient(135deg,rgba(212,175,55,.06),rgba(139,92,246,.04));}
+.trade-pill.primary:hover{border-color:var(--gold);
+  box-shadow:0 14px 30px -10px rgba(212,175,55,.4);}
+.trade-pill .tp-mark{font-size:22px;flex-shrink:0;
+  width:42px;height:42px;border-radius:50%;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border-hi);}
+.trade-pill.primary .tp-mark{background:rgba(212,175,55,.12);
+  border-color:var(--gold);color:var(--gold);}
+.trade-pill .tp-l{font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.18em;color:var(--text-3);text-transform:uppercase;}
+.trade-pill .tp-v{font-family:'Fraunces',serif;font-weight:400;font-size:18px;
+  letter-spacing:-.01em;color:var(--text);margin-top:2px;}
+.trade-pill.primary .tp-v{color:var(--gold);font-style:italic;}
+@media (max-width:780px){.trade-pills{grid-template-columns:1fr;}}
+
 .toast{position:fixed;bottom:32px;left:50%;
   transform:translateX(-50%) translateY(40px);
   background:var(--text);color:var(--bg);
@@ -620,6 +683,7 @@ footer{padding:80px 24px 40px;border-top:1px solid var(--border);
     <div class="nav-actions">
       <a href="/swap.html" class="nav-link hide-sm">Swap</a>
       <a href="/hub.html" class="nav-link hide-sm">Hub</a>
+      <a href="/memes.html" class="nav-link">Memes</a>
       <a href="/arcade.html" class="nav-link hide-sm">Arcade</a>
       <span class="wallet-chip" id="walletChip">
         <span class="dot"></span>
@@ -708,6 +772,89 @@ footer{padding:80px 24px 40px;border-top:1px solid var(--border);
         <div class="v" id="sLiq">$—</div>
         <div class="d" id="sLiqMon">— MON</div>
       </div>
+    </div>
+
+    <!-- Multi-timeframe pulse -->
+    <div class="pulse-wrap reveal" style="margin-top:18px;">
+      <div class="pulse-head">
+        <span class="eyebrow">// The pulse · live from DexScreener</span>
+        <span class="pulse-updated" id="pulseUpdated">— · auto-refresh 20s</span>
+      </div>
+      <div class="pulse-grid">
+        <div class="pulse-col">
+          <div class="pulse-tf">5 min</div>
+          <div class="pulse-row"><span>Δ</span><b class="pulse-v" id="p_m5_delta">—</b></div>
+          <div class="pulse-row"><span>Vol</span><b id="p_m5_vol">—</b></div>
+          <div class="pulse-row"><span>Buys</span><b class="up" id="p_m5_buys">—</b></div>
+          <div class="pulse-row"><span>Sells</span><b class="down" id="p_m5_sells">—</b></div>
+          <div class="pulse-bar"><div class="pulse-bar-fill" id="p_m5_bar"></div></div>
+        </div>
+        <div class="pulse-col">
+          <div class="pulse-tf">1 hr</div>
+          <div class="pulse-row"><span>Δ</span><b class="pulse-v" id="p_h1_delta">—</b></div>
+          <div class="pulse-row"><span>Vol</span><b id="p_h1_vol">—</b></div>
+          <div class="pulse-row"><span>Buys</span><b class="up" id="p_h1_buys">—</b></div>
+          <div class="pulse-row"><span>Sells</span><b class="down" id="p_h1_sells">—</b></div>
+          <div class="pulse-bar"><div class="pulse-bar-fill" id="p_h1_bar"></div></div>
+        </div>
+        <div class="pulse-col">
+          <div class="pulse-tf">6 hr</div>
+          <div class="pulse-row"><span>Δ</span><b class="pulse-v" id="p_h6_delta">—</b></div>
+          <div class="pulse-row"><span>Vol</span><b id="p_h6_vol">—</b></div>
+          <div class="pulse-row"><span>Buys</span><b class="up" id="p_h6_buys">—</b></div>
+          <div class="pulse-row"><span>Sells</span><b class="down" id="p_h6_sells">—</b></div>
+          <div class="pulse-bar"><div class="pulse-bar-fill" id="p_h6_bar"></div></div>
+        </div>
+        <div class="pulse-col">
+          <div class="pulse-tf">24 hr</div>
+          <div class="pulse-row"><span>Δ</span><b class="pulse-v" id="p_h24_delta">—</b></div>
+          <div class="pulse-row"><span>Vol</span><b id="p_h24_vol">—</b></div>
+          <div class="pulse-row"><span>Buys</span><b class="up" id="p_h24_buys">—</b></div>
+          <div class="pulse-row"><span>Sells</span><b class="down" id="p_h24_sells">—</b></div>
+          <div class="pulse-bar"><div class="pulse-bar-fill" id="p_h24_bar"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEXSCREENER CHART + NAD.FUN -->
+<section class="section compact" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">// Live · Chart · Bonded on nad.fun</span>
+      <h2 class="display h1">The <em>chart.</em></h2>
+      <p>Embedded straight from DexScreener · routed via nad.fun · Monad's first launchpad.</p>
+    </div>
+    <div class="chart-wrap reveal">
+      <iframe class="chart-frame"
+        src="https://dexscreener.com/monad/0x97Dc05Af02cB8F55bfF839AC5F849bdc9ADd7116?embed=1&theme=dark&info=0&trades=0"
+        title="MONWOLF chart · DexScreener"
+        loading="lazy"
+        allowfullscreen></iframe>
+    </div>
+    <div class="trade-pills reveal">
+      <a class="trade-pill primary" href="https://nad.fun/tokens/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">
+        <span class="tp-mark">⬥</span>
+        <div>
+          <div class="tp-l">Buy on the launchpad</div>
+          <div class="tp-v">nad.fun →</div>
+        </div>
+      </a>
+      <a class="trade-pill" href="https://dexscreener.com/monad/0x97Dc05Af02cB8F55bfF839AC5F849bdc9ADd7116" target="_blank" rel="noopener">
+        <span class="tp-mark">📊</span>
+        <div>
+          <div class="tp-l">Live chart + trades</div>
+          <div class="tp-v">DexScreener →</div>
+        </div>
+      </a>
+      <a class="trade-pill" href="https://monadexplorer.com/token/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">
+        <span class="tp-mark">🔍</span>
+        <div>
+          <div class="tp-l">On-chain</div>
+          <div class="tp-v">Monad Explorer →</div>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -1195,6 +1342,39 @@ async function loadDexscreener(){
     $('sTxns').textContent = txns.toLocaleString() + ' txns';
     $('sLiq').textContent  = fmtUsd(liqUsd);
     $('sLiqMon').textContent = fmt(liqMon) + ' MON';
+
+    // ── Multi-timeframe pulse ──
+    const updatePulse = (tf) => {
+      const ch  = parseFloat(pair.priceChange?.[tf] || 0);
+      const vol = parseFloat(pair.volume?.[tf] || 0);
+      const buys  = parseInt(pair.txns?.[tf]?.buys || 0);
+      const sells = parseInt(pair.txns?.[tf]?.sells || 0);
+      const total = buys + sells;
+      const arrow = ch > 0 ? '▲ ' : ch < 0 ? '▼ ' : '';
+      const ud    = ch > 0 ? 'up' : ch < 0 ? 'down' : '';
+      const dEl = $('p_' + tf + '_delta');
+      if (dEl){
+        dEl.textContent = total === 0 && vol === 0 && ch === 0 ? '—' : (arrow + Math.abs(ch).toFixed(2) + '%');
+        dEl.className = 'pulse-v ' + ud;
+      }
+      const vEl = $('p_' + tf + '_vol'); if (vEl) vEl.textContent = vol > 0 ? fmtUsd(vol) : '—';
+      const bEl = $('p_' + tf + '_buys'); if (bEl) bEl.textContent = buys;
+      const sEl = $('p_' + tf + '_sells'); if (sEl) sEl.textContent = sells;
+      const barEl = $('p_' + tf + '_bar');
+      if (barEl){
+        const ratio = total > 0 ? (buys / total) * 100 : 50;
+        barEl.style.width = ratio + '%';
+      }
+    };
+    updatePulse('m5');
+    updatePulse('h1');
+    updatePulse('h6');
+    updatePulse('h24');
+    const updEl = $('pulseUpdated');
+    if (updEl){
+      const t = new Date().toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+      updEl.textContent = 'updated ' + t + ' · auto-refresh 20s';
+    }
   }catch(e){ console.warn('dex:', e); }
 }
 loadDexscreener();

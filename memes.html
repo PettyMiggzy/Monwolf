@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0612">
+<title>The Meme Wall · MonWolf</title>
+<meta name="description" content="Pack memes. Pack-uploaded. Pack-curated. Drop yours into the wall.">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0612; --bg-2:#110826;
+  --surface:rgba(255,255,255,0.025);
+  --surface-2:rgba(255,255,255,0.045);
+  --border:rgba(255,255,255,0.07);
+  --border-hi:rgba(255,255,255,0.14);
+  --border-gold:rgba(212,175,55,0.32);
+  --text:#fafaf5; --text-2:#a59faf; --text-3:#5e5670;
+  --purple:#8b5cf6; --purple-hi:#a78bfa;
+  --gold:#d4af37; --gold-hi:#e7c46e;
+  --green:#34d399; --red:#f87171;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  overflow-x:hidden;min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+  opacity:.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+::selection{background:var(--gold);color:var(--bg);}
+
+.display{font-family:'Fraunces',Georgia,serif;font-weight:300;font-style:italic;
+  letter-spacing:-0.02em;line-height:.96;
+  font-variation-settings:"opsz" 144,"SOFT" 30;}
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.04em;}
+.h0{font-size:clamp(48px,9vw,108px);}
+.h1{font-size:clamp(32px,5vw,56px);}
+.eyebrow{display:inline-block;font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;letter-spacing:.22em;
+  color:var(--gold);text-transform:uppercase;}
+
+nav{position:sticky;top:0;z-index:80;
+  background:rgba(10,6,18,.7);backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  border-bottom:1px solid var(--border);padding:14px 24px;}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;
+  justify-content:space-between;align-items:center;gap:1rem;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand img{width:32px;height:32px;border-radius:50%;border:1px solid var(--border-hi);}
+.brand .name{font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+  font-size:18px;letter-spacing:-.01em;color:var(--text);}
+.nav-actions{display:flex;align-items:center;gap:6px;}
+.nav-link{font-size:12px;font-weight:500;letter-spacing:.04em;
+  padding:8px 14px;border-radius:99px;color:var(--text-2);transition:.18s var(--ease);}
+.nav-link:hover,.nav-link.active{color:var(--text);background:var(--surface);}
+.nav-cta{padding:10px 18px;border-radius:99px;background:var(--text);color:var(--bg);
+  font-size:12px;font-weight:600;letter-spacing:.02em;transition:.18s var(--ease);}
+.nav-cta:hover{transform:translateY(-1px);}
+.wallet-chip{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;
+  border-radius:99px;background:var(--surface);border:1px solid var(--border-hi);
+  font-size:11px;color:var(--text-2);cursor:pointer;transition:.18s var(--ease);
+  font-family:'JetBrains Mono',monospace;}
+.wallet-chip:hover{border-color:var(--gold);color:var(--text);}
+.wallet-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);}
+.wallet-chip.connected .dot{background:var(--green);box-shadow:0 0 6px var(--green);}
+@media (max-width:720px){
+  .nav-link.hide-sm,.nav-cta.hide-sm{display:none;}
+  .brand .name{display:none;}nav{padding:11px 16px;}
+}
+
+.wrap{position:relative;z-index:3;max-width:1280px;margin:0 auto;padding:0 24px;}
+.section{padding:80px 0;}
+@media (max-width:780px){.section{padding:56px 0;}}
+
+/* === HEAD === */
+.head{text-align:center;margin-bottom:48px;}
+.head .eyebrow{margin-bottom:16px;}
+.head h1{margin-bottom:16px;color:var(--text);}
+.head h1 em{font-style:italic;color:var(--gold);
+  background:linear-gradient(135deg,#e7c46e 0%,#d4af37 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.head p{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(16px,1.8vw,19px);
+  color:var(--text-2);max-width:580px;margin:0 auto;line-height:1.55;}
+.head p em{font-style:italic;color:var(--text);}
+
+/* === UPLOAD CARD === */
+.upload-card{
+  max-width:680px;margin:0 auto 56px;
+  background:linear-gradient(180deg,rgba(212,175,55,.04),rgba(139,92,246,.04));
+  border:1px solid var(--border-gold);border-radius:24px;
+  padding:32px;position:relative;overflow:hidden;
+}
+.upload-card::before{content:'';position:absolute;top:-30%;right:-20%;
+  width:60%;height:160%;background:radial-gradient(circle,rgba(212,175,55,.12),transparent 60%);
+  pointer-events:none;}
+.upload-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative;z-index:2;}
+.upload-head h3{font-family:'Fraunces',serif;font-weight:400;font-size:24px;letter-spacing:-.01em;color:var(--text);}
+.upload-head h3 em{font-style:italic;color:var(--gold);}
+.upload-head .your-pill{font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-2);padding:5px 10px;background:var(--surface);border-radius:99px;border:1px solid var(--border);}
+
+.drop-zone{
+  position:relative;z-index:2;
+  border:2px dashed var(--border-hi);border-radius:18px;
+  padding:36px 24px;text-align:center;cursor:pointer;
+  transition:.2s var(--ease);
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  min-height:180px;justify-content:center;
+}
+.drop-zone:hover,.drop-zone.dragging{border-color:var(--gold);background:rgba(212,175,55,.04);}
+.drop-zone svg{width:36px;height:36px;color:var(--text-2);}
+.drop-zone .dz-main{font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+  font-size:18px;color:var(--text);letter-spacing:-.005em;}
+.drop-zone .dz-sub{font-size:13px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
+.drop-zone input[type=file]{display:none;}
+
+.preview{position:relative;z-index:2;display:none;flex-direction:column;gap:14px;}
+.preview.show{display:flex;}
+.preview img{border-radius:14px;max-height:360px;width:auto;margin:0 auto;
+  border:1px solid var(--border);}
+.preview .caption-input{width:100%;padding:14px 16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:14px;outline:none;
+  transition:.15s var(--ease);}
+.preview .caption-input:focus{border-color:var(--gold);background:var(--surface-2);}
+.preview .caption-input::placeholder{color:var(--text-3);}
+.preview-meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:.04em;}
+.preview-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 22px;border-radius:99px;font-family:'Inter',sans-serif;
+  font-size:13px;font-weight:600;letter-spacing:.02em;cursor:pointer;
+  border:none;transition:.2s var(--ease);}
+.btn-gold{background:var(--gold);color:var(--bg);
+  box-shadow:0 10px 28px -8px rgba(212,175,55,.5);}
+.btn-gold:hover{background:var(--gold-hi);transform:translateY(-1px);}
+.btn-gold:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border-hi);}
+.btn-ghost:hover{background:var(--surface-2);border-color:var(--text);}
+.btn-text{font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
+  color:var(--text-2);letter-spacing:.04em;cursor:pointer;padding:8px 4px;
+  transition:.15s var(--ease);border-bottom:1px solid transparent;}
+.btn-text:hover{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* === GATE (when no wallet) === */
+.gate{max-width:560px;margin:0 auto;text-align:center;
+  background:var(--surface);border:1px solid var(--border-hi);
+  border-radius:24px;padding:44px 32px;}
+.gate .icon{font-size:48px;margin-bottom:20px;}
+.gate h3{font-family:'Fraunces',serif;font-weight:400;font-style:italic;
+  font-size:28px;letter-spacing:-.01em;color:var(--text);margin-bottom:12px;}
+.gate p{color:var(--text-2);font-size:15px;line-height:1.6;margin-bottom:24px;}
+.gate p em{font-style:italic;color:var(--text);}
+.gate-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* === STATUS === */
+.status-bar{max-width:680px;margin:0 auto 24px;padding:12px 18px;
+  border-radius:12px;font-size:13px;display:none;text-align:center;}
+.status-bar.show{display:block;}
+.status-bar.info{background:rgba(139,92,246,.1);border:1px solid var(--purple);color:var(--purple-hi);}
+.status-bar.success{background:rgba(52,211,153,.08);border:1px solid var(--green);color:var(--green);}
+.status-bar.error{background:rgba(248,113,113,.08);border:1px solid var(--red);color:var(--red);}
+
+/* === GALLERY === */
+.gallery-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.gallery-head h2{font-family:'Fraunces',serif;font-weight:400;font-style:italic;
+  font-size:clamp(22px,3vw,30px);letter-spacing:-.01em;color:var(--text);}
+.gallery-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);letter-spacing:.04em;}
+
+.gallery-grid{
+  columns:3;column-gap:20px;
+}
+@media (max-width:900px){.gallery-grid{columns:2;column-gap:14px;}}
+@media (max-width:520px){.gallery-grid{columns:1;}}
+
+.meme-card{
+  break-inside:avoid;margin-bottom:20px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+  transition:.25s var(--ease);position:relative;
+}
+.meme-card:hover{border-color:var(--border-hi);transform:translateY(-3px);
+  box-shadow:0 24px 60px -16px rgba(0,0,0,.5);}
+.meme-card .pic{position:relative;background:#000;}
+.meme-card .pic img{width:100%;height:auto;display:block;}
+.meme-card .meta{padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+.meme-card .caption{font-size:14px;color:var(--text);line-height:1.5;
+  font-family:'Inter',sans-serif;}
+.meme-card .caption:empty{display:none;}
+.meme-card .author-row{display:flex;justify-content:space-between;align-items:center;}
+.meme-card .author{font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-3);letter-spacing:.04em;}
+.meme-card .author .gold{color:var(--gold);}
+.meme-card .ago{font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--text-3);letter-spacing:.06em;}
+
+.gallery-empty{text-align:center;padding:60px 20px;color:var(--text-3);
+  font-family:'Fraunces',serif;font-style:italic;font-size:18px;}
+.gallery-loading{text-align:center;padding:60px 20px;color:var(--text-3);
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;}
+
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;
+  border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;
+  margin-right:8px;vertical-align:-2px;}
+
+/* === TOAST === */
+.toast{position:fixed;bottom:32px;left:50%;
+  transform:translateX(-50%) translateY(40px);
+  background:var(--text);color:var(--bg);padding:12px 20px;border-radius:99px;
+  font-size:13px;font-weight:500;letter-spacing:.01em;opacity:0;pointer-events:none;
+  transition:.3s var(--ease);z-index:200;max-width:340px;text-align:center;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.err{background:#fee;color:#831;}
+
+footer{padding:60px 24px 30px;border-top:1px solid var(--border);
+  background:var(--bg);margin-top:60px;position:relative;z-index:3;
+  text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);}
+footer a{color:var(--text-2);}footer a:hover{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="brand"><img src="logo.png" alt=""><span class="name">MonWolf</span></a>
+    <div class="nav-actions">
+      <a href="/swap.html" class="nav-link hide-sm">Swap</a>
+      <a href="/hub.html" class="nav-link hide-sm">Hub</a>
+      <a href="/memes.html" class="nav-link active">Memes</a>
+      <a href="/arcade.html" class="nav-link hide-sm">Arcade</a>
+      <span class="wallet-chip" id="walletChip">
+        <span class="dot"></span>
+        <span id="walletText">Connect</span>
+      </span>
+      <a href="/buy.html" class="nav-cta">Buy →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="section">
+    <div class="head">
+      <span class="eyebrow">// The Pack Curates · Pack Posts</span>
+      <h1 class="display h0">The Meme <em>Wall.</em></h1>
+      <p>Pack-uploaded. Pack-curated. The visual record of the rise. <em>Drop yours into the wall.</em></p>
+    </div>
+
+    <div class="status-bar" id="statusBar"></div>
+
+    <!-- Gate: shown if not signed in -->
+    <div class="gate" id="gate">
+      <div class="icon">🐺</div>
+      <h3>Sign in to <em>post.</em></h3>
+      <p>Your wallet is your identity. Create a Pack Wallet in 60 seconds — email + password, no crypto experience needed — and your address signs everything you post.</p>
+      <div class="gate-actions">
+        <a href="/buy.html" class="btn btn-gold">Create a Pack Wallet</a>
+        <button class="btn btn-ghost" id="connectMMBtn">Connect MetaMask</button>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--text-3);">
+        Anyone can <em>view</em> the wall — sign-in is only required to post.
+      </div>
+    </div>
+
+    <!-- Upload card (shown only when signed in) -->
+    <div class="upload-card" id="uploadCard" style="display:none;">
+      <div class="upload-head">
+        <h3>Drop your <em>meme.</em></h3>
+        <span class="your-pill" id="yourPill">—</span>
+      </div>
+
+      <label class="drop-zone" id="dropZone">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <span class="dz-main">Tap to pick · or drag &amp; drop</span>
+        <span class="dz-sub">JPG · PNG · GIF · WEBP · MAX 5 MB</span>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/gif,image/webp">
+      </label>
+
+      <div class="preview" id="preview">
+        <img id="previewImg" alt="">
+        <input type="text" class="caption-input" id="captionInput" placeholder="Caption (optional, 140 chars max)" maxlength="140">
+        <div class="preview-meta">
+          <span id="fileName">—</span>
+          <span id="fileSize">—</span>
+        </div>
+        <div class="preview-actions">
+          <button class="btn btn-ghost" id="cancelBtn">Cancel</button>
+          <button class="btn btn-gold" id="submitBtn">Post to the wall →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="gallery-head">
+      <h2>The wall</h2>
+      <span class="gallery-meta" id="galleryMeta">— LOADING —</span>
+    </div>
+    <div class="gallery-grid" id="gallery">
+      <div class="gallery-loading">Loading the wall…</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <a href="/">monwolf.fun</a> · <a href="/buy.html">buy</a> · <a href="/swap.html">swap</a> · <a href="/hub.html">hub</a> · <a href="/arcade.html">arcade</a>
+  <div style="margin-top:10px;font-family:'Fraunces',serif;font-style:italic;color:var(--text-2);">The future is ours.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+const SUPABASE_URL  = 'https://cuqhqcmrgpdjlhyqztnc.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1cWhxY21yZ3BkamxoeXF6dG5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjQ4NDAsImV4cCI6MjA5MjgwMDg0MH0.bsmuC_onaPutZmYZWTn9p1DvngKIA7Xx4J3YRajbf-8';
+const STORAGE_BUCKET = 'monwolf-memes';
+const TABLE = 'monwolf_memes';
+const MAX_BYTES = 5 * 1024 * 1024;
+const CHAIN_HEX = '0x8f';
+const RPC = 'https://rpc.monad.xyz';
+
+const $ = id => document.getElementById(id);
+
+// ────── TOAST ──────
+function toast(msg, isErr){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.toggle('err', !!isErr);
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+function status(kind, msg){
+  const el = $('statusBar');
+  if (!msg){ el.classList.remove('show'); el.innerHTML = ''; return; }
+  el.classList.remove('info','success','error');
+  el.classList.add('show', kind);
+  el.innerHTML = msg;
+}
+
+// ────── WALLET SESSION ──────
+let walletAddress = null;
+
+function detectSession(){
+  // Try local wallet (from /buy)
+  try{
+    const s = sessionStorage.getItem('mw_session_v1');
+    if (s){
+      const obj = JSON.parse(s);
+      if (obj && obj.address) return obj.address;
+    }
+  }catch{}
+  // Try MetaMask session
+  try{
+    const w = sessionStorage.getItem('mw_wallet');
+    if (w){
+      const obj = JSON.parse(w);
+      if (obj && obj.address) return obj.address;
+    }
+  }catch{}
+  // Live MetaMask
+  if (window.ethereum && window.ethereum.selectedAddress){
+    return window.ethereum.selectedAddress;
+  }
+  return null;
+}
+
+function shortAddr(a){ return a ? a.slice(0,6) + '…' + a.slice(-4) : ''; }
+
+function applySession(addr){
+  walletAddress = addr;
+  if (addr){
+    $('gate').style.display = 'none';
+    $('uploadCard').style.display = 'block';
+    $('yourPill').textContent = shortAddr(addr);
+    $('walletChip').classList.add('connected');
+    $('walletText').textContent = shortAddr(addr);
+  } else {
+    $('gate').style.display = 'block';
+    $('uploadCard').style.display = 'none';
+    $('walletChip').classList.remove('connected');
+    $('walletText').textContent = 'Connect';
+  }
+}
+
+$('connectMMBtn').onclick = async function(){
+  if (!window.ethereum){
+    return toast('No wallet detected — tap "Create a Pack Wallet" instead.', true);
+  }
+  this.innerHTML = '<span class="spin"></span>CONNECTING…';
+  try{
+    const accs = await window.ethereum.request({method:'eth_requestAccounts'});
+    try{ await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId: CHAIN_HEX}]}); }
+    catch(e){
+      if (e.code === 4902){
+        await window.ethereum.request({method:'wallet_addEthereumChain', params:[{
+          chainId: CHAIN_HEX, chainName: 'Monad Mainnet',
+          nativeCurrency: {name:'Monad', symbol:'MON', decimals:18},
+          rpcUrls:[RPC], blockExplorerUrls:['https://monadexplorer.com'],
+        }]});
+      }
+    }
+    const addr = accs[0];
+    sessionStorage.setItem('mw_wallet', JSON.stringify({address: addr}));
+    applySession(addr);
+    toast('Connected · ' + shortAddr(addr));
+  }catch(e){
+    toast('Connect failed: ' + (e.message || e), true);
+    this.innerHTML = 'Connect MetaMask';
+  }
+};
+
+$('walletChip').onclick = () => {
+  if (walletAddress){
+    // Already connected — offer to disconnect (just clear session)
+    if (confirm('Sign out of the Meme Wall?')){
+      sessionStorage.removeItem('mw_wallet');
+      sessionStorage.removeItem('mw_session_v1');
+      applySession(null);
+      toast('Signed out');
+    }
+  } else {
+    $('connectMMBtn').click();
+  }
+};
+
+// ────── UPLOAD ──────
+let selectedFile = null;
+
+$('fileInput').addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+const dz = $('dropZone');
+['dragenter','dragover'].forEach(ev => {
+  dz.addEventListener(ev, (e) => { e.preventDefault(); e.stopPropagation(); dz.classList.add('dragging'); });
+});
+['dragleave','drop'].forEach(ev => {
+  dz.addEventListener(ev, (e) => { e.preventDefault(); e.stopPropagation(); dz.classList.remove('dragging'); });
+});
+dz.addEventListener('drop', (e) => {
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file){
+  if (!file.type.match(/^image\/(jpeg|png|gif|webp)$/i)){
+    return toast('Only JPG, PNG, GIF, or WEBP', true);
+  }
+  if (file.size > MAX_BYTES){
+    return toast('Too big — keep it under 5MB', true);
+  }
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    $('previewImg').src = e.target.result;
+    $('preview').classList.add('show');
+    $('dropZone').style.display = 'none';
+    $('fileName').textContent = file.name.length > 32 ? file.name.slice(0, 32) + '…' : file.name;
+    $('fileSize').textContent = (file.size / 1024).toFixed(0) + ' KB';
+  };
+  reader.readAsDataURL(file);
+}
+
+$('cancelBtn').onclick = () => {
+  selectedFile = null;
+  $('preview').classList.remove('show');
+  $('dropZone').style.display = '';
+  $('fileInput').value = '';
+  $('captionInput').value = '';
+};
+
+$('submitBtn').onclick = async function(){
+  if (!selectedFile) return toast('Pick an image first', true);
+  if (!walletAddress) return toast('Sign in first', true);
+
+  this.innerHTML = '<span class="spin"></span>UPLOADING…';
+  this.disabled = true;
+  status('info', '<span class="spin"></span>Uploading to the pack vault…');
+
+  try{
+    // 1. Upload to storage
+    const ext = selectedFile.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+    const fname = crypto.randomUUID() + '.' + ext;
+    const storageUrl = `${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${fname}`;
+    const upR = await fetch(storageUrl, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
+        'Content-Type': selectedFile.type,
+        'x-upsert': 'false',
+      },
+      body: selectedFile,
+    });
+    if (!upR.ok){
+      const text = await upR.text();
+      throw new Error('Upload failed: ' + text.slice(0, 200));
+    }
+
+    // 2. Public URL
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${fname}`;
+
+    // 3. Insert row
+    const insR = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation',
+      },
+      body: JSON.stringify({
+        wallet_address: walletAddress.toLowerCase(),
+        image_url: publicUrl,
+        caption: ($('captionInput').value || '').trim().slice(0, 140),
+      }),
+    });
+    if (!insR.ok){
+      const text = await insR.text();
+      throw new Error('Database write failed: ' + text.slice(0, 200));
+    }
+
+    status('success', '✓ Posted to the wall.');
+    setTimeout(() => status(), 4000);
+    $('cancelBtn').click();
+    loadGallery();
+    toast('Posted to the wall');
+  }catch(e){
+    console.error(e);
+    const msg = (e.message || String(e)).slice(0, 240);
+    // Detect common Supabase config errors and give actionable guidance
+    if (/bucket/i.test(msg) && /not\s*found/i.test(msg)){
+      status('error', 'Supabase bucket "monwolf-memes" isn\'t set up yet. <a href="/supabase-memes-migration.sql" target="_blank">View setup SQL →</a>');
+    } else if (/table/i.test(msg) && /not\s*found/i.test(msg)){
+      status('error', 'Supabase table "monwolf_memes" isn\'t set up yet. <a href="/supabase-memes-migration.sql" target="_blank">View setup SQL →</a>');
+    } else if (/row.level.security|RLS/i.test(msg)){
+      status('error', 'Supabase RLS is blocking the upload. <a href="/supabase-memes-migration.sql" target="_blank">View setup SQL →</a>');
+    } else {
+      status('error', msg);
+    }
+    toast('Upload failed', true);
+  }finally{
+    this.innerHTML = 'Post to the wall →';
+    this.disabled = false;
+  }
+};
+
+// ────── GALLERY ──────
+function fmtAgo(ts){
+  const now = Date.now();
+  const t = new Date(ts).getTime();
+  const sec = Math.max(0, (now - t) / 1000);
+  if (sec < 60) return Math.floor(sec) + 's';
+  if (sec < 3600) return Math.floor(sec/60) + 'm';
+  if (sec < 86400) return Math.floor(sec/3600) + 'h';
+  if (sec < 604800) return Math.floor(sec/86400) + 'd';
+  return new Date(ts).toLocaleDateString();
+}
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+
+async function loadGallery(){
+  const el = $('gallery');
+  el.innerHTML = '<div class="gallery-loading">Loading the wall…</div>';
+  try{
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?select=*&order=created_at.desc&limit=200`, {
+      headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON },
+    });
+    if (!r.ok){
+      const text = await r.text();
+      if (/relation.*does not exist|Could not find the table/i.test(text)){
+        el.innerHTML =
+          '<div class="gallery-empty">' +
+            'The wall isn\'t set up yet.<br>' +
+            '<a href="/supabase-memes-migration.sql" target="_blank" style="color:var(--gold);">Run the Supabase migration →</a>' +
+          '</div>';
+        $('galleryMeta').textContent = '— SETUP REQUIRED —';
+        return;
+      }
+      throw new Error(text);
+    }
+    const memes = await r.json();
+    $('galleryMeta').textContent = '— ' + memes.length + ' MEMES —';
+    if (!memes.length){
+      el.innerHTML = '<div class="gallery-empty">No memes yet. <span style="color:var(--gold);">Be the first wolf to drop one.</span></div>';
+      return;
+    }
+    el.innerHTML = memes.map(m => `
+      <div class="meme-card">
+        <div class="pic"><img src="${escapeHtml(m.image_url)}" alt="" loading="lazy" onerror="this.parentNode.parentNode.style.display='none'"></div>
+        <div class="meta">
+          ${m.caption ? `<div class="caption">${escapeHtml(m.caption)}</div>` : ''}
+          <div class="author-row">
+            <span class="author">— by <span class="gold">${shortAddr(m.wallet_address)}</span></span>
+            <span class="ago">${fmtAgo(m.created_at)}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }catch(e){
+    console.error(e);
+    el.innerHTML = '<div class="gallery-empty">Couldn\'t load the wall.<br><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--text-3);">' + escapeHtml((e.message||'').slice(0,200)) + '</span></div>';
+    $('galleryMeta').textContent = '— ERROR —';
+  }
+}
+
+// ────── BOOT ──────
+applySession(detectSession());
+loadGallery();
+
+})();
+</script>
+
+</body>
+</html>

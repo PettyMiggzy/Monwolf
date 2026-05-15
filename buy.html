@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BUY $MONWOLF — Join The Pack</title>
+<meta name="description" content="Buy $MONWOLF in 60 seconds. No wallet required. Built for the pack. Powered by Monorail.">
+<meta name="theme-color" content="#a855f7">
+
+<meta property="og:title" content="BUY $MONWOLF — Join The Pack">
+<meta property="og:description" content="Buy $MONWOLF in 60 seconds. No wallet required. We create one for you.">
+<meta property="og:image" content="/logo.png">
+
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#08000f;
+  --bg-2:#100722;
+  --panel:#160a26;
+  --panel-2:#1c0e30;
+  --border:#3a1f5e;
+  --border-2:#4a2a73;
+  --text:#fff;
+  --text-2:#c8b6e6;
+  --text-3:#7e6d96;
+  --purple:#a855f7;
+  --purple-2:#7c3aed;
+  --pink:#ec4899;
+  --orange:#ff8a3d;
+  --gold:#f5c242;
+  --green:#22c55e;
+  --red:#ef4444;
+  --grad:linear-gradient(135deg, #a855f7 0%, #ff8a3d 100%);
+  --grad-text:linear-gradient(135deg, #ff8a3d 0%, #a855f7 100%);
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  min-height:100vh;
+  line-height:1.5;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(168,85,247,.15), transparent 70%),
+    radial-gradient(ellipse 50% 30% at 80% 100%, rgba(255,138,61,.1), transparent 70%);
+}
+a{color:inherit;text-decoration:none;}
+
+/* === NAV === */
+nav{
+  position:sticky;top:0;left:0;right:0;
+  background:rgba(8,0,15,.78);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  z-index:80;padding:.85rem 1rem;
+}
+.nav-inner{max-width:560px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+.logo{display:flex;align-items:center;gap:.55rem;}
+.logo img{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--purple);}
+.logo .name{font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:2px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;
+  color:var(--text-2);padding:8px 12px;border:1px solid var(--border);border-radius:8px;}
+.back-link:hover{border-color:var(--purple);color:#fff;}
+
+/* === LAYOUT === */
+.wrap{position:relative;z-index:2;max-width:560px;margin:0 auto;padding:24px 18px 80px;}
+
+/* === HERO === */
+.hero{text-align:center;margin:8px 0 28px;}
+.hero-eyebrow{display:inline-block;padding:6px 12px;border-radius:99px;
+  background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.4);
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--purple);
+  text-transform:uppercase;margin-bottom:14px;}
+.hero h1{font-family:'Russo One',sans-serif;font-size:clamp(28px,7vw,42px);letter-spacing:1px;line-height:1;margin-bottom:10px;}
+.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;}
+.hero p{font-size:14px;color:var(--text-2);max-width:420px;margin:0 auto;}
+
+/* === CARDS === */
+.card{
+  background:linear-gradient(180deg, rgba(28,14,48,.6), rgba(16,7,34,.6));
+  border:1.5px solid var(--border);border-radius:18px;
+  padding:22px 20px;margin-bottom:14px;
+  box-shadow:0 8px 40px -10px rgba(168,85,247,.25);
+}
+.card-h{font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:2px;color:var(--text);
+  margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.card-h .num{display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;background:var(--grad);
+  font-family:'Russo One',sans-serif;font-size:11px;color:#fff;}
+.card-sub{font-size:12px;color:var(--text-3);margin-bottom:14px;}
+
+/* === MODE PICKER === */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.mode-card{
+  background:linear-gradient(180deg, rgba(28,14,48,.55), rgba(16,7,34,.55));
+  border:1.5px solid var(--border);border-radius:14px;
+  padding:16px 14px;text-align:center;cursor:pointer;transition:.18s;
+  position:relative;overflow:hidden;
+}
+.mode-card:hover{border-color:var(--purple);transform:translateY(-2px);
+  box-shadow:0 12px 32px -8px rgba(168,85,247,.4);}
+.mode-card.active{border-color:var(--orange);background:linear-gradient(180deg, rgba(255,138,61,.12), rgba(168,85,247,.08));}
+.mode-card.active::before{content:'';position:absolute;top:8px;right:8px;width:8px;height:8px;
+  border-radius:50%;background:var(--orange);box-shadow:0 0 10px var(--orange);}
+.mode-emoji{font-size:28px;margin-bottom:6px;display:block;}
+.mode-title{font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:1.2px;color:#fff;margin-bottom:2px;}
+.mode-sub{font-size:10px;color:var(--text-3);line-height:1.4;}
+
+/* === FORM === */
+.form-group{margin-bottom:14px;}
+.label{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  color:var(--text-3);text-transform:uppercase;margin-bottom:6px;}
+input[type=text],input[type=email],input[type=password],input[type=number]{
+  width:100%;padding:14px;background:rgba(8,4,24,.6);border:1.5px solid var(--border);
+  border-radius:10px;color:#fff;font-family:'Inter',sans-serif;font-size:15px;outline:none;
+  transition:border .15s;
+}
+input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(168,85,247,.18);}
+input::placeholder{color:#574069;}
+
+.amount-input{font-size:28px;font-weight:700;font-family:'Russo One',sans-serif;}
+
+.help{font-size:11px;color:var(--text-3);margin-top:4px;line-height:1.5;}
+
+/* === BUTTONS === */
+.btn{
+  display:flex;align-items:center;justify-content:center;width:100%;
+  padding:16px;border:none;border-radius:12px;
+  font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:2px;
+  cursor:pointer;transition:.15s;text-transform:uppercase;
+  text-align:center;
+}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 8px 24px -4px rgba(168,85,247,.5);}
+.btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 32px -4px rgba(168,85,247,.6);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;filter:grayscale(.3);}
+.btn-ghost{background:transparent;border:1.5px solid var(--border-2);color:#fff;}
+.btn-ghost:hover{border-color:var(--purple);}
+.btn-sm{padding:10px 14px;font-size:11px;letter-spacing:1.5px;width:auto;}
+.btn-row{display:flex;gap:8px;}
+
+/* === SEED PHRASE === */
+.seed-box{
+  background:rgba(245,194,66,.06);border:1.5px solid rgba(245,194,66,.4);border-radius:12px;
+  padding:14px;font-family:'JetBrains Mono',monospace;font-size:13px;
+  line-height:1.9;color:#fff;letter-spacing:.5px;
+  filter:blur(10px);transition:filter .2s;cursor:pointer;user-select:none;
+}
+.seed-box.revealed{filter:none;user-select:text;cursor:auto;}
+.seed-box::after{content:'TAP TO REVEAL';position:absolute;}
+.seed-wrap{position:relative;}
+.seed-wrap::before{
+  content:'TAP TO REVEAL · DO NOT SCREENSHOT IN PUBLIC';
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--gold);
+  text-align:center;padding:0 20px;pointer-events:none;z-index:2;
+  transition:opacity .2s;
+}
+.seed-wrap.revealed::before{opacity:0;}
+
+.seed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.seed-word{
+  background:rgba(8,4,24,.5);border:1px solid var(--border);border-radius:8px;
+  padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:13px;
+}
+.seed-word .n{color:var(--text-3);font-size:10px;margin-right:6px;}
+
+.warn-box{
+  background:rgba(245,194,66,.08);border:1.5px solid rgba(245,194,66,.4);border-radius:10px;
+  padding:12px 14px;font-size:12px;color:var(--gold);margin:14px 0;line-height:1.5;
+}
+.warn-box b{color:#fff;}
+.warn-box ul{margin:8px 0 0 16px;color:var(--text-2);}
+.warn-box li{font-size:11.5px;margin:3px 0;}
+
+.check-row{display:flex;gap:10px;align-items:flex-start;margin:12px 0;padding:10px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;cursor:pointer;}
+.check-row input{margin-top:3px;}
+.check-row label{flex:1;font-size:13px;color:var(--text-2);cursor:pointer;line-height:1.4;}
+
+/* === WALLET INFO PANEL === */
+.wallet-panel{
+  background:linear-gradient(135deg, rgba(168,85,247,.1), rgba(255,138,61,.06));
+  border:1.5px solid var(--purple);border-radius:14px;
+  padding:14px 16px;margin-bottom:14px;
+}
+.wallet-row{display:flex;justify-content:space-between;align-items:center;margin:4px 0;font-size:12px;}
+.wallet-row .l{color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:1px;font-size:10px;text-transform:uppercase;}
+.wallet-row .v{color:#fff;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.wallet-row.bal .v{font-size:16px;font-weight:700;color:var(--orange);}
+
+.addr-row{display:flex;gap:6px;align-items:center;margin-top:8px;}
+.addr-row input{flex:1;font-size:11px;font-family:'JetBrains Mono',monospace;padding:8px 10px;}
+.addr-row button{padding:8px 12px;background:var(--purple);border:none;border-radius:8px;color:#fff;
+  font-family:'Russo One',sans-serif;font-size:10px;letter-spacing:1.5px;cursor:pointer;}
+
+.qr-wrap{display:flex;justify-content:center;margin:14px 0;}
+.qr-wrap canvas, .qr-wrap img{width:180px;height:180px;border-radius:10px;background:#fff;padding:10px;}
+
+/* === SWAP UI === */
+.swap-row{background:rgba(8,4,24,.5);border:1px solid var(--border);border-radius:12px;
+  padding:14px;margin-bottom:6px;}
+.swap-row-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:1px;text-transform:uppercase;}
+.swap-row .bal{color:var(--orange);cursor:pointer;}
+.swap-row-input{display:flex;align-items:center;gap:10px;}
+.swap-row input.amt{flex:1;background:transparent;border:none;outline:none;color:#fff;
+  font-size:26px;font-weight:700;padding:0;width:100%;}
+.tk-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(168,85,247,.1);
+  border:1.5px solid var(--purple);border-radius:10px;flex-shrink:0;}
+.tk-pill img{width:24px;height:24px;border-radius:50%;background:#000;}
+.tk-pill .s{font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:1px;color:#fff;}
+
+.flip-btn{display:flex;align-items:center;justify-content:center;width:40px;height:40px;
+  border-radius:50%;background:rgba(168,85,247,.18);border:1.5px solid var(--purple);
+  color:#fff;font-size:18px;margin:-2px auto;cursor:pointer;transition:.25s;}
+.flip-btn:hover{transform:rotate(180deg);background:rgba(168,85,247,.3);}
+
+.details{margin-top:12px;padding:12px;background:rgba(8,4,24,.4);border:1px solid var(--border);
+  border-radius:10px;font-size:11.5px;}
+.details .drow{display:flex;justify-content:space-between;padding:3px 0;color:var(--text-3);}
+.details .drow b{color:#fff;}
+
+/* === STATUS === */
+.status{margin-top:12px;padding:11px 14px;border-radius:10px;font-size:12px;display:none;line-height:1.5;}
+.status.show{display:block;}
+.status.info{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.4);color:#cfc4ff;}
+.status.success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);color:#86efac;}
+.status.error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.4);color:#fca5a5;}
+.status a{color:inherit;text-decoration:underline;font-weight:600;}
+
+/* === POWERED BY === */
+.powered{display:flex;align-items:center;justify-content:center;gap:12px;margin:18px auto 0;
+  padding:14px 22px;max-width:320px;
+  background:rgba(255,138,61,.06);border:1px solid rgba(255,138,61,.18);border-radius:12px;
+  text-decoration:none;transition:.15s;}
+.powered:hover{border-color:rgba(255,138,61,.4);background:rgba(255,138,61,.1);}
+.powered span{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;
+  color:var(--text-3);text-transform:uppercase;}
+.powered img{height:22px;width:auto;display:block;}
+
+.footer{text-align:center;color:var(--text-3);font-size:11px;margin-top:24px;line-height:1.7;}
+.footer a{color:var(--purple);}
+
+/* === HIDE/SHOW HELPERS === */
+.hidden{display:none !important;}
+
+/* MetaMask icon */
+.mm-icon{width:36px;height:36px;margin:0 auto 6px;display:block;}
+
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;
+  border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;
+  margin-right:8px;vertical-align:-2px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo"><img src="/logo.png" alt=""><span class="name">MONWOLF</span></a>
+    <a href="/" class="back-link">← BACK</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-eyebrow">🐺 JOIN THE PACK · 60 SECONDS</span>
+    <h1>BUY <span class="grad">$MONWOLF</span></h1>
+    <p>No wallet? No crypto? No problem. We'll set you up in under a minute.</p>
+  </div>
+
+  <!-- MODE PICKER (shown when no mode chosen) -->
+  <div id="modePicker">
+    <div class="modes">
+      <div class="mode-card" id="modeNew">
+        <span class="mode-emoji">✨</span>
+        <div class="mode-title">NEW TO CRYPTO</div>
+        <div class="mode-sub">Create a wallet right here. No app, no signup.</div>
+      </div>
+      <div class="mode-card" id="modeWallet">
+        <span class="mode-emoji">🦊</span>
+        <div class="mode-title">HAVE A WALLET</div>
+        <div class="mode-sub">MetaMask, Phantom, Rabby, Trust, etc.</div>
+      </div>
+    </div>
+    <div class="card" id="returningBox">
+      <div class="card-h"><span class="num">↻</span>RETURNING WOLF?</div>
+      <div class="card-sub">Already created a wallet here before? Unlock it.</div>
+      <button id="unlockExisting" class="btn btn-ghost">UNLOCK MY WALLET</button>
+    </div>
+  </div>
+
+  <!-- NEW USER: CREATE WALLET -->
+  <div id="screenCreate" class="hidden">
+    <div class="card">
+      <div class="card-h"><span class="num">1</span>CREATE YOUR PACK WALLET</div>
+      <div class="card-sub">A wallet is your personal account on Monad. We'll generate one in your browser. Anthropic-style: <b>you hold the keys, not us</b>. The MonWolf team can never touch your funds.</div>
+
+      <div class="form-group">
+        <label class="label">EMAIL OR USERNAME</label>
+        <input type="text" id="newEmail" placeholder="alphawolf@pack.com" autocomplete="username">
+        <div class="help">Just an identifier so you can find your wallet later. Not sent anywhere.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="label">PASSWORD</label>
+        <input type="password" id="newPassword" placeholder="At least 8 characters" autocomplete="new-password">
+        <div class="help">Used to encrypt your wallet. If you lose this, you'll need the recovery phrase.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="label">CONFIRM PASSWORD</label>
+        <input type="password" id="newPassword2" placeholder="Type it again" autocomplete="new-password">
+      </div>
+
+      <button id="createWalletBtn" class="btn btn-primary">CREATE WALLET →</button>
+      <div class="status" id="createStatus"></div>
+    </div>
+  </div>
+
+  <!-- NEW USER: BACKUP SEED -->
+  <div id="screenSeed" class="hidden">
+    <div class="card">
+      <div class="card-h"><span class="num">2</span>BACK UP YOUR RECOVERY PHRASE</div>
+      <div class="card-sub">These 12 words ARE your wallet. Write them on paper. Store them safely. Anyone with these words owns the wallet.</div>
+
+      <div class="warn-box">
+        <b>⚠️ Read this before continuing:</b>
+        <ul>
+          <li>If you clear your browser, you'll need this phrase to restore your wallet.</li>
+          <li>MonWolf cannot recover this for you. Ever.</li>
+          <li>Don't screenshot. Don't store in cloud notes. Use paper.</li>
+        </ul>
+      </div>
+
+      <div class="seed-wrap" id="seedWrap">
+        <div class="seed-grid" id="seedGrid"></div>
+      </div>
+
+      <div class="check-row" id="seedConfirmRow">
+        <input type="checkbox" id="seedConfirm">
+        <label for="seedConfirm">I wrote down my 12 words on paper. I understand that losing them means losing my wallet forever.</label>
+      </div>
+
+      <button id="seedContinue" class="btn btn-primary" disabled>CONTINUE →</button>
+    </div>
+  </div>
+
+  <!-- RETURNING USER: UNLOCK -->
+  <div id="screenUnlock" class="hidden">
+    <div class="card">
+      <div class="card-h"><span class="num">↻</span>UNLOCK YOUR WALLET</div>
+      <div class="card-sub">Enter the password you used when you created your wallet.</div>
+
+      <div class="form-group">
+        <label class="label">EMAIL OR USERNAME</label>
+        <input type="text" id="unlockEmail" placeholder="alphawolf@pack.com" autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label class="label">PASSWORD</label>
+        <input type="password" id="unlockPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <button id="unlockBtn" class="btn btn-primary">UNLOCK →</button>
+      <div class="status" id="unlockStatus"></div>
+
+      <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--border);">
+        <div class="label" style="margin-bottom:8px;">DON'T HAVE A WALLET YET?</div>
+        <button id="goToCreate" class="btn btn-ghost">CREATE ONE</button>
+      </div>
+
+      <div style="margin-top:10px;">
+        <button id="restoreSeed" class="btn btn-ghost" style="font-size:11px;padding:10px;">↑ RESTORE FROM SEED PHRASE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESTORE FROM SEED -->
+  <div id="screenRestore" class="hidden">
+    <div class="card">
+      <div class="card-h"><span class="num">↑</span>RESTORE FROM RECOVERY PHRASE</div>
+      <div class="card-sub">Paste your 12 words separated by spaces. Then pick a new password to encrypt it on this device.</div>
+
+      <div class="form-group">
+        <label class="label">12-WORD RECOVERY PHRASE</label>
+        <input type="text" id="restoreSeedInput" placeholder="word1 word2 word3 ... word12" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label class="label">EMAIL OR USERNAME</label>
+        <input type="text" id="restoreEmail" placeholder="alphawolf@pack.com">
+      </div>
+
+      <div class="form-group">
+        <label class="label">NEW PASSWORD</label>
+        <input type="password" id="restorePassword" placeholder="At least 8 characters">
+      </div>
+
+      <button id="restoreBtn" class="btn btn-primary">RESTORE WALLET →</button>
+      <div class="status" id="restoreStatus"></div>
+    </div>
+  </div>
+
+  <!-- MAIN BUY/SELL SCREEN -->
+  <div id="screenMain" class="hidden">
+    <div class="wallet-panel">
+      <div class="wallet-row"><span class="l">▌ Your Pack Wallet</span><span class="v" id="walletLabel">—</span></div>
+      <div class="wallet-row"><span class="l">▌ MON Balance</span><span class="v" id="monBal">— MON</span></div>
+      <div class="wallet-row bal"><span class="l">▌ MONWOLF Balance</span><span class="v" id="wolfBal">— MONWOLF</span></div>
+      <div class="addr-row">
+        <input type="text" id="addrField" readonly>
+        <button id="copyAddr">COPY</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button id="showQrBtn" class="btn btn-sm btn-ghost" style="flex:1;">SHOW QR</button>
+        <button id="walletMenuBtn" class="btn btn-sm btn-ghost" style="flex:1;">⚙ MANAGE</button>
+      </div>
+    </div>
+
+    <div id="qrPanel" class="card hidden">
+      <div class="card-h">RECEIVE MON</div>
+      <div class="card-sub">Send <b>MON</b> from any exchange (Bybit, Gate, Kucoin) or another Monad wallet to this address. Once it lands, you can buy MONWOLF below.</div>
+      <div class="qr-wrap" id="qrWrap"></div>
+      <div class="help" style="text-align:center;">⚠️ ONLY send <b>MON on Monad mainnet</b>. Other chains will be lost.</div>
+    </div>
+
+    <div id="walletMenu" class="card hidden">
+      <div class="card-h">WALLET TOOLS</div>
+      <button id="exportSeedBtn" class="btn btn-ghost" style="margin-bottom:8px;">🔑 EXPORT RECOVERY PHRASE</button>
+      <button id="exportPkBtn" class="btn btn-ghost" style="margin-bottom:8px;">📋 EXPORT PRIVATE KEY</button>
+      <button id="logoutBtn" class="btn btn-ghost" style="margin-bottom:8px;color:var(--red);border-color:var(--red);">LOG OUT</button>
+      <div class="warn-box" style="margin-top:8px;">
+        <b>About this wallet:</b> Your private key is encrypted with your password and stored on this device only. Clearing browser data without backing up the recovery phrase = wallet lost forever.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="num" id="opIcon">🐺</span><span id="opTitle">BUY $MONWOLF</span></div>
+
+      <div class="swap-row">
+        <div class="swap-row-h">
+          <span id="inLabel">YOU PAY</span>
+          <span class="bal" id="balIn">balance: —</span>
+        </div>
+        <div class="swap-row-input">
+          <input type="number" inputmode="decimal" id="amountIn" class="amt" placeholder="0.0" min="0" step="any">
+          <div class="tk-pill" id="inPill">
+            <img id="inLogo" src="" alt="">
+            <span class="s" id="inSym">MON</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="flip-btn" id="flipBtn" title="Flip">↕</button>
+
+      <div class="swap-row">
+        <div class="swap-row-h">
+          <span id="outLabel">YOU RECEIVE</span>
+          <span class="bal" id="balOut">balance: —</span>
+        </div>
+        <div class="swap-row-input">
+          <input type="text" id="amountOut" class="amt" placeholder="0.0" readonly>
+          <div class="tk-pill" id="outPill">
+            <img id="outLogo" src="/logo.png" alt="">
+            <span class="s" id="outSym">MONWOLF</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="details" id="details" style="display:none;">
+        <div class="drow"><span>Rate</span><b id="dRate">—</b></div>
+        <div class="drow"><span>Min received</span><b id="dMin">—</b></div>
+        <div class="drow"><span>Route</span><b id="dRoute">—</b></div>
+        <div class="drow"><span>Slippage</span><b>3%</b></div>
+        <div class="drow"><span>Pack fee (1%)</span><b>→ MonWolf treasury</b></div>
+      </div>
+
+      <button id="actionBtn" class="btn btn-primary" disabled style="margin-top:14px;">ENTER AN AMOUNT</button>
+
+      <div class="status" id="buyStatus"></div>
+    </div>
+
+    <a href="https://monorail.xyz" target="_blank" rel="noopener" class="powered">
+      <span>Powered by</span>
+      <img src="/monorail-3bars.png" alt="Monorail">
+    </a>
+  </div>
+
+  <!-- METAMASK MODE -->
+  <div id="screenMetamask" class="hidden">
+    <div class="card">
+      <div class="card-h"><span class="num">🦊</span>CONNECT YOUR WALLET</div>
+      <div class="card-sub">Connect MetaMask, Phantom, Rabby, or any browser wallet. We'll switch you to Monad mainnet automatically.</div>
+      <button id="mmConnectBtn" class="btn btn-primary">CONNECT WALLET</button>
+      <div class="status" id="mmStatus"></div>
+      <div class="help" style="margin-top:14px;">
+        Don't have one yet? <a href="#" id="switchToCreate" style="color:var(--orange);">Create a Pack Wallet instead →</a> — no install needed.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Built for the pack · <a href="/">monwolf hub</a> · 
+    <a href="https://monadexplorer.com/token/0x8361a59d340466211ad4aB41C09a32e4530a7777" target="_blank" rel="noopener">$MONWOLF on Monad</a>
+    <div style="margin-top:8px;">
+      🐺 <i>The future is ours.</i>
+    </div>
+  </div>
+
+</div>
+
+<!-- ethers.js v6 -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<!-- QR code library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   MONWOLF · BUY FLOW
+   - Self-custodial in-browser wallet (encrypted privkey in localStorage)
+   - OR connect existing wallet (MetaMask etc)
+   - Buy/Sell MONWOLF via Monorail aggregator
+   ════════════════════════════════════════════════════════════ */
+(function(){
+'use strict';
+
+const MONWOLF = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
+const NATIVE  = '0x0000000000000000000000000000000000000000';
+const CHAIN_ID = 143;
+const CHAIN_HEX = '0x8f';
+const RPC = 'https://rpc.monad.xyz';
+const EXPLORER = 'https://monadexplorer.com';
+const MONORAIL_QUOTE = 'https://pathfinder.monorail.xyz/v4/quote';
+const MONORAIL_APP_ID = '1176408161625';
+
+const MON_TOKEN  = { addr: NATIVE,  sym: 'MON',     name: 'Monad',   logo: 'https://monorail-static.fra1.digitaloceanspaces.com/tokens/mon-token.svg', decimals: 18 };
+const WOLF_TOKEN = { addr: MONWOLF, sym: 'MONWOLF', name: 'MonWolf', logo: '/logo.png', decimals: 18 };
+
+const STORE_PREFIX = 'mw_v1_';
+const SESSION_KEY  = 'mw_session_v1';
+
+const $ = id => document.getElementById(id);
+
+// ────── STATE ──────
+const STATE = {
+  mode: null,         // 'new' | 'metamask'
+  account: null,      // address
+  wallet: null,       // ethers.Wallet (only when self-custodial)
+  signerType: null,   // 'local' | 'mm'
+  inTok:  MON_TOKEN,
+  outTok: WOLF_TOKEN,
+  quote: null,
+  quoteSeq: 0,
+};
+
+// ────── RPC ──────
+async function rpcCall(method, params){
+  const r = await fetch(RPC, {
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body: JSON.stringify({jsonrpc:'2.0', id:Date.now(), method, params}),
+  });
+  if (!r.ok) throw new Error('RPC HTTP ' + r.status);
+  const j = await r.json();
+  if (j.error) throw new Error('RPC: ' + j.error.message);
+  return j.result;
+}
+const tokenIface = new ethers.Interface([
+  'function approve(address spender, uint256 amount) returns (bool)',
+  'function allowance(address owner, address spender) view returns (uint256)',
+  'function balanceOf(address account) view returns (uint256)',
+  'function decimals() view returns (uint8)',
+]);
+async function ethCall(to, data){ return rpcCall('eth_call', [{to, data}, 'latest']); }
+async function nativeBalance(owner){ return BigInt(await rpcCall('eth_getBalance', [owner, 'latest'])); }
+async function tokenBalance(token, owner){
+  const data = tokenIface.encodeFunctionData('balanceOf', [owner]);
+  const res = await ethCall(token, data);
+  return tokenIface.decodeFunctionResult('balanceOf', res)[0];
+}
+async function tokenAllowance(token, owner, spender){
+  const data = tokenIface.encodeFunctionData('allowance', [owner, spender]);
+  const res = await ethCall(token, data);
+  return tokenIface.decodeFunctionResult('allowance', res)[0];
+}
+
+// ────── ENCRYPTION (Web Crypto) ──────
+function buf2hex(buf){ return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+function hex2buf(hex){ return new Uint8Array(hex.match(/.{2}/g).map(b=>parseInt(b,16))).buffer; }
+function str2buf(s){ return new TextEncoder().encode(s); }
+function buf2str(b){ return new TextDecoder().decode(b); }
+
+async function deriveKey(password, salt){
+  const baseKey = await crypto.subtle.importKey('raw', str2buf(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' },
+    baseKey,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+async function encryptJSON(password, obj){
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv   = crypto.getRandomValues(new Uint8Array(12));
+  const key  = await deriveKey(password, salt);
+  const ct   = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, str2buf(JSON.stringify(obj)));
+  return { salt: buf2hex(salt), iv: buf2hex(iv), ct: buf2hex(ct) };
+}
+async function decryptJSON(password, packet){
+  const salt = new Uint8Array(hex2buf(packet.salt));
+  const iv   = new Uint8Array(hex2buf(packet.iv));
+  const ct   = hex2buf(packet.ct);
+  const key  = await deriveKey(password, salt);
+  const plain = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, ct);
+  return JSON.parse(buf2str(plain));
+}
+
+// ────── STORAGE ──────
+function userKey(handle){ return STORE_PREFIX + handle.trim().toLowerCase(); }
+function listWallets(){
+  return Object.keys(localStorage)
+    .filter(k => k.startsWith(STORE_PREFIX))
+    .map(k => ({ key: k, handle: k.slice(STORE_PREFIX.length) }));
+}
+function saveWallet(handle, packet, address){
+  const record = { ...packet, address, ts: Date.now(), v: 1 };
+  localStorage.setItem(userKey(handle), JSON.stringify(record));
+}
+function loadWallet(handle){
+  const raw = localStorage.getItem(userKey(handle));
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch(e){ return null; }
+}
+function setSession(handle, address){ sessionStorage.setItem(SESSION_KEY, JSON.stringify({handle, address})); }
+function getSession(){
+  try{ const s = sessionStorage.getItem(SESSION_KEY); return s ? JSON.parse(s) : null; }catch(e){ return null; }
+}
+function clearSession(){ sessionStorage.removeItem(SESSION_KEY); }
+
+// ────── UI HELPERS ──────
+function setStatus(elId, kind, html){
+  const el = $(elId);
+  if (!el) return;
+  el.className = 'status show ' + kind;
+  el.innerHTML = html;
+}
+function clearStatus(elId){ const el = $(elId); if (el){ el.className='status'; el.innerHTML=''; } }
+function fmt(n, dec){
+  if (n == null || isNaN(n)) return '—';
+  const v = Number(n);
+  if (v === 0) return '0';
+  if (v < 0.000001) return v.toExponential(2);
+  if (v < 1) return v.toFixed(dec || 6);
+  if (v < 1000) return v.toFixed(4);
+  return v.toLocaleString('en-US', {maximumFractionDigits: 2});
+}
+function shortAddr(a){ return a ? a.slice(0,6)+'…'+a.slice(-4) : ''; }
+
+function showScreen(id){
+  ['modePicker','screenCreate','screenSeed','screenUnlock','screenRestore','screenMain','screenMetamask']
+    .forEach(s => { const el = $(s); if (el) el.classList.toggle('hidden', s !== id); });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ════════════════════════════════════════════════════════════
+// MODE PICKER
+// ════════════════════════════════════════════════════════════
+$('modeNew').onclick = () => showScreen('screenCreate');
+$('modeWallet').onclick = () => showScreen('screenMetamask');
+$('unlockExisting').onclick = () => showScreen('screenUnlock');
+$('goToCreate').onclick = () => showScreen('screenCreate');
+$('restoreSeed').onclick = () => showScreen('screenRestore');
+$('switchToCreate').onclick = (e) => { e.preventDefault(); showScreen('screenCreate'); };
+
+// Show "unlock my wallet" only if any wallets exist
+function refreshReturningVisibility(){
+  $('returningBox').style.display = listWallets().length ? '' : 'none';
+}
+refreshReturningVisibility();
+
+// ════════════════════════════════════════════════════════════
+// CREATE WALLET FLOW
+// ════════════════════════════════════════════════════════════
+let PENDING_WALLET = null;  // ephemeral during seed-confirm step
+
+$('createWalletBtn').onclick = async function(){
+  clearStatus('createStatus');
+  const email = $('newEmail').value.trim();
+  const pw    = $('newPassword').value;
+  const pw2   = $('newPassword2').value;
+
+  if (!email) return setStatus('createStatus', 'error', 'Pick an email or username — anything memorable.');
+  if (pw.length < 8) return setStatus('createStatus', 'error', 'Password must be at least 8 characters.');
+  if (pw !== pw2) return setStatus('createStatus', 'error', 'Passwords don\'t match.');
+  if (loadWallet(email)) return setStatus('createStatus', 'error',
+    'A wallet already exists for that name on this browser. <a href="#" onclick="document.getElementById(\'unlockExisting\').click();return false;">Unlock it instead</a> or use a different username.');
+
+  this.innerHTML = '<span class="spin"></span>GENERATING WALLET…';
+  this.disabled = true;
+  try{
+    const w = ethers.Wallet.createRandom();
+    const seed = w.mnemonic.phrase;
+    const pk   = w.privateKey;
+    const addr = w.address;
+
+    // Encrypt
+    const packet = await encryptJSON(pw, { privkey: pk, mnemonic: seed });
+    saveWallet(email, packet, addr);
+
+    PENDING_WALLET = { email, password: pw, wallet: w, seed };
+
+    // Show seed phrase screen
+    paintSeed(seed);
+    showScreen('screenSeed');
+    refreshReturningVisibility();
+  }catch(e){
+    console.error(e);
+    setStatus('createStatus', 'error', 'Failed to create wallet: ' + (e.message || e));
+  }finally{
+    this.innerHTML = 'CREATE WALLET →';
+    this.disabled = false;
+  }
+};
+
+function paintSeed(phrase){
+  const words = phrase.split(/\s+/);
+  $('seedGrid').innerHTML = words.map((w,i) =>
+    `<div class="seed-word"><span class="n">${(i+1).toString().padStart(2,'0')}</span>${w}</div>`
+  ).join('');
+}
+$('seedWrap').onclick = function(){
+  this.classList.add('revealed');
+};
+$('seedConfirm').onchange = function(){
+  $('seedContinue').disabled = !this.checked;
+};
+$('seedContinue').onclick = function(){
+  if (!PENDING_WALLET) { showScreen('modePicker'); return; }
+  STATE.wallet = PENDING_WALLET.wallet;
+  STATE.account = PENDING_WALLET.wallet.address;
+  STATE.signerType = 'local';
+  setSession(PENDING_WALLET.email, STATE.account);
+  PENDING_WALLET = null;
+  enterMainScreen();
+};
+
+// ════════════════════════════════════════════════════════════
+// UNLOCK FLOW
+// ════════════════════════════════════════════════════════════
+$('unlockBtn').onclick = async function(){
+  clearStatus('unlockStatus');
+  const email = $('unlockEmail').value.trim();
+  const pw    = $('unlockPassword').value;
+  if (!email || !pw) return setStatus('unlockStatus', 'error', 'Both fields required.');
+  const packet = loadWallet(email);
+  if (!packet) return setStatus('unlockStatus', 'error', 'No wallet found for "' + email + '" on this device.');
+
+  this.innerHTML = '<span class="spin"></span>UNLOCKING…';
+  this.disabled = true;
+  try{
+    const obj = await decryptJSON(pw, packet);
+    const w = new ethers.Wallet(obj.privkey);
+    if (w.address.toLowerCase() !== packet.address.toLowerCase()){
+      throw new Error('Wallet integrity check failed.');
+    }
+    // Attach mnemonic for export
+    w._mnemonic = obj.mnemonic;
+    STATE.wallet = w;
+    STATE.account = w.address;
+    STATE.signerType = 'local';
+    setSession(email, w.address);
+    enterMainScreen();
+  }catch(e){
+    console.error(e);
+    setStatus('unlockStatus', 'error', 'Wrong password. Try again.');
+  }finally{
+    this.innerHTML = 'UNLOCK →';
+    this.disabled = false;
+  }
+};
+
+// ════════════════════════════════════════════════════════════
+// RESTORE FLOW
+// ════════════════════════════════════════════════════════════
+$('restoreBtn').onclick = async function(){
+  clearStatus('restoreStatus');
+  const phrase = $('restoreSeedInput').value.trim().toLowerCase().replace(/\s+/g, ' ');
+  const email  = $('restoreEmail').value.trim();
+  const pw     = $('restorePassword').value;
+  const words  = phrase.split(' ');
+  if (words.length !== 12) return setStatus('restoreStatus', 'error', 'Phrase must be exactly 12 words.');
+  if (!email) return setStatus('restoreStatus', 'error', 'Pick an email or username.');
+  if (pw.length < 8) return setStatus('restoreStatus', 'error', 'Password must be at least 8 characters.');
+
+  this.innerHTML = '<span class="spin"></span>RESTORING…';
+  this.disabled = true;
+  try{
+    const w = ethers.Wallet.fromPhrase(phrase);
+    const packet = await encryptJSON(pw, { privkey: w.privateKey, mnemonic: phrase });
+    saveWallet(email, packet, w.address);
+    w._mnemonic = phrase;
+    STATE.wallet = w;
+    STATE.account = w.address;
+    STATE.signerType = 'local';
+    setSession(email, w.address);
+    enterMainScreen();
+    refreshReturningVisibility();
+  }catch(e){
+    console.error(e);
+    setStatus('restoreStatus', 'error', 'Invalid recovery phrase: ' + (e.message || e));
+  }finally{
+    this.innerHTML = 'RESTORE WALLET →';
+    this.disabled = false;
+  }
+};
+
+// ════════════════════════════════════════════════════════════
+// METAMASK FLOW
+// ════════════════════════════════════════════════════════════
+$('mmConnectBtn').onclick = async function(){
+  clearStatus('mmStatus');
+  if (!window.ethereum){
+    return setStatus('mmStatus', 'error',
+      'No wallet detected. <a href="https://metamask.io/download" target="_blank" rel="noopener">Install MetaMask</a> or use the "New to crypto" option above — we\'ll generate one right here, no install needed.');
+  }
+  this.innerHTML = '<span class="spin"></span>CONNECTING…';
+  this.disabled = true;
+  try{
+    const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+    // Switch / add Monad chain
+    try{
+      await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId: CHAIN_HEX}]});
+    }catch(e){
+      if (e && e.code === 4902){
+        await window.ethereum.request({method:'wallet_addEthereumChain', params:[{
+          chainId: CHAIN_HEX, chainName: 'Monad Mainnet',
+          nativeCurrency: {name:'Monad', symbol:'MON', decimals:18},
+          rpcUrls: [RPC], blockExplorerUrls: [EXPLORER],
+        }]});
+      } else throw e;
+    }
+    STATE.account = accounts[0];
+    STATE.signerType = 'mm';
+    STATE.wallet = null;
+    enterMainScreen();
+  }catch(e){
+    console.error(e);
+    setStatus('mmStatus', 'error', 'Connection failed: ' + (e.message || e));
+  }finally{
+    this.innerHTML = 'CONNECT WALLET';
+    this.disabled = false;
+  }
+};
+
+// ════════════════════════════════════════════════════════════
+// MAIN SCREEN
+// ════════════════════════════════════════════════════════════
+function enterMainScreen(){
+  $('walletLabel').textContent = STATE.signerType === 'mm' ? shortAddr(STATE.account) + ' (MetaMask)' : shortAddr(STATE.account);
+  $('addrField').value = STATE.account;
+
+  // QR
+  if (typeof QRCode !== 'undefined'){
+    const qrEl = $('qrWrap');
+    qrEl.innerHTML = '<canvas id="qrCanvas"></canvas>';
+    QRCode.toCanvas($('qrCanvas'), STATE.account, { width: 180, margin: 1, color: {dark:'#08000f', light:'#ffffff'} }, function(err){
+      if (err) console.error(err);
+    });
+  }
+
+  paintTokens();
+  refreshBalances();
+  showScreen('screenMain');
+  setInterval(refreshBalances, 20000);
+}
+
+function paintTokens(){
+  $('inLogo').src  = STATE.inTok.logo;
+  $('inSym').textContent  = STATE.inTok.sym;
+  $('outLogo').src = STATE.outTok.logo;
+  $('outSym').textContent = STATE.outTok.sym;
+
+  const isBuy = STATE.outTok.addr.toLowerCase() === MONWOLF.toLowerCase();
+  $('opTitle').textContent = isBuy ? 'BUY $MONWOLF' : 'SELL $MONWOLF';
+  $('opIcon').textContent  = isBuy ? '🐺' : '💰';
+  $('inLabel').textContent = isBuy ? 'YOU PAY' : 'YOU SELL';
+  $('outLabel').textContent = isBuy ? 'YOU RECEIVE' : 'YOU GET';
+}
+
+$('flipBtn').onclick = () => {
+  const tmp = STATE.inTok; STATE.inTok = STATE.outTok; STATE.outTok = tmp;
+  paintTokens();
+  $('amountIn').value = '';
+  $('amountOut').value = '';
+  $('details').style.display = 'none';
+  refreshBalances();
+  paintBalances();
+};
+
+async function refreshBalances(){
+  if (!STATE.account) return;
+  try{
+    const [mon, wolf] = await Promise.all([
+      nativeBalance(STATE.account),
+      tokenBalance(MONWOLF, STATE.account),
+    ]);
+    STATE.monBal = mon;
+    STATE.wolfBal = wolf;
+    $('monBal').textContent  = fmt(Number(ethers.formatUnits(mon, 18))) + ' MON';
+    $('wolfBal').textContent = fmt(Number(ethers.formatUnits(wolf, 18))) + ' MONWOLF';
+    paintBalances();
+  }catch(e){ console.warn('balance fetch:', e); }
+}
+
+function paintBalances(){
+  const isMonIn = STATE.inTok.addr === NATIVE;
+  const inB = isMonIn ? STATE.monBal : STATE.wolfBal;
+  const outB = isMonIn ? STATE.wolfBal : STATE.monBal;
+  if (inB != null)  $('balIn').textContent  = 'balance: ' + fmt(Number(ethers.formatUnits(inB, 18)));
+  if (outB != null) $('balOut').textContent = 'balance: ' + fmt(Number(ethers.formatUnits(outB, 18)));
+  $('balIn').onclick = () => {
+    if (inB == null) return;
+    const v = Number(ethers.formatUnits(inB, 18));
+    // leave a tiny buffer for gas if MON is the input
+    const gasBuffer = isMonIn ? 0.05 : 0;
+    const useable = Math.max(0, v - gasBuffer);
+    $('amountIn').value = useable.toString();
+    $('amountIn').dispatchEvent(new Event('input'));
+  };
+}
+
+// ────── QUOTE ──────
+let quoteTimer = null;
+$('amountIn').oninput = function(){
+  clearTimeout(quoteTimer);
+  const amount = parseFloat(this.value);
+  $('amountOut').value = '';
+  $('details').style.display = 'none';
+  STATE.quote = null;
+  if (!amount || amount <= 0){ $('actionBtn').disabled = true; $('actionBtn').textContent = 'ENTER AN AMOUNT'; return; }
+  $('actionBtn').disabled = true; $('actionBtn').innerHTML = '<span class="spin"></span>QUOTING…';
+  quoteTimer = setTimeout(()=>doQuote(amount), 350);
+};
+
+async function doQuote(amount){
+  const seq = ++STATE.quoteSeq;
+  try{
+    const url = MONORAIL_QUOTE + '?' + new URLSearchParams({
+      from: STATE.inTok.addr,
+      to:   STATE.outTok.addr,
+      amount: String(amount),
+      sender: STATE.account,
+      slippage: '300',
+      source: MONORAIL_APP_ID,
+    }).toString();
+    const r = await fetch(url, {cache:'no-cache'});
+    const j = await r.json();
+    if (seq !== STATE.quoteSeq) return;
+    if (j.message && !j.transaction) throw new Error(j.message);
+    STATE.quote = j;
+    const outAmt = parseFloat(j.output_formatted || j.amountOut || 0);
+    const minAmt = parseFloat(j.min_output_formatted || 0);
+    const rate   = outAmt / amount;
+    $('amountOut').value = outAmt.toFixed(outAmt < 1 ? 6 : 4);
+    $('dRate').textContent  = '1 ' + STATE.inTok.sym + ' ≈ ' + fmt(rate) + ' ' + STATE.outTok.sym;
+    $('dMin').textContent   = fmt(minAmt) + ' ' + STATE.outTok.sym;
+    $('dRoute').textContent = (j.routes?.[0]?.[0]?.splits?.[0]?.protocol) || 'monorail';
+    $('details').style.display = 'block';
+    const isBuy = STATE.outTok.addr.toLowerCase() === MONWOLF.toLowerCase();
+    $('actionBtn').disabled = false;
+    $('actionBtn').textContent = isBuy ? '🐺 BUY MONWOLF' : '💰 SELL MONWOLF';
+  }catch(e){
+    if (seq !== STATE.quoteSeq) return;
+    $('actionBtn').disabled = true;
+    $('actionBtn').textContent = 'QUOTE UNAVAILABLE';
+    setStatus('buyStatus', 'error', 'Quote failed: ' + (e.message || e));
+  }
+}
+
+// ────── SIGN + BROADCAST ──────
+async function sendTxLocal(txParams){
+  // Build, sign, and broadcast a tx with the local wallet
+  const w = STATE.wallet;
+  const nonce = await rpcCall('eth_getTransactionCount', [w.address, 'pending']);
+  const gasPrice = await rpcCall('eth_gasPrice', []);
+  const tx = {
+    to: txParams.to,
+    data: txParams.data,
+    value: txParams.value || '0x0',
+    nonce: parseInt(nonce, 16),
+    gasPrice: BigInt(gasPrice),
+    chainId: CHAIN_ID,
+  };
+  // Estimate gas
+  try{
+    const gas = await rpcCall('eth_estimateGas', [{from: w.address, to: tx.to, data: tx.data, value: tx.value}]);
+    tx.gasLimit = BigInt(gas);
+  }catch(e){
+    // fallback gas limit
+    tx.gasLimit = BigInt(500000);
+  }
+  const raw = await w.signTransaction(tx);
+  const hash = await rpcCall('eth_sendRawTransaction', [raw]);
+  return hash;
+}
+async function sendTxMM(txParams){
+  return window.ethereum.request({method:'eth_sendTransaction', params:[{
+    from: STATE.account, to: txParams.to, data: txParams.data, value: txParams.value || '0x0',
+  }]});
+}
+async function waitReceipt(hash, maxMs){
+  maxMs = maxMs || 120000;
+  const start = Date.now();
+  while (Date.now() - start < maxMs){
+    try{
+      const r = await rpcCall('eth_getTransactionReceipt', [hash]);
+      if (r && r.blockNumber) return r;
+    }catch(e){}
+    await new Promise(r => setTimeout(r, 1500));
+  }
+  return null;
+}
+
+$('actionBtn').onclick = async function(){
+  if (!STATE.quote) return;
+  clearStatus('buyStatus');
+  const q = STATE.quote;
+  this.disabled = true;
+  const origText = this.textContent;
+
+  try{
+    const isNativeFrom = STATE.inTok.addr === NATIVE;
+
+    // ──── If MON balance might be too low for gas, warn ────
+    if (isNativeFrom){
+      const monBal = STATE.monBal || 0n;
+      const inWei  = ethers.parseUnits($('amountIn').value, 18);
+      // Need at least ~0.02 MON beyond the swap input for gas
+      const minGas = ethers.parseUnits('0.02', 18);
+      if (monBal < inWei + minGas){
+        throw new Error('Not enough MON for swap + gas. Need at least 0.02 MON beyond your swap amount for transaction fees.');
+      }
+    }
+
+    // ──── Approve if needed (for token-in swaps) ────
+    if (!isNativeFrom){
+      const spender = q.transaction.to;
+      const needed = BigInt(q.input);
+      const current = await tokenAllowance(STATE.inTok.addr, STATE.account, spender);
+      if (current < needed){
+        this.innerHTML = '<span class="spin"></span>APPROVING…';
+        setStatus('buyStatus', 'info', 'Approving ' + STATE.inTok.sym + ' for the swap…');
+        const approveData = tokenIface.encodeFunctionData('approve', [spender, (2n**256n - 1n)]);
+        const approveParams = { to: STATE.inTok.addr, data: approveData, value: '0x0' };
+        const aHash = STATE.signerType === 'mm' ? await sendTxMM(approveParams) : await sendTxLocal(approveParams);
+        setStatus('buyStatus', 'info', 'Approval submitted: <a href="' + EXPLORER + '/tx/' + aHash + '" target="_blank">view tx</a> · waiting for confirmation…');
+        const rec = await waitReceipt(aHash, 90000);
+        if (!rec) throw new Error('Approval not confirmed in 90s. Try again.');
+      }
+    }
+
+    // ──── Execute swap ────
+    this.innerHTML = '<span class="spin"></span>SWAPPING…';
+    setStatus('buyStatus', 'info', (STATE.outTok.addr === MONWOLF ? 'Hunting MONWOLF…' : 'Selling MONWOLF…'));
+    const swapParams = {
+      to: q.transaction.to,
+      data: q.transaction.data,
+      value: isNativeFrom ? q.transaction.value : '0x0',
+    };
+    const hash = STATE.signerType === 'mm' ? await sendTxMM(swapParams) : await sendTxLocal(swapParams);
+    setStatus('buyStatus', 'info', 'Transaction submitted: <a href="' + EXPLORER + '/tx/' + hash + '" target="_blank">view on explorer</a> · waiting for confirmation…');
+    const rec = await waitReceipt(hash, 120000);
+    if (!rec){
+      setStatus('buyStatus', 'info', '⏳ Still confirming after 2 min. Check <a href="' + EXPLORER + '/tx/' + hash + '" target="_blank">explorer</a> directly.');
+    } else {
+      const success = rec.status === '0x1';
+      if (success){
+        const isBuy = STATE.outTok.addr === MONWOLF;
+        setStatus('buyStatus', 'success',
+          '✅ ' + (isBuy ? '🐺 Welcome to the pack! ' : 'Swap complete. ') +
+          '<a href="' + EXPLORER + '/tx/' + hash + '" target="_blank">View on explorer →</a>');
+      } else {
+        throw new Error('Transaction reverted on-chain.');
+      }
+    }
+    // Refresh balances
+    setTimeout(refreshBalances, 2000);
+  }catch(e){
+    console.error(e);
+    const msg = (e && e.message) ? e.message : String(e);
+    setStatus('buyStatus', 'error', '❌ ' + (msg.includes('user rejected') || msg.includes('User denied') ? 'You cancelled the transaction.' : msg));
+  }finally{
+    this.disabled = false;
+    this.textContent = origText;
+  }
+};
+
+// ────── ADDRESS / QR / MENU ──────
+$('copyAddr').onclick = function(){
+  navigator.clipboard.writeText(STATE.account).then(()=>{
+    this.textContent = 'COPIED';
+    setTimeout(()=>this.textContent='COPY', 1500);
+  });
+};
+$('showQrBtn').onclick = function(){
+  $('qrPanel').classList.toggle('hidden');
+  $('walletMenu').classList.add('hidden');
+};
+$('walletMenuBtn').onclick = function(){
+  $('walletMenu').classList.toggle('hidden');
+  $('qrPanel').classList.add('hidden');
+};
+
+$('exportSeedBtn').onclick = async function(){
+  if (STATE.signerType === 'mm') return alert('MetaMask wallets: recovery phrase is in MetaMask app.');
+  const pw = prompt('Re-enter your password to reveal the recovery phrase:');
+  if (!pw) return;
+  const session = getSession();
+  if (!session) return alert('No session.');
+  const packet = loadWallet(session.handle);
+  try{
+    const obj = await decryptJSON(pw, packet);
+    alert('YOUR 12-WORD RECOVERY PHRASE:\n\n' + obj.mnemonic + '\n\n⚠️ WRITE THIS DOWN ON PAPER. Anyone with this phrase owns your wallet.');
+  }catch(e){
+    alert('Wrong password.');
+  }
+};
+$('exportPkBtn').onclick = async function(){
+  if (STATE.signerType === 'mm') return alert('MetaMask wallets: export the private key in MetaMask app (Account → Show private key).');
+  const pw = prompt('Re-enter your password to reveal the private key:');
+  if (!pw) return;
+  const session = getSession();
+  if (!session) return alert('No session.');
+  const packet = loadWallet(session.handle);
+  try{
+    const obj = await decryptJSON(pw, packet);
+    prompt('YOUR PRIVATE KEY (copy and store safely):', obj.privkey);
+  }catch(e){
+    alert('Wrong password.');
+  }
+};
+$('logoutBtn').onclick = function(){
+  if (!confirm('Log out? Your wallet stays encrypted on this device — you can unlock again with your password.')) return;
+  STATE.wallet = null;
+  STATE.account = null;
+  STATE.signerType = null;
+  clearSession();
+  showScreen('modePicker');
+  refreshReturningVisibility();
+};
+
+// ────── AUTO-RESUME SESSION ──────
+(function autoResume(){
+  const session = getSession();
+  if (!session) return;
+  // We don't have the password decrypted in session, so just bounce them to unlock screen pre-filled
+  // If signerType was MM, we'd resume automatically — but MetaMask requires re-confirm anyway.
+})();
+})();
+</script>
+
+</body>
+</html>

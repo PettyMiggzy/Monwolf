@@ -17,9 +17,7 @@ Living roadmap. Newest additions at the top of each section.
 - **Wire-in**: One-line edit to `ONRAMPER_API_KEY` constant near top of the on-ramp block in `/buy.html`. Same-hour ship.
 
 ### Supabase migration for `/memes`
-- Pending: run `/supabase-memes-migration.sql` in the `cuqhqcmrgpdjlhyqztnc` SQL editor.
-- Creates: `monwolf_memes` table + `monwolf-memes` public storage bucket + RLS policies.
-- Until done, the wall shows a "Run migration →" empty state instead of working uploads.
+- ✅ DONE — verified via REST probe: table `monwolf_memes` returns 200 + empty array, storage bucket `monwolf-memes` exists. Migration ran successfully. Wall is live at `/memes`, just waiting for the first post.
 
 ### WalletConnect Project ID
 - Current value in `/index.html` and `/swap.html` is a placeholder.

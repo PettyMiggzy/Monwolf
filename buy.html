@@ -153,6 +153,32 @@ input::placeholder{color:#574069;}
 .btn-sm{padding:10px 14px;font-size:11px;letter-spacing:1.5px;width:auto;}
 .btn-row{display:flex;gap:8px;}
 
+.btn-newtocrypto{
+  background:linear-gradient(135deg,#f5c242 0%,#ff8a3d 60%,#ec4899 100%);
+  color:#1a0608;font-family:'Bungee',cursive;letter-spacing:1.5px;
+  box-shadow:0 12px 32px -6px rgba(245,194,66,.55),
+             0 6px 18px -4px rgba(236,72,153,.4),
+             inset 0 -1px 0 rgba(0,0,0,.18);
+  transition:.2s;}
+.btn-newtocrypto:hover:not(:disabled){transform:translateY(-1px);
+  box-shadow:0 18px 40px -6px rgba(245,194,66,.7),
+             0 12px 28px -4px rgba(236,72,153,.55);}
+.btn-newtocrypto:disabled{opacity:.5;cursor:not-allowed;}
+
+/* Onramp (buy-MON-with-card) card */
+.onramp-card{
+  background:linear-gradient(135deg,rgba(245,194,66,.07),rgba(236,72,153,.05)) !important;
+  border-color:rgba(245,194,66,.35) !important;
+  position:relative;overflow:hidden;}
+.onramp-card::before{content:'';position:absolute;top:-30%;right:-20%;
+  width:60%;height:160%;pointer-events:none;
+  background:radial-gradient(circle,rgba(245,194,66,.15),transparent 60%);}
+.onramp-perks{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 14px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;
+  letter-spacing:.06em;color:var(--text-2);position:relative;z-index:1;}
+.onramp-perks span{padding:4px 9px;border-radius:99px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);}
+
 /* === SEED PHRASE === */
 .seed-wrap{position:relative;}
 .seed-wrap::before{
@@ -470,6 +496,26 @@ input::placeholder{color:#574069;}
       <div class="card-sub">Send <b>MON</b> from any exchange (Bybit, Gate, Kucoin) or another Monad wallet to this address. Once it lands, you can buy MONWOLF below.</div>
       <div class="qr-wrap" id="qrWrap"></div>
       <div class="help" style="text-align:center;">⚠️ ONLY send <b>MON on Monad mainnet</b>. Other chains will be lost.</div>
+    </div>
+
+    <!-- ONRAMP · Buy MON directly with credit card via Transak -->
+    <div class="card onramp-card">
+      <div class="card-h"><span class="num">💳</span>BUY MON WITH CARD</div>
+      <div class="card-sub">
+        New to crypto? Skip the bridges and exchanges.
+        <b>Transak</b> lets you buy MON with Apple&nbsp;Pay, Google&nbsp;Pay, credit card, or bank transfer — delivered straight to your wallet.
+      </div>
+      <div class="onramp-perks">
+        <span>⚡ Native MON on Monad</span>
+        <span>🏛️ Bank + card + Apple Pay</span>
+        <span>🌍 64 countries</span>
+      </div>
+      <button id="onrampBtn" class="btn btn-newtocrypto" style="width:100%;margin-top:6px;">
+        BUY MON WITH CARD →
+      </button>
+      <div class="help" style="margin-top:8px;text-align:center;">
+        Already have MON? Skip to <b>BUY $MONWOLF</b> below ↓
+      </div>
     </div>
 
     <div id="walletMenu" class="card hidden">
@@ -1560,6 +1606,98 @@ $('logoutBtn').onclick = function(){
   showScreen('modePicker');
   refreshReturningVisibility();
 };
+
+// ────── TRANSAK ON-RAMP (fiat → MON direct to wallet) ──────
+// Transak integrated Monad on day 1 of mainnet (Nov 2025). Their on-ramp
+// accepts cards / Apple Pay / Google Pay / bank transfers in 64+ countries
+// and delivers MON natively to the user's wallet.
+//
+// PARTNER FEES: To earn commission on every on-ramp, sign up at
+//   https://transak.com/partners
+// then drop the API key into TRANSAK_API_KEY below + set TRANSAK_FEE_WALLET
+// to the wallet that receives partner-side fee payouts (configured in the
+// Transak dashboard after partner approval).
+const TRANSAK_API_KEY    = '';     // ← partner key (empty = no commission, still works)
+const TRANSAK_FEE_WALLET = '';     // ← payout wallet, set in Transak dashboard
+const TRANSAK_ENV        = 'PROD'; // 'PROD' = global.transak.com · 'STAGING' for testing
+
+function openTransak(){
+  const addr = STATE.account;
+  if (!addr){
+    alert('Create or unlock a wallet first — Transak needs an address to deliver MON to.');
+    return;
+  }
+  const base = TRANSAK_ENV === 'STAGING'
+    ? 'https://global-stg.transak.com/'
+    : 'https://global.transak.com/';
+  const params = new URLSearchParams({
+    productsAvailed:       'BUY',
+    network:               'monad',
+    cryptoCurrencyCode:    'MON',
+    cryptoCurrencyList:    'MON',
+    fiatCurrency:          'USD',
+    defaultFiatAmount:     '50',
+    walletAddress:         addr,
+    walletAddressLockType: 'lock',
+    disableWalletAddressForm: 'true',
+    themeColor:            'a855f7',
+    hideMenu:              'true',
+    isFeeCalculationHidden:'false',
+    redirectURL:           window.location.origin + '/buy.html?onramp=done',
+  });
+  if (TRANSAK_API_KEY) params.set('apiKey', TRANSAK_API_KEY);
+  const url = base + '?' + params.toString();
+
+  // Try a centered popup; fall back to same-tab nav if blocked (mobile).
+  const w = 480, h = 760;
+  const left = Math.max(0,(screen.width  - w) / 2);
+  const top  = Math.max(0,(screen.height - h) / 2);
+  const win  = window.open(url,'mw_transak',
+    `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`);
+  if (!win || win.closed || typeof win.closed === 'undefined'){
+    window.location.href = url; // popup blocker → same-tab
+  }
+}
+$('onrampBtn').onclick = openTransak;
+
+// Light-up the onramp card when the user came in via /buy.html?path=new
+// (i.e. "NEW TO CRYPTO?" CTA from the homepage). Scroll to it once main
+// screen renders so the fiat-on-ramp is the first thing they see.
+(function honorNewPathFlag(){
+  const url = new URL(window.location.href);
+  if (url.searchParams.get('path') !== 'new') return;
+  // Once the main buy screen is visible, scroll the onramp card into view.
+  // showScreen() is called after wallet unlock/create; we hook after a short delay.
+  const tryFocus = () => {
+    const main = document.getElementById('screenMain');
+    const card = document.querySelector('.onramp-card');
+    if (main && !main.classList.contains('hidden') && card){
+      card.scrollIntoView({behavior:'smooth', block:'center'});
+      card.style.transition = 'box-shadow .8s';
+      card.style.boxShadow  = '0 0 0 2px var(--gold), 0 24px 60px -10px rgba(245,194,66,.5)';
+      setTimeout(() => { card.style.boxShadow = ''; }, 2400);
+      return true;
+    }
+    return false;
+  };
+  let tries = 0;
+  const iv = setInterval(() => { if (tryFocus() || ++tries > 40) clearInterval(iv); }, 250);
+})();
+
+// Handle Transak ?onramp=done redirect (after a successful card purchase)
+(function honorOnrampDone(){
+  const url = new URL(window.location.href);
+  if (url.searchParams.get('onramp') !== 'done') return;
+  // Strip the flag from the URL bar
+  url.searchParams.delete('onramp');
+  window.history.replaceState({}, '', url.pathname + (url.search ? '?' + url.search.replace(/^\?/,'') : ''));
+  // Bump the user toward the swap card
+  setTimeout(() => {
+    const swap = document.querySelector('.card .card-h + .swap-row, #actionBtn');
+    if (swap) swap.scrollIntoView({behavior:'smooth', block:'center'});
+    if (typeof refreshBalances === 'function') refreshBalances();
+  }, 500);
+})();
 
 // ────── AUTO-RESUME SESSION ──────
 (function autoResume(){

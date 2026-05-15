@@ -110,19 +110,33 @@ body::after{
   font-size:clamp(11px,1.8vw,16px);letter-spacing:.4em;
   color:var(--orange);margin-bottom:18px;text-transform:uppercase;
   text-shadow:0 0 24px rgba(255,138,61,.8),0 0 4px rgba(0,0,0,.8);
-  opacity:0;animation:splashFadeUp 1s .4s var(--ease) forwards;}
+  opacity:0;animation:splashEyebrow 2.4s .4s var(--ease) forwards;}
 .splash-title{font-family:'Bungee',cursive;font-weight:400;
   font-size:clamp(64px,17vw,220px);line-height:.85;
   letter-spacing:.04em;color:#fff;
   text-shadow:0 8px 60px rgba(0,0,0,.95),0 0 100px rgba(168,85,247,.6),0 4px 8px rgba(0,0,0,.9);
-  opacity:0;animation:splashFadeUp 1.2s 1.5s var(--ease) forwards;}
+  opacity:0;animation:splashTitle 1.9s 1s var(--ease) forwards;}
 .splash-sub{font-family:'JetBrains Mono',monospace;font-weight:600;
   font-size:clamp(10px,1.4vw,13px);letter-spacing:.35em;
-  color:rgba(255,255,255,.85);margin-top:18px;text-transform:uppercase;
-  text-shadow:0 0 12px rgba(0,0,0,.9);
-  opacity:0;animation:splashFadeUp 1s 3s var(--ease) forwards;}
-@keyframes splashFadeUp{
-  from{opacity:0;transform:translateY(40px);filter:blur(6px);}
+  color:rgba(255,255,255,.9);margin-top:18px;text-transform:uppercase;
+  text-shadow:0 0 12px rgba(0,0,0,.9),0 0 24px rgba(168,85,247,.4);
+  opacity:0;animation:splashFadeIn 1s 6.5s var(--ease) forwards;}
+/* Eyebrow + RISES fade IN, hold briefly, then fade OUT
+   so the alpha wolf is uncontested during the howling moment. */
+@keyframes splashEyebrow{
+  0%   {opacity:0;transform:translateY(20px);filter:blur(4px);}
+  25%  {opacity:1;transform:translateY(0);filter:blur(0);}        /* in by 1.0s */
+  70%  {opacity:1;transform:translateY(0);filter:blur(0);}        /* hold to 2.08s + .4s delay = ~2.5s */
+  100% {opacity:0;transform:translateY(-10px);filter:blur(3px);}  /* out by 2.8s */
+}
+@keyframes splashTitle{
+  0%   {opacity:0;transform:translateY(40px) scale(.98);filter:blur(8px);}
+  28%  {opacity:1;transform:translateY(0)    scale(1);  filter:blur(0);} /* in by 1.5s */
+  65%  {opacity:1;transform:translateY(0)    scale(1);  filter:blur(0);} /* hold to ~2.2s */
+  100% {opacity:0;transform:translateY(-24px) scale(1.06);filter:blur(6px);} /* out by 2.9s */
+}
+@keyframes splashFadeIn{
+  from{opacity:0;transform:translateY(20px);filter:blur(4px);}
   to  {opacity:1;transform:translateY(0);filter:blur(0);}
 }
 .splash-skip{position:absolute;bottom:28px;right:28px;z-index:4;
@@ -132,7 +146,7 @@ body::after{
   letter-spacing:.22em;border-radius:99px;cursor:pointer;
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   transition:.2s var(--ease);
-  opacity:0;animation:splashFadeUp .6s 2s var(--ease) forwards;}
+  opacity:0;animation:splashFadeIn .6s 2s var(--ease) forwards;}
 .splash-skip:hover{background:var(--orange);border-color:var(--orange);color:#000;}
 .splash-progress{position:absolute;left:0;right:0;bottom:0;height:2px;z-index:4;
   background:rgba(255,255,255,.06);}
@@ -323,6 +337,22 @@ nav{position:sticky;top:34px;z-index:80;
   border:1.5px solid var(--purple);}
 .btn-ghost:hover{background:rgba(168,85,247,.22);border-color:var(--orange);
   box-shadow:0 12px 28px -10px rgba(168,85,247,.5);}
+.btn-newtocrypto{
+  background:linear-gradient(135deg,var(--gold) 0%,var(--orange) 60%,var(--pink) 100%);
+  color:#1a0608;
+  box-shadow:0 14px 36px -8px rgba(245,194,66,.55),
+             0 6px 18px -4px rgba(236,72,153,.4),
+             inset 0 -1px 0 rgba(0,0,0,.18);
+  position:relative;}
+.btn-newtocrypto::before{content:'';position:absolute;inset:-2px;
+  border-radius:99px;padding:2px;background:linear-gradient(135deg,#fff7d6,#ec4899);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.0;
+  transition:.2s var(--ease);pointer-events:none;}
+.btn-newtocrypto:hover{transform:translateY(-2px);
+  box-shadow:0 22px 48px -8px rgba(245,194,66,.7),
+             0 12px 28px -4px rgba(236,72,153,.6);}
+.btn-newtocrypto:hover::before{opacity:1;}
 .btn-text{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
   color:var(--text-2);letter-spacing:.04em;cursor:pointer;
   padding:8px 4px;transition:.18s var(--ease);
@@ -856,6 +886,7 @@ footer{padding:80px 24px 40px;border-top:1px solid var(--border);
     </p>
     <div class="hero-ctas reveal reveal-delay-3">
       <a href="/buy.html" class="btn btn-primary">🐺 BUY $MONWOLF →</a>
+      <a href="/buy.html?path=new" class="btn btn-newtocrypto">✨ NEW TO CRYPTO?</a>
       <a href="/swap.html" id="heroConnectBtn" class="btn btn-ghost">🦊 CONNECT WALLET</a>
     </div>
     <button class="hero-ca reveal reveal-delay-3" id="caCopy">

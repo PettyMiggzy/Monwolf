@@ -177,6 +177,8 @@ a{color:inherit;text-decoration:none;}
 .tc-btn:hover{background:var(--purple);color:#fff;border-color:var(--purple);}
 .tc-btn.primary{background:var(--grad);color:#fff;border-color:transparent;}
 .tc-btn.primary:hover{transform:translateY(-1px);box-shadow:0 8px 16px -6px rgba(168,85,247,.5);}
+.tc-btn.removeBtn{flex:0 0 auto;padding:8px 10px;color:var(--text-3);}
+.tc-btn.removeBtn:hover{background:rgba(239,68,68,.2);border-color:var(--red);color:var(--red);}
 
 /* SOON state */
 .soon-panel{padding:60px 30px;border-radius:18px;background:var(--panel);
@@ -392,11 +394,15 @@ a{color:inherit;text-decoration:none;}
     <div class="panel-h">
       <div class="panel-h-l">
         <h2>🐾 THE TERRITORY</h2>
-        <div class="panel-sub">live prices across the Monad pack · auto-refresh 30s · DexScreener feed</div>
+        <div class="panel-sub">MONWOLF + your tracked tokens · live prices · auto-refresh 30s · stored locally on this device</div>
       </div>
       <div class="panel-h-r">
         <button class="chip" id="terrRefresh">↺ REFRESH</button>
       </div>
+    </div>
+    <div class="scan-controls" style="margin-bottom:14px;">
+      <input id="terrAddr" class="scan-input" placeholder="0x… paste token address to track" spellcheck="false" autocomplete="off">
+      <button class="scan-btn" id="terrAdd">+ ADD</button>
     </div>
     <div class="token-grid" id="terrGrid"></div>
   </div>
@@ -511,15 +517,23 @@ const DEAD         = '0x000000000000000000000000000000000000dEaD';
 const MONWOLF      = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
 const MONWOLF_PAIR = '0x97Dc05Af02cB8F55bfF839AC5F849bdc9ADd7116';
 
-const PACK_TOKENS = [
-  { addr: MONWOLF,                                       sym:'MONWOLF', name:'MonWolf',  emoji:'🐺', featured:true },
-  { addr:'0xb72e6262dae53caf167f0966421a0b9782977777',   sym:'MOLLY',   name:'Molly',    emoji:'🐶' },
-  { addr:'0x350035555e10d9afaf1566aaebfced5ba6c27777',   sym:'CHOG',    name:'Chog',     emoji:'🥩' },
-  { addr:'0x5e1b1a14c8758104b8560514e94ab8320e587777',   sym:'CHOGI',   name:'Chogi',    emoji:'🧪' },
-  { addr:'0xb744f5cdb792d8187640214c4a1c9ace29af7777',   sym:'MONSHI',  name:'Monshi',   emoji:'🐱' },
-  { addr:'0xaCA86430cCCEdbedB35910fC8A5AFEF07dA37777',   sym:'RENE',    name:'Rene',     emoji:'🐕' },
-  { addr:'0x148a3a811979e5BF8366FC279B2d67742Fe17777',   sym:'PHUCK',   name:'Phuck',    emoji:'💀' },
-];
+// MONWOLF is always pinned + featured. Everything else is user-curated.
+const MONWOLF_TOKEN = { addr: MONWOLF, sym:'MONWOLF', name:'MonWolf', emoji:'🐺', featured:true };
+
+const TERR_KEY = 'mw_territory_v1';
+function loadUserTokens(){
+  try{ return JSON.parse(localStorage.getItem(TERR_KEY) || '[]'); }
+  catch{ return []; }
+}
+function saveUserTokens(list){
+  localStorage.setItem(TERR_KEY, JSON.stringify(list.slice(0, 20)));
+}
+// Combined list at render time: MONWOLF first, then user adds (dedup case-insensitive)
+function getTerritoryTokens(){
+  const user = loadUserTokens()
+    .filter(t => t.addr && t.addr.toLowerCase() !== MONWOLF.toLowerCase());
+  return [MONWOLF_TOKEN, ...user];
+}
 
 const RANKS = [
   { min: 10000000, name:'APEX',     emoji:'👑', cls:'tier-mythic'   },
@@ -655,28 +669,28 @@ function renderCard(t, d, nadInfo){
       <a class="tc-btn primary" href="/swap?from=MON&to=${t.addr}">SWAP</a>
       <a class="tc-btn" href="https://dexscreener.com/monad/${t.addr}" target="_blank">CHART</a>
       <button class="tc-btn copyBtn" data-addr="${t.addr}">COPY</button>
+      ${t.featured ? '' : `<button class="tc-btn removeBtn" data-addr="${t.addr}" title="Stop tracking">✕</button>`}
     </div>
   </div>`;
 }
 
 async function refreshTerritory(){
   const grid = $('terrGrid');
+  const tokens = getTerritoryTokens();
   if (!grid.children.length){
-    grid.innerHTML = PACK_TOKENS.map(t => `<div class="tcard loading ${t.featured?'featured':''}">
-      <div class="tc-h"><div class="tc-logo">${t.emoji}</div>
+    grid.innerHTML = tokens.map(t => `<div class="tcard loading ${t.featured?'featured':''}">
+      <div class="tc-h"><div class="tc-logo">${t.emoji || (t.sym||'?')[0]}</div>
         <div class="tc-meta"><div class="tc-sym">$${t.sym}</div><div class="tc-name">⟳ loading…</div></div>
       </div><div class="tc-price">⟳</div></div>`).join('');
   }
   // Fetch DexScreener (price/mcap/liq/24h) AND nad.fun (real image, holders) in parallel
-  // nadFetch is cached, so the rate budget gets hit once and shared across panels
   const [dexResults, nadResults] = await Promise.all([
-    Promise.allSettled(PACK_TOKENS.map(t => fetchDex(t.addr))),
-    Promise.allSettled(PACK_TOKENS.map(t => nadFetch(`/token/${t.addr}`))),
+    Promise.allSettled(tokens.map(t => fetchDex(t.addr))),
+    Promise.allSettled(tokens.map(t => nadFetch(`/token/${t.addr}`))),
   ]);
-  grid.innerHTML = PACK_TOKENS.map((t,i) => {
+  grid.innerHTML = tokens.map((t,i) => {
     const dex = dexResults[i].status==='fulfilled' ? dexResults[i].value : null;
     const nad = nadResults[i].status==='fulfilled' ? nadResults[i].value : null;
-    // nad.fun /token/ returns either nested {token_info, market_info} or flat — handle both
     const nadInfo = nad && (nad.token_info || nad.market_info ? nad : null);
     return renderCard(t, dex, nadInfo);
   }).join('');
@@ -686,15 +700,27 @@ async function refreshTerritory(){
     btn.addEventListener('click', e => {
       e.preventDefault();
       navigator.clipboard.writeText(btn.dataset.addr).then(() => {
-        btn.textContent = 'COPIED ✓';
+        btn.textContent = '✓';
         setTimeout(() => btn.textContent = 'COPY', 1500);
       });
     });
   });
 
-  // Update top stats with MONWOLF
-  const d = dexResults[0].status === 'fulfilled' ? dexResults[0].value : null;
-  const monwolfNad = nadResults[0].status === 'fulfilled' ? nadResults[0].value : null;
+  // Wire remove buttons (user-added tokens only)
+  grid.querySelectorAll('.removeBtn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const addr = btn.dataset.addr;
+      const user = loadUserTokens().filter(t => t.addr.toLowerCase() !== addr.toLowerCase());
+      saveUserTokens(user);
+      // Drop the card immediately for snappy feel
+      btn.closest('.tcard')?.remove();
+    });
+  });
+
+  // Update top stats with MONWOLF (always at index 0)
+  const d = dexResults[0]?.status === 'fulfilled' ? dexResults[0].value : null;
+  const monwolfNad = nadResults[0]?.status === 'fulfilled' ? nadResults[0].value : null;
   if (d){
     const p = parseFloat(d.priceUsd || 0);
     const c = parseFloat(d.priceChange?.h24 || 0);
@@ -708,7 +734,6 @@ async function refreshTerritory(){
     $('statMcap').textContent = mc ? '$' + fmtNum(mc) : '—';
     $('statLiq').textContent  = lq ? 'liq $' + fmtNum(lq) : '—';
     $('statVol').textContent  = vl ? '24h vol $' + fmtNum(vl) : '—';
-    // Use real holder count from nad.fun if we got it
     const realHolders = monwolfNad?.market_info?.holder_count;
     if (realHolders){
       $('statHolders').textContent = fmtNum(realHolders, 0);
@@ -717,6 +742,54 @@ async function refreshTerritory(){
       $('statHolders').textContent = fmtNum(tx);
     }
   }
+}
+
+// ADD TOKEN — paste an address, validate via nad.fun, store, refresh
+async function addTerritoryToken(){
+  const input = $('terrAddr');
+  const addr = (input.value || '').trim();
+  if (!/^0x[a-fA-F0-9]{40}$/.test(addr)){
+    input.style.borderColor = 'var(--red)';
+    setTimeout(() => input.style.borderColor = '', 1200);
+    return;
+  }
+  if (addr.toLowerCase() === MONWOLF.toLowerCase()){
+    input.value = '';
+    input.placeholder = 'MONWOLF is already pinned';
+    setTimeout(() => input.placeholder = '0x… paste token address to track', 1500);
+    return;
+  }
+  const current = loadUserTokens();
+  if (current.some(t => t.addr.toLowerCase() === addr.toLowerCase())){
+    input.value = '';
+    input.placeholder = 'Already tracking that token';
+    setTimeout(() => input.placeholder = '0x… paste token address to track', 1500);
+    return;
+  }
+  if (current.length >= 19){
+    input.placeholder = '20-token limit reached — remove one first';
+    setTimeout(() => input.placeholder = '0x… paste token address to track', 2000);
+    return;
+  }
+  const btn = $('terrAdd');
+  btn.textContent = '⟳';
+  btn.disabled = true;
+  // Look up token metadata so we have sym + name for the loading skeleton
+  let sym = '???', name = '';
+  try{
+    const nad = await nadFetch(`/token/${addr}`, { cache: false });
+    const ti = nad?.token_info || nad;
+    if (ti){
+      sym = (ti.symbol || sym).slice(0, 12);
+      name = (ti.name || '').slice(0, 32);
+    }
+  }catch{}
+  const next = [...current, { addr, sym, name }];
+  saveUserTokens(next);
+  input.value = '';
+  btn.textContent = '+ ADD';
+  btn.disabled = false;
+  refreshTerritory();
 }
 
 // BURN MEMORIAL · balanceOf(0xdead) on MONWOLF
@@ -855,6 +928,8 @@ $('packClose').addEventListener('click', () => {
   $('connectCard').classList.remove('hidden');
 });
 $('terrRefresh').addEventListener('click', refreshTerritory);
+$('terrAdd').addEventListener('click', addTerritoryToken);
+$('terrAddr').addEventListener('keydown', e => { if (e.key === 'Enter') addTerritoryToken(); });
 
 // ════════════════════════════════════════════════════════════════════
 // NAD.FUN API helpers — used by NEW PUPS, HUNTING GROUNDS, PACK SCAN, STALK

@@ -105,7 +105,8 @@ nav{
 .card-sub{font-size:12px;color:var(--text-3);margin-bottom:14px;}
 
 /* === MODE PICKER === */
-.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+@media (max-width:720px){.modes{grid-template-columns:1fr;}}
 .mode-card{
   background:linear-gradient(180deg, rgba(28,14,48,.55), rgba(16,7,34,.55));
   border:1.5px solid var(--border);border-radius:14px;
@@ -383,16 +384,16 @@ input::placeholder{color:#574069;}
         <div class="mode-title">NEW TO CRYPTO</div>
         <div class="mode-sub">Create a wallet with email + password. Works on any device.</div>
       </div>
+      <div class="mode-card" id="modeReturning">
+        <span class="mode-emoji">↻</span>
+        <div class="mode-title">RETURNING WOLF</div>
+        <div class="mode-sub">Sign in to a Pack Wallet you created here before. Email + password.</div>
+      </div>
       <div class="mode-card" id="modeWallet">
         <span class="mode-emoji">🦊</span>
         <div class="mode-title">HAVE A WALLET</div>
         <div class="mode-sub">MetaMask, Phantom, Rabby, Trust, etc.</div>
       </div>
-    </div>
-    <div class="card" id="returningBox">
-      <div class="card-h"><span class="num">↻</span>RETURNING WOLF?</div>
-      <div class="card-sub">Already created a wallet here before? Unlock it.</div>
-      <button id="unlockExisting" class="btn btn-ghost">UNLOCK MY WALLET</button>
     </div>
   </div>
 
@@ -898,7 +899,9 @@ function showScreen(id){
 // ════════════════════════════════════════════════════════════
 $('modeNew').onclick = () => showScreen('screenCreate');
 $('modeWallet').onclick = () => showScreen('screenMetamask');
-$('unlockExisting').onclick = () => showScreen('screenUnlock');
+$('modeReturning').onclick = () => showScreen('screenUnlock');
+// Legacy reference — older "Unlock instead" links inside error messages still work
+window.unlockExisting = $('modeReturning');
 $('goToCreate').onclick = () => showScreen('screenCreate');
 $('restoreSeed').onclick = () => showScreen('screenRestore');
 $('switchToCreate').onclick = (e) => { e.preventDefault(); showScreen('screenCreate'); };
@@ -932,13 +935,13 @@ $('createWalletBtn').onclick = async function(){
     // Check both local AND cloud for existing wallet under this handle
     if (loadWallet(email)){
       return setStatus('createStatus', 'error',
-        'A wallet already exists for "' + email + '" on this device. <a href="#" onclick="document.getElementById(\'unlockExisting\').click();return false;">Unlock it instead</a> or use a different username.');
+        'A wallet already exists for "' + email + '" on this device. <a href="#" onclick="document.getElementById(\'modeReturning\').click();return false;">Unlock it instead</a> or use a different username.');
     }
     setStatus('createStatus', 'info', '<span class="spin"></span>Checking the pack vault…');
     const existing = await sbLookupWallet(eh);
     if (existing){
       return setStatus('createStatus', 'error',
-        'A wallet already exists for "' + email + '" — you\'ve signed up here before. <a href="#" onclick="document.getElementById(\'unlockExisting\').click();return false;">Unlock it instead</a> or use a different username.');
+        'A wallet already exists for "' + email + '" — you\'ve signed up here before. <a href="#" onclick="document.getElementById(\'modeReturning\').click();return false;">Unlock it instead</a> or use a different username.');
     }
 
     setStatus('createStatus', 'info', '<span class="spin"></span>Generating your wallet… this takes 2–3 seconds (heavy encryption).');

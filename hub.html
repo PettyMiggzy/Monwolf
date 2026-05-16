@@ -511,7 +511,7 @@ a{color:inherit;text-decoration:none;}
 // Alchemy dashboard to allowed domains: monwolf.vercel.app, monwolf.xyz,
 // www.monwolf.xyz. Without those restrictions anyone can scrape and reuse it.
 const RPC          = 'https://monad-mainnet.g.alchemy.com/v2/_ZfKSl1YD2Yur6eajfKkN';
-const NAD_API      = 'https://api.nadapp.net';  // mainnet API (per official SDK constants)
+const NAD_API      = '/api/nad';  // Vercel proxy — rotates 3 API keys, edge-caches 20s
 const EXPLORER     = 'https://monadexplorer.com';
 const DEAD         = '0x000000000000000000000000000000000000dEaD';
 const MONWOLF      = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
@@ -934,15 +934,18 @@ $('terrAddr').addEventListener('keydown', e => { if (e.key === 'Enter') addTerri
 // ════════════════════════════════════════════════════════════════════
 // NAD.FUN API helpers — used by NEW PUPS, HUNTING GROUNDS, PACK SCAN, STALK
 // ════════════════════════════════════════════════════════════════════
-// Without an API key, nad.fun rate-limits external origins to 10 req/min.
-// Creating a key (free) bumps that to 100/min — paste it into NAD_API_KEY.
-// Sign up: https://nad.fun, connect wallet, settings → API Keys → Create.
-const NAD_API_KEY = 'nadfun_xY2HNrb6fQGwIHXH63mFNovyyprIR6cL';  // King's MonWolf Hub key — 100 req/min
+// All requests route through our /api/nad/ Vercel proxy which:
+//   • Rotates across 3 API keys (~300 req/min direct budget)
+//   • Edge-caches GETs for 20s + 60s stale-while-revalidate
+//   • Keeps the API keys server-side (never exposed to the browser)
+// Net effect: rate-limit ceiling becomes a non-issue at any realistic
+// traffic level. Client-side cache below is just a small extra layer.
 
-// In-memory response cache so we don't burn the rate budget on repeat
-// renders. Keyed by full path. Most feeds tolerate 60s staleness fine.
+// In-memory response cache for the current tab — saves a roundtrip to
+// the edge cache when the same data is requested repeatedly within one
+// session (e.g. tab-switch).
 const _nadCache = new Map();
-const NAD_CACHE_TTL = 20_000;  // 20s — tight cadence, plenty of budget on 100 req/min
+const NAD_CACHE_TTL = 20_000;  // 20s · matches the edge cache window
 
 async function nadFetch(path, { cache = true } = {}){
   const now = Date.now();
@@ -951,12 +954,11 @@ async function nadFetch(path, { cache = true } = {}){
     if (hit && (now - hit.t) < NAD_CACHE_TTL) return hit.v;
   }
   try{
-    const headers = {};
-    if (NAD_API_KEY) headers['X-API-Key'] = NAD_API_KEY;
-    const r = await fetch(NAD_API + path, { headers });
+    const r = await fetch(NAD_API + path);
     if (r.status === 429){
-      const remaining = r.headers.get('x-ratelimit-remaining');
-      console.warn('nad.fun rate-limited', path, 'remaining:', remaining);
+      // Should be virtually impossible with the proxy + 3-key rotation,
+      // but defend against it anyway
+      console.warn('nad.fun rate-limited', path, 'remaining:', r.headers.get('x-rl-remaining'));
       return { _rateLimited: true };
     }
     if (!r.ok) return null;
@@ -971,8 +973,8 @@ function renderEmpty(emoji, title, body){
   return `<div class="soon-panel"><div class="icon">${emoji}</div><h3>${title}</h3><p>${body}</p></div>`;
 }
 function renderRateLimited(){
-  return renderEmpty('⏳', 'Rate limited',
-    `nad.fun caps anonymous traffic at 10 req/min — King needs to drop in an API key. <br><br>Create one at <a href="https://nad.fun" target="_blank" style="color:var(--gold);text-decoration:underline">nad.fun</a> → settings → API Keys, then paste it into <code style="background:rgba(245,194,66,.1);padding:2px 6px;border-radius:4px;font-size:11px">NAD_API_KEY</code> in /hub.html.`);
+  return renderEmpty('⏳', 'Backend busy',
+    `The data proxy is hitting nad.fun's rate limits. This is rare — wait 30 seconds and refresh. If it persists, ping King.`);
 }
 
 // Token card renderer for nad.fun-shape data (NEW PUPS + HUNTING GROUNDS)

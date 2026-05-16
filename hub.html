@@ -505,7 +505,7 @@ a{color:inherit;text-decoration:none;}
 // Alchemy dashboard to allowed domains: monwolf.vercel.app, monwolf.xyz,
 // www.monwolf.xyz. Without those restrictions anyone can scrape and reuse it.
 const RPC          = 'https://monad-mainnet.g.alchemy.com/v2/_ZfKSl1YD2Yur6eajfKkN';
-const NAD_API      = 'https://api.nad.fun';  // mainnet bot-api server
+const NAD_API      = 'https://api.nadapp.net';  // mainnet API (per official SDK constants)
 const EXPLORER     = 'https://monadexplorer.com';
 const DEAD         = '0x000000000000000000000000000000000000dEaD';
 const MONWOLF      = '0x8361a59d340466211ad4aB41C09a32e4530a7777';
@@ -862,12 +862,12 @@ $('terrRefresh').addEventListener('click', refreshTerritory);
 // Without an API key, nad.fun rate-limits external origins to 10 req/min.
 // Creating a key (free) bumps that to 100/min — paste it into NAD_API_KEY.
 // Sign up: https://nad.fun, connect wallet, settings → API Keys → Create.
-const NAD_API_KEY = '';  // ← paste 'nadfun_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' here
+const NAD_API_KEY = 'nadfun_xY2HNrb6fQGwIHXH63mFNovyyprIR6cL';  // King's MonWolf Hub key — 100 req/min
 
 // In-memory response cache so we don't burn the rate budget on repeat
 // renders. Keyed by full path. Most feeds tolerate 60s staleness fine.
 const _nadCache = new Map();
-const NAD_CACHE_TTL = 60_000;  // 60s
+const NAD_CACHE_TTL = 20_000;  // 20s — tight cadence, plenty of budget on 100 req/min
 
 async function nadFetch(path, { cache = true } = {}){
   const now = Date.now();
@@ -1233,13 +1233,11 @@ document.querySelectorAll('.tab').forEach(tab => {
   refreshTerritory();
   refreshBurn();
   refreshTicker();
-  // Auto-refresh cadence tuned to live within nad.fun's 10 req/min anon
-  // limit. Territory hits 7 nad endpoints per refresh + 7 DexScreener.
-  // 90s here means ~5 req/min on Territory alone. Bumps to 30s once
-  // King drops in the API key (100/min budget = plenty of headroom).
-  setInterval(refreshTerritory, 90_000);
+  // Auto-refresh — Territory 30s + ticker 15s. With NAD_API_KEY granting
+  // 100 req/min, this leaves plenty of headroom for tab loads + manual refreshes.
+  setInterval(refreshTerritory, 30_000);
   setInterval(refreshBurn,      60_000);
-  setInterval(refreshTicker,    30_000);
+  setInterval(refreshTicker,    15_000);
   const acc = await detectAccount();
   if (acc){ STATE.account = acc; renderPackCard(); }
 })();

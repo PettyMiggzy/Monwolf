@@ -311,52 +311,38 @@ async function run(){
   let signature;
   try{ signature = await signer.sign(nonce); }
   catch(e){ setStep(3,'error',`<span class="err">${e.message || 'Signature rejected.'}</span>`); $('goBtn').disabled=false; return; }
-  setStep(4, 'active', `Signed · creating session…`);
+  setStep(4, 'active', `Signed · posting to MonWolf proxy…<br><span style="color:var(--text-3);font-size:10px">(server-side mint dodges nad.fun's Origin allowlist)</span>`);
 
-  // Step 4: Session
+  // Steps 4+5: Hand off to our Vercel proxy which does /auth/session and
+  // /api-key server-side. This dodges nad.fun's Origin allowlist on /api-key
+  // (which only accepts nad.fun / nadapp.net / localhost browser origins).
+  let apiKey;
   try{
-    const r = await fetch(NAD_API + '/auth/session', {
+    const r = await fetch('/api/mint-key', {
       method: 'POST',
-      credentials: 'include',  // accept the session cookie
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         signature,
         nonce,
         chain_id: CHAIN_ID_DEC,
         wallet_address: null,
+        key_name: keyName,
+        expires_in_days: keyExpiry || undefined,
       }),
     });
-    if (!r.ok){
-      const txt = await r.text();
-      throw new Error(`HTTP ${r.status} from /auth/session — ${txt.slice(0,120)}`);
-    }
-    await r.json();  // consume the body even if we don't use it
-  }catch(e){ setStep(4,'error',`<span class="err">${e.message}</span>`); $('goBtn').disabled=false; return; }
-  setStep(5, 'active', `Session live · minting key "${keyName}"…`);
-
-  // Step 5: Create key
-  let apiKey;
-  try{
-    const body = { name: keyName, description: 'MonWolf Pack Den hub integration' };
-    if (keyExpiry) body.expires_in_days = keyExpiry;
-    const r = await fetch(NAD_API + '/api-key', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    if (!r.ok){
-      const txt = await r.text();
-      throw new Error(`HTTP ${r.status} from /api-key — ${txt.slice(0,150)}`);
-    }
     const data = await r.json();
+    if (!r.ok){
+      const detail = data.detail || data.error || `HTTP ${r.status}`;
+      throw new Error(detail);
+    }
     apiKey = data.api_key;
-    if (!apiKey) throw new Error('Response missing api_key field: ' + JSON.stringify(data).slice(0,200));
+    if (!apiKey) throw new Error('Proxy response missing api_key: ' + JSON.stringify(data).slice(0, 200));
   }catch(e){
-    setStep(5,'error',`<span class="err">${e.message}</span><br><br><span style="color:var(--text-3);font-size:10px">Common causes: hit 5-key limit (delete one at nad.fun), or browser blocking third-party cookies (try Chrome / disable strict tracking protection).</span>`);
+    setStep(5,'error',`<span class="err">${e.message}</span><br><br><span style="color:var(--text-3);font-size:10px">Common causes: hit 5-key limit at nad.fun (delete one and retry), signature already used (sign a fresh nonce), or session expired between steps.</span>`);
     $('goBtn').disabled=false;
     return;
   }
+  setStep(4, 'done');
   setStep(5, 'done', `✓ Key created`);
 
   // Show the key

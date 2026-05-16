@@ -29,9 +29,9 @@ const MONORAIL = {
   APP_ID: '1176408161625',  // 1% fee → flywheel treasury wallet
 };
 
-// Public Monad RPC. (Removed `/api/rpc` — that's moyaki's serverless proxy
-// which doesn't exist on MoniStake, was causing 404 spam in console.)
-const RPC_URLS = ['https://rpc.monad.xyz'];
+// Routes through /api/rpc which proxies to Alchemy server-side (key hidden).
+// Falls back to public RPC if proxy is cold/unreachable.
+const RPC_URLS = ['/api/rpc', 'https://rpc.monad.xyz'];
 
 const tokenIface = new ethers.Interface([
   'function approve(address spender, uint256 amount) returns (bool)',

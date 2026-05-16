@@ -510,7 +510,7 @@ a{color:inherit;text-decoration:none;}
 // SECURITY: this key is visible in client-side JS — lock it down in the
 // Alchemy dashboard to allowed domains: monwolf.vercel.app, monwolf.xyz,
 // www.monwolf.xyz. Without those restrictions anyone can scrape and reuse it.
-const RPC          = 'https://monad-mainnet.g.alchemy.com/v2/_ZfKSl1YD2Yur6eajfKkN';
+const RPC          = '/api/rpc';  // Proxies to Alchemy server-side (key never reaches browser)
 const NAD_API      = '/api/nad';  // Vercel proxy — rotates 3 API keys, edge-caches 20s
 const EXPLORER     = 'https://monadexplorer.com';
 const DEAD         = '0x000000000000000000000000000000000000dEaD';

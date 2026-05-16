@@ -42,8 +42,9 @@ a { color:inherit; text-decoration:none; }
 .brand { display:flex; align-items:center; gap:.7rem; }
 .brand-logo { width:42px; height:42px; border-radius:10px;
   background:var(--grad); display:flex; align-items:center; justify-content:center;
-  font-family:'Russo One'; color:#0a0118; font-size:1.2rem;
+  overflow:hidden; padding:3px;
   box-shadow:0 8px 24px -6px rgba(168,85,247,.7), inset 0 1px 0 rgba(255,255,255,.3); }
+.brand-logo img { width:100%; height:100%; object-fit:contain; display:block; }
 .brand-name { font-family:'Russo One',sans-serif; font-size:1.05rem;
   letter-spacing:.18em; line-height:1; }
 .brand-name .sub { display:block; font-size:.65rem; color:var(--text-3);
@@ -165,7 +166,7 @@ a { color:inherit; text-decoration:none; }
 <div class="page">
   <div class="topbar">
     <div class="brand">
-      <div class="brand-logo">M</div>
+      <div class="brand-logo"><img src="logo.png" alt=""></div>
       <div class="brand-name">MONWOLF<span class="sub">ARCADE</span></div>
     </div>
     <div class="wallet-pill" id="walletPill">

@@ -1310,8 +1310,8 @@ document.querySelectorAll('.tab').forEach(tab => {
   refreshTerritory();
   refreshBurn();
   refreshTicker();
-  // Auto-refresh — Territory 30s + ticker 15s. With NAD_API_KEY granting
-  // 100 req/min, this leaves plenty of headroom for tab loads + manual refreshes.
+  // Auto-refresh — Territory 30s + ticker 15s. With proxy + 3-key
+  // rotation pool and 20s edge cache, traffic stays comfortable.
   setInterval(refreshTerritory, 30_000);
   setInterval(refreshBurn,      60_000);
   setInterval(refreshTicker,    15_000);

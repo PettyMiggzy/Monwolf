@@ -906,11 +906,8 @@ $('goToCreate').onclick = () => showScreen('screenCreate');
 $('restoreSeed').onclick = () => showScreen('screenRestore');
 $('switchToCreate').onclick = (e) => { e.preventDefault(); showScreen('screenCreate'); };
 
-// Show "unlock my wallet" only if any wallets exist
-function refreshReturningVisibility(){
-  $('returningBox').style.display = listWallets().length ? '' : 'none';
-}
-refreshReturningVisibility();
+// (Sign-in mode card is always visible — wallets can live in the cloud vault
+// even when this device has none locally.)
 
 // ════════════════════════════════════════════════════════════
 // CREATE WALLET FLOW

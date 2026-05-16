@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#0a0118">
+<title>Token · MonWolf Pack Den</title>
+<meta name="description" content="Live token detail · chart · native buy/sell on Monad. Powered by MonWolf Pack Den.">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Space+Grotesk:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --pink:#FF1493;--pink-soft:#FF69B4;--pink-glow:rgba(255,20,147,.5);
+  --purple:#A855F7;--purple-deep:#7C3AED;
+  --cyan:#22d3ee;--green:#22d36f;--red:#ff4d6d;--amber:#ffaa33;
+  --bg:#0a0118;--ink:#FFE9F4;--mute:#9a8bb3;
+  --panel:rgba(20,8,40,.55);--panel-line:rgba(255,20,147,.18);
+}
+html,body{overflow-x:hidden;}
+body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.5;}
+body::before{content:'';position:fixed;inset:0;z-index:-3;background:radial-gradient(ellipse at 50% 0%,rgba(255,20,147,.2),transparent 60%),radial-gradient(ellipse at 100% 80%,rgba(168,85,247,.18),transparent 55%),radial-gradient(ellipse at 0% 60%,rgba(255,105,180,.12),transparent 50%);}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:-2;background-image:repeating-linear-gradient(0deg,rgba(255,20,147,.025) 0,rgba(255,20,147,.025) 1px,transparent 1px,transparent 4px);}
+
+.nav{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;gap:14px;background:rgba(10,1,24,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--panel-line);}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
+.brand-img{width:36px;height:36px;border-radius:50%;border:2px solid var(--pink);box-shadow:0 0 16px var(--pink-glow);overflow:hidden;flex-shrink:0;background:#000;}
+.brand-img img{width:100%;height:100%;object-fit:cover;}
+.brand-name{font-family:'Bungee',sans-serif;font-size:18px;letter-spacing:2.5px;color:#fff;}
+.brand-sub{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--pink);margin-top:-2px;}
+.nav-back{padding:8px 14px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--pink);border:1px solid var(--pink);border-radius:6px;background:rgba(255,20,147,.06);}
+.nav-back:hover{background:rgba(255,20,147,.14);}
+.wallet-pill{padding:8px 13px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;background:rgba(34,211,238,.1);color:var(--cyan);border:1px solid rgba(34,211,238,.4);cursor:pointer;}
+.wallet-pill.on{background:rgba(34,211,111,.12);color:var(--green);border-color:rgba(34,211,111,.4);}
+.wallet-pill:hover{filter:brightness(1.15);}
+
+.wrap{max-width:1180px;margin:0 auto;padding:18px;}
+.split{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;}
+@media (max-width:880px){.split{grid-template-columns:1fr;}}
+
+.empty{padding:40px 20px;text-align:center;color:var(--mute);font-family:'JetBrains Mono',monospace;font-size:12px;}
+
+.hero{background:var(--panel);border:1px solid var(--panel-line);border-radius:14px;padding:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+.hero-logo{width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,#FF1493,#A855F7);border:2px solid rgba(255,20,147,.5);object-fit:cover;flex-shrink:0;}
+.hero-meta{flex:1;min-width:0;}
+.hero-symbol{font-family:'Bungee',sans-serif;font-size:22px;letter-spacing:2px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hero-name{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mute);letter-spacing:.5px;margin-top:2px;}
+.hero-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.hero-status{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;}
+.hero-status.curve{background:rgba(255,170,51,.14);color:var(--amber);border:1px solid rgba(255,170,51,.4);}
+.hero-status.dex{background:rgba(34,211,111,.14);color:var(--green);border:1px solid rgba(34,211,111,.4);}
+.hero-cto{background:linear-gradient(135deg,#FFD55A,#FF1493);color:#000;font-family:'Bungee',sans-serif;font-size:9px;letter-spacing:1.5px;padding:3px 8px;border-radius:5px;}
+.hero-pct{font-family:'Bungee',sans-serif;font-size:18px;letter-spacing:1px;padding:8px 14px;border-radius:8px;flex-shrink:0;}
+.hero-pct.up{background:rgba(34,211,111,.16);color:var(--green);border:1px solid rgba(34,211,111,.45);}
+.hero-pct.down{background:rgba(255,77,109,.16);color:var(--red);border:1px solid rgba(255,77,109,.45);}
+.hero-pct.flat{background:rgba(255,255,255,.04);color:var(--mute);border:1px solid rgba(255,255,255,.1);}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+@media (max-width:520px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-card{background:var(--panel);border:1px solid var(--panel-line);border-radius:10px;padding:11px 12px;font-family:'JetBrains Mono',monospace;}
+.stat-card .lbl{font-size:9px;color:var(--mute);letter-spacing:1.2px;}
+.stat-card .val{color:#fff;font-weight:700;margin-top:3px;font-size:15px;}
+.stat-card .val.up{color:var(--green);}
+.stat-card .val.down{color:var(--red);}
+
+.bc-box{background:var(--panel);border:1px solid rgba(255,170,51,.4);border-radius:12px;padding:14px;margin-bottom:14px;}
+.bc-box h3{font-family:'Bungee',sans-serif;font-size:13px;letter-spacing:1.8px;color:var(--amber);margin-bottom:10px;font-weight:400;}
+.bc-bar{background:rgba(8,0,18,.6);border-radius:8px;overflow:hidden;height:30px;position:relative;border:1px solid rgba(255,170,51,.3);}
+.bc-fill{height:100%;background:linear-gradient(90deg,#FFAA33,#FF1493);box-shadow:0 0 14px rgba(255,170,51,.5);transition:width .6s;}
+.bc-fill.about-to-grad{background:linear-gradient(90deg,#FFD55A,#22d36f);animation:gradPulse 1.2s infinite;}
+@keyframes gradPulse{0%,100%{box-shadow:0 0 14px rgba(255,213,90,.5);}50%{box-shadow:0 0 30px rgba(34,211,111,.8);}}
+.bc-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bungee',sans-serif;font-size:13px;letter-spacing:1.5px;color:#fff;text-shadow:0 0 6px rgba(0,0,0,.85);}
+
+.chart-box{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:0;margin-bottom:14px;overflow:hidden;position:relative;}
+
+/* Bonding curve panel — pre-grad visualization */
+.curve-panel{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:18px;margin-bottom:14px;}
+.curve-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.curve-title{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.18em;color:#fff;text-transform:uppercase;}
+.curve-sub{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--mute);text-transform:uppercase;}
+.curve-plot{width:100%;height:220px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.04);border-radius:8px;overflow:hidden;position:relative;}
+.curve-plot svg{display:block;width:100%;height:100%;}
+.curve-plot .curve-stroke{fill:none;stroke:url(#curveGrad);stroke-width:2;}
+.curve-plot .curve-stroke-future{fill:none;stroke:rgba(255,255,255,.15);stroke-width:1.5;stroke-dasharray:4 4;}
+.curve-plot .curve-fill{fill:url(#curveFill);opacity:.35;}
+.curve-plot .axis-line{stroke:rgba(255,255,255,.08);stroke-width:1;}
+.curve-plot .axis-label{font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--mute);}
+.curve-plot .current-dot{fill:var(--pink);stroke:#fff;stroke-width:2;filter:drop-shadow(0 0 8px var(--pink));}
+.curve-plot .grad-marker{stroke:var(--gold,#f5c242);stroke-width:1.5;stroke-dasharray:3 3;}
+.curve-plot .grad-label{font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--gold,#f5c242);font-weight:700;letter-spacing:.1em;}
+.curve-plot .curve-tooltip{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#fff;pointer-events:none;}
+.curve-legend{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.leg-item{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;}
+.leg-dot{display:inline-block;width:10px;height:10px;border-radius:50%;}
+.leg-dot.curve{background:linear-gradient(135deg,var(--pink),var(--cyan,#06d6f5));}
+.leg-dot.current{background:var(--pink);box-shadow:0 0 6px var(--pink);}
+.leg-dot.grad{background:var(--gold,#f5c242);}
+.chart-box iframe{width:100%;height:540px;border:none;display:block;background:#0a0118;}
+.chart-fallback{padding:36px 20px;text-align:center;color:var(--mute);font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;}
+.chart-fallback a{color:var(--cyan);text-decoration:none;}
+
+/* Native chart */
+.chart-toolbar{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  padding:10px 14px;
+  background:rgba(8,0,18,.55);border-bottom:1px solid var(--panel-line);
+}
+.chart-pills{display:flex;gap:4px;flex-wrap:wrap;}
+.chart-pill{
+  padding:5px 10px;border-radius:6px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;font-weight:700;
+  background:rgba(255,20,147,.08);border:1px solid rgba(255,20,147,.2);color:var(--mute);
+  transition:all .12s;
+}
+.chart-pill:hover{color:#fff;border-color:var(--pink);}
+.chart-pill.active{background:var(--pink);color:#fff;border-color:var(--pink);box-shadow:0 0 12px rgba(255,20,147,.4);}
+.chart-stats{display:flex;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mute);letter-spacing:.6px;flex-wrap:wrap;}
+.chart-stats .stat{display:inline-flex;gap:4px;}
+.chart-stats .stat b{color:#fff;font-weight:700;}
+.chart-stats .stat .up{color:var(--green);}
+.chart-stats .stat .down{color:var(--red);}
+.chart-canvas{height:480px;width:100%;background:#0a0118;position:relative;}
+.chart-canvas .loading{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--mute);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;
+  background:rgba(10,1,24,.5);
+}
+.chart-source{
+  padding:7px 14px;background:rgba(8,0,18,.6);border-top:1px solid var(--panel-line);
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mute);letter-spacing:1.5px;
+}
+.chart-source a{color:var(--pink);text-decoration:none;}
+.chart-source img{height:12px;width:auto;vertical-align:middle;margin-left:5px;}
+
+.ca-row{background:var(--panel);border:1px solid var(--panel-line);border-radius:10px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mute);margin-bottom:14px;flex-wrap:wrap;gap:6px;}
+.ca-row .ca{cursor:pointer;background:rgba(8,0,18,.55);border:1px solid rgba(255,20,147,.1);padding:6px 10px;border-radius:6px;color:#fff;transition:all .12s;font-family:inherit;font-size:inherit;}
+.ca-row .ca:hover{border-color:var(--pink);}
+.ca-row .ca.copied{background:rgba(34,211,111,.16);color:var(--green);border-color:rgba(34,211,111,.4);}
+.ca-row .links{display:flex;gap:6px;align-items:center;}
+.ca-row .links a{width:28px;height:28px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:rgba(8,0,18,.55);border:1px solid rgba(255,255,255,.08);text-decoration:none;color:var(--mute);font-size:13px;}
+.ca-row .links a:hover{border-color:var(--pink);color:#fff;}
+
+.swap{background:var(--panel);border:1px solid var(--pink);border-radius:14px;padding:18px;position:sticky;top:84px;box-shadow:0 0 30px rgba(255,20,147,.2);}
+.swap h2{font-family:'Bungee',sans-serif;font-size:16px;letter-spacing:2px;color:#fff;margin-bottom:14px;font-weight:400;}
+.swap-tabs{display:flex;gap:6px;margin-bottom:14px;}
+.swap-tabs button{flex:1;padding:11px;background:var(--panel);border:1px solid var(--panel-line);border-radius:8px;font-family:'Bungee',sans-serif;font-size:11px;letter-spacing:1.6px;color:var(--mute);cursor:pointer;transition:all .12s;}
+.swap-tabs button.active.buy{background:linear-gradient(135deg,rgba(34,211,111,.2),rgba(34,211,238,.16));color:var(--green);border-color:var(--green);}
+.swap-tabs button.active.sell{background:linear-gradient(135deg,rgba(255,77,109,.2),rgba(255,20,147,.16));color:var(--red);border-color:var(--red);}
+
+.swap-row{background:rgba(8,0,18,.55);border:1px solid var(--panel-line);border-radius:10px;padding:12px;margin-bottom:8px;}
+.swap-row .top{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mute);letter-spacing:1px;margin-bottom:6px;}
+.swap-row .bal{cursor:pointer;color:var(--cyan);}
+.swap-row .bal:hover{color:#fff;}
+.swap-row .row{display:flex;align-items:center;gap:8px;}
+.swap-row input{flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;min-width:0;}
+.swap-row input::placeholder{color:#42305a;}
+.swap-row .tk{font-family:'Bungee',sans-serif;font-size:13px;letter-spacing:1.5px;color:#fff;flex-shrink:0;}
+
+.swap-presets{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:10px;}
+.swap-presets button{padding:7px 0;background:rgba(255,20,147,.08);border:1px solid rgba(255,20,147,.25);color:var(--pink);border-radius:6px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;font-weight:700;}
+.swap-presets button:hover{background:rgba(255,20,147,.22);color:#fff;}
+
+.swap-quote{background:rgba(8,0,18,.55);border:1px solid var(--panel-line);border-radius:10px;padding:11px 13px;margin-bottom:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mute);display:flex;justify-content:space-between;align-items:center;}
+.swap-quote .out{color:#fff;font-weight:700;}
+.swap-quote .usd{color:var(--mute);font-size:10px;margin-left:6px;}
+
+.burn-flywheel{
+  background:linear-gradient(135deg, rgba(255,77,109,.10) 0%, rgba(255,20,147,.08) 100%);
+  border:1px solid rgba(255,77,109,.32);
+  border-radius:10px;padding:9px 12px;margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;
+}
+.burn-flywheel .bf-icon{font-size:18px;line-height:1;}
+.burn-flywheel .bf-text{flex:1;}
+.burn-flywheel .bf-line{font-size:11px;color:#fff;letter-spacing:.3px;line-height:1.4;}
+.burn-flywheel .bf-line b{color:var(--red);font-weight:700;}
+.burn-flywheel .bf-sub{font-size:9px;color:var(--mute);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+
+.swap-settings{background:rgba(8,0,18,.55);border:1px solid var(--panel-line);border-radius:10px;padding:11px 13px;margin-bottom:10px;}
+.swap-settings summary{cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.8px;color:var(--mute);list-style:none;display:flex;justify-content:space-between;align-items:center;}
+.swap-settings summary::-webkit-details-marker{display:none;}
+.swap-settings summary .slp{color:var(--cyan);font-weight:700;}
+.swap-settings .body{margin-top:10px;}
+.swap-settings input[type=range]{width:100%;}
+.swap-settings .preset-chips{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;}
+.swap-settings .preset-chips button{padding:4px 8px;font-size:9px;background:rgba(255,20,147,.08);border:1px solid rgba(255,20,147,.25);color:var(--pink);border-radius:5px;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+.swap-settings .preset-chips button.active{background:var(--pink);color:#fff;}
+
+.swap-execute{width:100%;padding:15px;border:none;border-radius:10px;cursor:pointer;font-family:'Bungee',sans-serif;font-size:14px;letter-spacing:2px;background:linear-gradient(135deg,#22d36f,#22d3ee);color:#0a0118;font-weight:700;transition:all .15s;}
+.swap-execute.sell-mode{background:linear-gradient(135deg,#ff4d6d,#FF1493);color:#fff;}
+.swap-execute.connect-mode{background:linear-gradient(135deg,#FF1493,#A855F7);color:#fff;}
+.swap-execute:disabled{opacity:.5;cursor:not-allowed;}
+.swap-execute:not(:disabled):hover{transform:translateY(-1px);filter:brightness(1.1);}
+
+.tx-status{margin-top:12px;padding:10px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.4px;display:none;}
+.tx-status.show{display:block;}
+.tx-status.pending{background:rgba(255,170,51,.12);color:var(--amber);border:1px solid rgba(255,170,51,.4);}
+.tx-status.success{background:rgba(34,211,111,.12);color:var(--green);border:1px solid rgba(34,211,111,.4);}
+.tx-status.error{background:rgba(255,77,109,.12);color:var(--red);border:1px solid rgba(255,77,109,.4);}
+.tx-status a{color:inherit;text-decoration:underline;}
+
+.disclaim{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mute);text-align:center;letter-spacing:.6px;line-height:1.5;}
+
+.powered-by-monorail{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:10px;padding:8px 12px;
+  background:rgba(8,0,18,.55);border:1px solid var(--panel-line);border-radius:8px;
+  text-decoration:none;color:var(--mute);
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;font-weight:700;
+  opacity:.7;transition:all .15s;
+}
+.powered-by-monorail:hover{opacity:1;border-color:rgba(255,170,51,.4);}
+.powered-by-monorail img{height:13px;width:auto;filter:brightness(1.1);}
+
+.foot{max-width:1180px;margin:24px auto;padding:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-top:1px solid var(--panel-line);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.2px;color:var(--mute);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="/hub">
+    <span class="brand-img"><img src="/logo.png" alt="" onerror="this.src='/logo.png'"></span>
+    <div>
+      <div class="brand-name">MONWOLF</div>
+      <div class="brand-sub">TOKEN VIEW</div>
+    </div>
+  </a>
+  <button class="wallet-pill" id="walletPill">⚡ CONNECT</button>
+</nav>
+
+<div class="wrap">
+  <a class="nav-back" href="/hub" style="margin-bottom:14px;display:inline-block;">◄ BACK TO HUB</a>
+
+  <div id="loadState" class="empty">⏳ loading token data…</div>
+
+  <div id="tokenContent" style="display:none;">
+
+    <div class="hero">
+      <img class="hero-logo" id="heroLogo" alt="" onerror="this.style.background='linear-gradient(135deg,#FF1493,#A855F7)';this.removeAttribute('src');">
+      <div class="hero-meta">
+        <div class="hero-symbol" id="heroSymbol">$—</div>
+        <div class="hero-name" id="heroName">—</div>
+        <div class="hero-row">
+          <span class="hero-status" id="heroStatus">—</span>
+          <span class="hero-cto" id="heroCto" style="display:none;">CTO</span>
+          <span class="hero-status" id="heroAge" style="background:rgba(255,255,255,.04);color:var(--mute);border:1px solid rgba(255,255,255,.1);">—</span>
+        </div>
+      </div>
+      <div class="hero-pct flat" id="heroPct">—</div>
+    </div>
+
+    <div class="split">
+
+      <div>
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card"><div class="lbl">PRICE USD</div><div class="val" id="sPrice">—</div></div>
+          <div class="stat-card"><div class="lbl">MARKET CAP</div><div class="val" id="sMcap">—</div></div>
+          <div class="stat-card"><div class="lbl">HOLDERS</div><div class="val" id="sHolders">—</div></div>
+          <div class="stat-card stat-dex-only" id="statAth"><div class="lbl">OFF ATH</div><div class="val" id="sAth">—</div></div>
+          <div class="stat-card stat-dex-only" id="statVol"><div class="lbl">TOTAL VOL</div><div class="val" id="sVol">—</div></div>
+          <div class="stat-card stat-dex-only" id="statAthPx"><div class="lbl">ATH USD</div><div class="val" id="sAthPx">—</div></div>
+        </div>
+
+        <div class="bc-box" id="bcBox" style="display:none;">
+          <h3>⏳ BONDING CURVE PROGRESS</h3>
+          <div class="bc-bar">
+            <div class="bc-fill" id="bcFill" style="width:0%;"></div>
+            <div class="bc-text" id="bcText">0% TO GRADUATION</div>
+          </div>
+          <div class="bc-stats" id="bcStats" style="display:none;margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--mute);text-transform:uppercase;">TOKENS TO GRAD</div>
+              <div id="bcTokensLeft" style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:#fff;margin-top:4px;">—</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--mute);text-transform:uppercase;">MON TO GRAD</div>
+              <div id="bcMonLeft" style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--pink);margin-top:4px;">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-box" id="chartBox">
+          <div class="chart-toolbar" id="chartToolbar" style="display:none;">
+            <div class="chart-pills" id="chartPills">
+              <button class="chart-pill" data-res="1">1m</button>
+              <button class="chart-pill" data-res="5">5m</button>
+              <button class="chart-pill" data-res="15">15m</button>
+              <button class="chart-pill active" data-res="60">1H</button>
+              <button class="chart-pill" data-res="240">4H</button>
+              <button class="chart-pill" data-res="1D">1D</button>
+            </div>
+            <div class="chart-stats" id="chartStats"></div>
+          </div>
+          <div class="chart-canvas" id="chartCanvas">
+            <div class="chart-fallback" id="chartFallback">⏳ loading chart…</div>
+          </div>
+          <div class="chart-source" id="chartSource" style="display:none;">
+            <span>OHLC DATA · NAD.FUN</span>
+            <a href="https://nad.fun" target="_blank" rel="noopener">powered by nad.fun ↗</a>
+          </div>
+        </div>
+
+        <!-- Bonding curve plot — visible for pre-grad only. Shows price-vs-supply-sold curve with current position marker. -->
+        <div class="curve-panel" id="curvePanel" style="display:none;">
+          <div class="curve-head">
+            <span class="curve-title">🌀 BONDING CURVE</span>
+            <span class="curve-sub">price · vs · tokens sold</span>
+          </div>
+          <div class="curve-plot" id="curvePlot"></div>
+          <div class="curve-legend">
+            <span class="leg-item"><span class="leg-dot curve"></span> curve</span>
+            <span class="leg-item"><span class="leg-dot current"></span> current price</span>
+            <span class="leg-item"><span class="leg-dot grad"></span> graduation</span>
+          </div>
+        </div>
+
+        <div class="ca-row">
+          <button class="ca" id="caCopy">📋 —</button>
+          <div class="links">
+            <a id="lExplorer" target="_blank" rel="noopener" title="Monad explorer">🔎</a>
+            <a id="lChart" target="_blank" rel="noopener" title="DexScreener">📊</a>
+            <a id="lNad" target="_blank" rel="noopener" title="nad.fun">🚀</a>
+            <a id="lTwitter" target="_blank" rel="noopener" title="X" style="display:none;">𝕏</a>
+            <a id="lTelegram" target="_blank" rel="noopener" title="TG" style="display:none;">✈</a>
+            <a id="lWebsite" target="_blank" rel="noopener" title="Web" style="display:none;">🌐</a>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="swap">
+          <h2>⚡ SWAP</h2>
+          <div class="swap-tabs">
+            <button class="active buy" data-side="buy">⚡ BUY</button>
+            <button class="sell" data-side="sell">💰 SELL</button>
+          </div>
+
+          <div class="swap-row">
+            <div class="top">
+              <span id="amtLabel">YOU SPEND</span>
+              <span class="bal" id="amtBalance">balance: —</span>
+            </div>
+            <div class="row">
+              <input id="amtInput" type="number" step="any" placeholder="0.0" inputmode="decimal">
+              <span class="tk" id="amtToken">MON</span>
+            </div>
+          </div>
+
+          <div class="swap-presets" id="presets"></div>
+
+          <div class="swap-quote">
+            <span>YOU GET</span>
+            <span><span class="out" id="quoteOut">—</span><span class="usd" id="quoteUsd"></span></span>
+          </div>
+
+          <div class="burn-flywheel" id="burnFlywheel" style="display:none;">
+            <span class="bf-icon">🔥</span>
+            <div class="bf-text">
+              <div class="bf-line"><b id="burnAmt">—</b> <span id="burnSym">—</span> → MONWOLF buyback + burn</div>
+              <div class="bf-sub">1% fee feeds the flywheel · every trade pumps holders</div>
+            </div>
+          </div>
+
+          <details class="swap-settings">
+            <summary>
+              <span>⚙ slippage tolerance</span>
+              <span class="slp" id="slpDisplay">1.0%</span>
+            </summary>
+            <div class="body">
+              <input type="range" id="slpSlider" min="0.1" max="10" step="0.1" value="1.0">
+              <div class="preset-chips">
+                <button data-slp="0.5">0.5%</button>
+                <button data-slp="1.0" class="active">1.0%</button>
+                <button data-slp="2.0">2.0%</button>
+                <button data-slp="5.0">5.0%</button>
+              </div>
+            </div>
+          </details>
+
+          <button class="swap-execute connect-mode" id="executeBtn">⚡ CONNECT WALLET</button>
+
+          <div class="tx-status" id="txStatus"></div>
+
+          <div class="disclaim">Hybrid routing — <a href="https://monorail.xyz" target="_blank" rel="noopener" style="color:#FF1493;text-decoration:none;">Monorail</a> aggregator (Capricorn / Kuru / Crystal / Octoswap / Atlantis / Uniswap V3) with <a href="https://nad.fun" target="_blank" rel="noopener" style="color:#FF1493;text-decoration:none;">nad.fun</a> bonding-curve fallback for pre-grad tokens. Pre-flight sim prevents wasted gas.</div>
+
+          <a class="powered-by-monorail" href="https://monorail.xyz" target="_blank" rel="noopener" title="Swap routing powered by Monorail">
+            <span>POWERED BY</span>
+            <img src="/brand/monorail-text.svg" alt="Monorail">
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div>◆ monwolf.fun · trader hub v1.0 · token view</div>
+  <a href="https://t.me/kingpetty317" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;background:linear-gradient(135deg,rgba(255,20,147,.14),rgba(34,211,238,.14));border:1px solid rgba(255,20,147,.45);border-radius:20px;text-decoration:none;color:#fff;font-family:'Bungee',sans-serif;font-size:9px;letter-spacing:1.5px;">
+    <span style="font-size:11px;">👑</span>
+    <span>KING PETTY BUILD</span>
+    <span style="color:#9FE9FF;font-size:8px;letter-spacing:1px;">· @kingpetty317</span>
+  </a>
+</div>
+
+<script src="/js/wallet-helper.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.0/dist/ethers.umd.min.js"></script>
+<script src="https://unpkg.com/lightweight-charts@4.1.5/dist/lightweight-charts.standalone.production.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/hub-gate.js"></script>
+<script src="/js/hub-trade.js"></script>
+<script>
+'use strict';
+
+const $ = s => document.querySelector(s);
+const PARAMS = new URLSearchParams(location.search);
+const ADDR = (PARAMS.get('addr') || '').toLowerCase();
+const PRE_AMOUNT = PARAMS.get('amount') || '';
+const PRE_SIDE = (PARAMS.get('side') || 'buy').toLowerCase();
+const NADFUN_API = '/api/nad';  // Vercel proxy — auto-injects key, rotates pool, edge-caches
+const RPC_URL    = '/api/rpc';  // Server-side QuickNode proxy (key never reaches browser)
+
+// nad.fun V3 mainnet contracts (see Naddotfun/contract-v3-abi)
+const LENS_ADDR  = '0x7e78A8DE94f21804F7a17F4E8BF9EC2c872187ea';
+const BC_ROUTER  = '0x6F6B8F1a20703309951a5127c45B49b1CD981A22';  // pre-grad swaps
+const DEX_ROUTER = '0x0B79d71AE99528D1dB24A4148b5f4F865cc2b137';  // post-grad swaps
+// Lens consolidates all view methods — one contract, every read.
+const LENS_ABI = [
+  'function isGraduated(address _token) external view returns (bool)',
+  'function isLocked(address _token) external view returns (bool)',
+  'function getProgress(address _token) external view returns (uint256)',
+  'function availableBuyTokens(address _token) external view returns (uint256 availableBuyToken, uint256 requiredMonAmount)',
+  'function getAmountOut(address _token, uint256 _amountIn, bool _isBuy) external view returns (address router, uint256 amountOut)',
+];
+
+if (!ADDR || !/^0x[0-9a-f]{40}$/.test(ADDR)) location.href = '/hub';
+
+const STATE = {
+  side: PRE_SIDE === 'sell' ? 'sell' : 'buy',
+  account: null,
+  token: null,
+  decimals: 18,
+  symbol: '?',
+  isPreGrad: true,
+  slippage: 1.0,
+  amount: PRE_AMOUNT,
+  quote: null,
+  balance: { native: 0n, token: 0n },
+  busy: false,
+  quoteTimer: null,
+};
+
+function fmt(n, d=2){
+  if (n==null || isNaN(n)) return '—';
+  const x = +n;
+  if (x === 0) return '0';
+  if (Math.abs(x) >= 1e9) return (x/1e9).toFixed(d)+'B';
+  if (Math.abs(x) >= 1e6) return (x/1e6).toFixed(d)+'M';
+  if (Math.abs(x) >= 1e3) return (x/1e3).toFixed(d)+'K';
+  if (Math.abs(x) >= 1) return x.toFixed(d);
+  if (Math.abs(x) >= .01) return x.toFixed(4);
+  return x.toExponential(2);
+}
+function ageOf(unixSec){
+  const d = Date.now()/1000 - unixSec;
+  if (d < 60) return Math.floor(d)+'s old';
+  if (d < 3600) return Math.floor(d/60)+'m old';
+  if (d < 86400) return Math.floor(d/3600)+'h old';
+  return Math.floor(d/86400)+'d old';
+}
+function isPreGradMarket(t){
+  const mt = (t.market_info && t.market_info.market_type) || '';
+  // Explicit signals from nad.fun win when present
+  if (mt.includes('DEX')) return false;
+  if (mt.includes('CURVE')) return true;
+  if (t.token_info && t.token_info.is_graduated === true)  return false;
+  // CRITICAL: when nad.fun 429s and we only have the default fallback
+  // (is_graduated:false), we used to assume CURVE. That misclassified
+  // $MONWOLF as pre-grad whenever nad.fun rate-limited us. Trust Monorail's
+  // tradeable signal here: if it has a usd_per_token > 0 AND non-trivial
+  // supply, the token has a DEX pair → graduated.
+  const m = t._monorail;
+  if (m){
+    const px  = parseFloat(m.usd_per_token || 0);
+    const sup = parseFloat(m.supply || 0);
+    if (px > 0 && sup > 0) return false;
+    // Monorail also exposes bonding_curve_progress; >= 100 = graduated
+    const bcp = parseFloat(m.bonding_curve_progress);
+    if (!isNaN(bcp) && bcp >= 100) return false;
+  }
+  // No DEX signal anywhere — fall through to nad.fun's flag
+  return (t.token_info && t.token_info.is_graduated === false);
+}
+function bcProgress(t){
+  if (!isPreGradMarket(t)) return 1;
+  if (!t.market_info) return null;  // unknown, not 0
+  // Critical: if upstream didn't return reserve_token, we CANNOT compute
+  // progress. Previously this code treated missing reserve_token as 0n,
+  // which inverted to 100% (sold = supply - 0 = supply). Result: every
+  // pre-grad token whose /order/market_cap fallback fired showed
+  // '100% TO GRADUATION' next to text saying 'curve is still active'.
+  if (!t.market_info.reserve_token) return null;
+  if (!t.market_info.total_supply)  return null;
+  const sup = BigInt(t.market_info.total_supply);
+  const rem = BigInt(t.market_info.reserve_token);
+  if (sup === 0n) return null;
+  const sold = sup > rem ? sup - rem : 0n;
+  const num = Number(sold * 1000000n / sup) / 1000000;
+  return Math.max(0, Math.min(1, num / 0.8));
+}
+function tokAmt(rawWithDec, decimals=18){
+  if (!rawWithDec) return 0;
+  try{
+    const big = BigInt(rawWithDec);
+    const scale = 10n ** BigInt(decimals);
+    const whole = Number(big / scale);
+    const frac = Number(big % scale) / Number(scale);
+    return whole + frac;
+  }catch(e){ return 0; }
+}
+function parseUnits(str, decimals=18){
+  // safe BigInt parser for "1.23" → 1230000000000000000n
+  if (!str || isNaN(+str)) return 0n;
+  const s = String(str).trim();
+  const neg = s.startsWith('-');
+  const a = neg ? s.slice(1) : s;
+  const [w='0', f=''] = a.split('.');
+  const fPad = (f + '0'.repeat(decimals)).slice(0, decimals);
+  const v = BigInt(w) * (10n**BigInt(decimals)) + BigInt(fPad || 0);
+  return neg ? -v : v;
+}
+
+// ── BONDING CURVE PLOT ──────────────────────────────────────
+// Math: constant-product with virtual reserves. price = virtualMon / virtualToken.
+// As tokens get bought, virtualToken decreases and virtualMon increases.
+// We plot price vs (virtualTokenSold), with current position marked.
+//
+// V3 mainnet config (from contract-v3-abi README):
+//   virtualMon_init   = 180,000 MON
+//   virtualToken_init = 1,073,000,191 tokens
+//   targetToken       = 279,900,191 tokens (graduation when reached)
+const CURVE_CFG = {
+  vMonInit:   180_000,
+  vTokenInit: 1_073_000_191,
+  vTokenTarget: 279_900_191,  // virtual remaining at graduation
+};
+
+function curvePriceAt(virtualToken){
+  // k = vMonInit * vTokenInit (constant)
+  const k = CURVE_CFG.vMonInit * CURVE_CFG.vTokenInit;
+  // current vMon = k / virtualToken, price = vMon / virtualToken = k / virtualToken^2
+  return k / (virtualToken * virtualToken);
+}
+
+function renderCurvePlot(token){
+  const panel = document.getElementById('curvePanel');
+  const host  = document.getElementById('curvePlot');
+  if (!panel || !host) return;
+
+  // Show panel only for pre-grad tokens
+  if (!STATE.isPreGrad){
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = '';
+
+  // Current virtual token reserve — from market_info.reserve_token (raw 18-decimal)
+  const mi = token.market_info || {};
+  let currentVToken = null;
+  if (mi.reserve_token){
+    try { currentVToken = Number(BigInt(mi.reserve_token)) / 1e18; } catch(_){}
+  }
+  // If we don't have a current position, just show the curve without the dot
+
+  // Sample 60 points along the curve from start (vTokenInit) to target (vTokenTarget)
+  const N = 60;
+  const samples = [];
+  for (let i = 0; i <= N; i++){
+    const t = i / N;
+    // vToken decreases linearly in our sample plane (which puts price on log-ish y)
+    const vt = CURVE_CFG.vTokenInit - (CURVE_CFG.vTokenInit - CURVE_CFG.vTokenTarget) * t;
+    const price = curvePriceAt(vt);
+    const tokensSold = CURVE_CFG.vTokenInit - vt;
+    samples.push({ vt, price, tokensSold, pctSold: t });
+  }
+
+  // SVG dimensions
+  const W = 900, H = 220;
+  const padL = 60, padR = 16, padT = 14, padB = 28;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  // Y scale (log) — price range
+  const yMin = samples[0].price;
+  const yMax = samples[samples.length - 1].price;
+  const logMin = Math.log10(yMin);
+  const logMax = Math.log10(yMax);
+  const yOf = price => padT + plotH - ((Math.log10(price) - logMin) / (logMax - logMin)) * plotH;
+
+  // X scale — linear over % sold
+  const xOf = pctSold => padL + pctSold * plotW;
+
+  // Current position: where does the user sit on this curve?
+  let currentX = null, currentY = null, currentPct = null;
+  if (currentVToken != null){
+    const soldNow = CURVE_CFG.vTokenInit - currentVToken;
+    const totalToSell = CURVE_CFG.vTokenInit - CURVE_CFG.vTokenTarget;
+    currentPct = Math.max(0, Math.min(1, soldNow / totalToSell));
+    currentX = xOf(currentPct);
+    const priceNow = curvePriceAt(currentVToken);
+    currentY = yOf(priceNow);
+  }
+
+  // Build the path for the curve up to currentPct (filled/colored)
+  // and from currentPct → 100% (dashed/future)
+  const pathParts = [];
+  const futurePath = [];
+  for (let i = 0; i < samples.length; i++){
+    const s = samples[i];
+    const x = xOf(s.pctSold);
+    const y = yOf(s.price);
+    if (currentPct == null || s.pctSold <= currentPct){
+      pathParts.push((i===0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1));
+    } else {
+      if (futurePath.length === 0 && currentX != null){
+        futurePath.push('M' + currentX.toFixed(1) + ',' + currentY.toFixed(1));
+      }
+      futurePath.push('L' + x.toFixed(1) + ',' + y.toFixed(1));
+    }
+  }
+  const past = pathParts.join(' ');
+  const future = futurePath.join(' ');
+
+  // Fill path (area under curve to the X-axis)
+  let fill = '';
+  if (past){
+    fill = past + ' L' + (currentX != null ? currentX : xOf(1)).toFixed(1) + ',' + (padT + plotH) + ' L' + padL + ',' + (padT + plotH) + ' Z';
+  }
+
+  // Axis labels — 5 ticks on X (% sold), 4 on Y (price)
+  const xTicks = [0, 0.25, 0.5, 0.75, 1].map(p => ({
+    x: xOf(p), label: Math.round(p*100) + '%'
+  }));
+  const yTicks = [0, 0.33, 0.66, 1].map(p => {
+    const lp = logMin + (logMax - logMin) * p;
+    const price = Math.pow(10, lp);
+    return { y: yOf(price), label: fmtPriceShort(price) };
+  });
+
+  // Graduation marker — vertical line at x = 100% sold
+  const gradX = xOf(1);
+
+  host.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="curveGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"  stop-color="#06d6f5"/>
+          <stop offset="50%" stop-color="#a855f7"/>
+          <stop offset="100%" stop-color="#ec4899"/>
+        </linearGradient>
+        <linearGradient id="curveFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#a855f7" stop-opacity=".5"/>
+          <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Grid lines -->
+      ${yTicks.map(t => `<line class="axis-line" x1="${padL}" x2="${W - padR}" y1="${t.y.toFixed(1)}" y2="${t.y.toFixed(1)}"/>`).join('')}
+
+      <!-- Curve area fill (past, up to current position) -->
+      ${fill ? `<path class="curve-fill" d="${fill}"/>` : ''}
+
+      <!-- Curve stroke past (current → 0%) -->
+      ${past ? `<path class="curve-stroke" d="${past}"/>` : ''}
+
+      <!-- Curve stroke future (dashed, current → 100%) -->
+      ${future ? `<path class="curve-stroke-future" d="${future}"/>` : ''}
+
+      <!-- Graduation marker -->
+      <line class="grad-marker" x1="${gradX}" x2="${gradX}" y1="${padT}" y2="${padT + plotH}"/>
+      <text class="grad-label" x="${gradX - 4}" y="${padT + 10}" text-anchor="end">GRAD</text>
+
+      <!-- Current position dot -->
+      ${currentX != null ? `<circle class="current-dot" cx="${currentX.toFixed(1)}" cy="${currentY.toFixed(1)}" r="6"/>` : ''}
+
+      <!-- Y axis labels -->
+      ${yTicks.map(t => `<text class="axis-label" x="${padL - 6}" y="${(t.y + 3).toFixed(1)}" text-anchor="end">${t.label}</text>`).join('')}
+
+      <!-- X axis labels -->
+      ${xTicks.map(t => `<text class="axis-label" x="${t.x.toFixed(1)}" y="${H - padB + 16}" text-anchor="middle">${t.label}</text>`).join('')}
+    </svg>
+  `;
+}
+
+// Compact price formatter for the y-axis (e.g., "1.8e-4 MON")
+function fmtPriceShort(p){
+  if (p == null || isNaN(p)) return '';
+  if (p >= 1) return p.toFixed(2);
+  if (p >= 1e-3) return p.toFixed(4);
+  return p.toExponential(1);
+}
+
+// ── LENS READS ──────────────────────────────────────────────
+// Pulls live curve state from nad.fun's Lens contract via /api/rpc.
+// Returns { isGraduated, isLocked, progressBps, tokensLeft, monRequired } or null.
+async function loadLensState(token){
+  if (!window.ethers) return null;
+  try{
+    // ethers v6 needs an ABSOLUTE URL — '/api/rpc' silently fails as a relative path.
+    // Resolve against the current origin so the proxy is reachable on any host.
+    const rpcAbs = (typeof window !== 'undefined' && window.location)
+      ? window.location.origin + RPC_URL
+      : RPC_URL;
+    const provider = new ethers.JsonRpcProvider(rpcAbs);
+    const lens = new ethers.Contract(LENS_ADDR, LENS_ABI, provider);
+    // Fire all reads in parallel — Lens is view-only, QuickNode handles batching.
+    const [isGrad, isLocked, progress, avail] = await Promise.all([
+      lens.isGraduated(token).catch(e => { console.warn('lens isGraduated', e?.shortMessage||e?.message); return null; }),
+      lens.isLocked(token).catch(() => null),
+      lens.getProgress(token).catch(e => { console.warn('lens getProgress', e?.shortMessage||e?.message); return null; }),
+      lens.availableBuyTokens(token).catch(() => null),
+    ]);
+    return {
+      isGraduated: isGrad === true,
+      isLocked:    isLocked === true,
+      progressBps: progress != null ? Number(progress) : null,
+      tokensLeft:  avail ? avail[0].toString() : null,
+      monRequired: avail ? avail[1].toString() : null,
+    };
+  }catch(e){
+    console.warn('lens read failed', e);
+    return null;
+  }
+}
+
+// ── LOAD ────────────────────────────────────
+async function loadToken(){
+  // Fire all calls in parallel:
+  //   /token/{addr}            → token_info
+  //   /trade/market/{addr}     → market_info (price, ATH, volume, holders, reserves)
+  //   /trade/metrics/{addr}    → swap counts per timeframe (used to tier the chart)
+  //   Lens contract calls      → on-chain progress + availableBuyTokens (most accurate)
+  //   monorail v2/token        → fallback for symbol/image/supply
+  const [tokenRes, marketRes, metricsRes, lensRes, monoRes] = await Promise.allSettled([
+    fetch(`${NADFUN_API}/token/${ADDR}`),
+    fetch(`${NADFUN_API}/trade/market/${ADDR}`),
+    fetch(`${NADFUN_API}/trade/metrics/${ADDR}?timeframes=1D`),
+    loadLensState(ADDR),
+    fetch(`https://api.monorail.xyz/v2/token/${ADDR}`),
+  ]);
+
+  let data = null;
+  // token_info from /token/
+  if (tokenRes.status === 'fulfilled' && tokenRes.value.ok){
+    try { data = await tokenRes.value.json(); } catch(_){}
+  }
+  // market_info from /trade/market/
+  if (marketRes.status === 'fulfilled' && marketRes.value.ok){
+    try {
+      const mj = await marketRes.value.json();
+      if (mj.market_info){
+        if (!data) data = { token_info: { token_id: ADDR }, market_info: mj.market_info };
+        else data.market_info = mj.market_info;
+      }
+    } catch(_){}
+  }
+
+  // Pull 1D trade count for tier-aware rendering decisions downstream
+  if (metricsRes.status === 'fulfilled' && metricsRes.value.ok){
+    try {
+      const mj = await metricsRes.value.json();
+      const m = (mj.metrics || []).find(r => r.timeframe === '1D') || {};
+      data = data || { token_info: { token_id: ADDR }, market_info: {} };
+      data._swapCount = (m.transactions && m.transactions.total) || 0;
+    } catch(_){}
+  }
+
+  // Lens contract state — the most accurate source of truth for curve progress
+  if (lensRes.status === 'fulfilled' && lensRes.value){
+    data = data || { token_info: { token_id: ADDR }, market_info: {} };
+    data._lens = lensRes.value;
+  }
+
+  // Fallback scan of /order/market_cap
+  if (data && !data.market_info){
+    try{
+      const r2 = await fetch(`${NADFUN_API}/order/market_cap?page=1&limit=50`);
+      const j = await r2.json();
+      const hit = (j.tokens||[]).find(t=>(t.token_info.token_id||'').toLowerCase()===ADDR);
+      if (hit) data = hit;
+    }catch(e){}
+  }
+
+  if (!data){
+    data = {token_info:{token_id:ADDR, symbol:ADDR.slice(0,6), name:'Unknown', is_graduated:false}, market_info:{}};
+  }
+
+  // Monorail enrichment for any still-missing fields
+  if (monoRes.status === 'fulfilled' && monoRes.value.ok){
+    try{
+      const m = await monoRes.value.json();
+      const ti = data.token_info || (data.token_info = {});
+      const mi = data.market_info || (data.market_info = {});
+      if (m.symbol)   ti.symbol   = m.symbol;
+      if (m.name)     ti.name     = m.name;
+      if (m.image_uri && !ti.image_uri) ti.image_uri = m.image_uri;
+      if (!mi.price_usd && m.usd_per_token)        mi.price_usd     = m.usd_per_token;
+      if (!mi.holder_count && m.holders)           mi.holder_count  = parseInt(m.holders);
+      if (!mi.total_supply && m.supply){
+        const s = parseFloat(m.supply);
+        if (s > 0){
+          try{ mi.total_supply = (BigInt(Math.round(s)) * 10n**18n).toString(); }
+          catch(_){ mi.total_supply = String(Math.round(s * 1e18)); }
+        }
+      }
+      data._monorail = m;
+    }catch(e){}
+  }
+  return data;
+}
+
+function renderToken(t){
+  const ti = t.token_info || {};
+  const mi = t.market_info || {};
+  STATE.token = t;
+  STATE.symbol = (ti.symbol || '?').slice(0,12);
+  STATE.isPreGrad = isPreGradMarket(t);
+
+  document.title = `$${STATE.symbol} · Pack Den`;
+
+  // hero
+  if (ti.image_uri) $('#heroLogo').src = ti.image_uri;
+  $('#heroSymbol').textContent = '$' + STATE.symbol;
+  $('#heroName').textContent = (ti.name || '—').slice(0,40);
+  const status = $('#heroStatus');
+  if (STATE.isPreGrad){
+    status.textContent = '⏳ CURVE';
+    status.className = 'hero-status curve';
+  } else {
+    status.textContent = '✅ DEX';
+    status.className = 'hero-status dex';
+  }
+  if (ti.is_cto) $('#heroCto').style.display = 'inline-flex';
+  if (ti.created_at) $('#heroAge').textContent = ageOf(ti.created_at);
+  const pct = +t.percent;
+  const pctEl = $('#heroPct');
+  if (!isNaN(pct)){
+    pctEl.textContent = (pct>0?'+':'')+pct.toFixed(2)+'%';
+    pctEl.className = 'hero-pct ' + (pct>0?'up':pct<0?'down':'flat');
+  }
+
+  // stats
+  const px = +mi.price_usd || 0;
+  const sup = tokAmt(mi.total_supply, 18);
+  const mcap = (px && sup) ? px * sup : null;
+  const ath = +mi.ath_price_usd || 0;
+  const offAth = (px && ath) ? ((px - ath) / ath) * 100 : null;
+  const vol = tokAmt(mi.volume, 18);
+
+  $('#sPrice').textContent  = px ? '$'+fmt(px, px>=1?4:8) : '—';
+  $('#sMcap').textContent   = mcap ? '$'+fmt(mcap,2) : '—';
+  $('#sHolders').textContent = mi.holder_count ? fmt(mi.holder_count,0) : '—';
+  $('#sAthPx').textContent  = ath ? '$'+fmt(ath, ath>=1?4:8) : '—';
+  $('#sVol').textContent    = vol ? '$'+fmt(vol*px,2) : '—';
+  const athEl = $('#sAth');
+  if (offAth != null){
+    athEl.textContent = (offAth>0?'+':'')+offAth.toFixed(1)+'%';
+    athEl.classList.add(offAth > -5 ? 'up' : 'down');
+  }
+
+  // Hide ATH / VOL tiles on bonding-curve tokens — nad.fun doesn't track
+  // those for pre-grad and showing three '—' tiles makes the page look
+  // half-broken. Auditor flagged this in re-audit.
+  if (STATE.isPreGrad){
+    ['statAth','statVol','statAthPx'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  }
+
+  // bonding curve box — use Lens data when available (most accurate), fallback to derived
+  if (STATE.isPreGrad){
+    $('#bcBox').style.display = '';
+    const lens = t._lens;
+
+    // Lens.getProgress returns bps (10000 = 100%). Trust this above derived math.
+    let p = null;
+    if (lens && lens.progressBps != null){
+      p = lens.progressBps / 10000;  // bps → 0..1
+    } else {
+      p = bcProgress(t);  // fallback to derived from reserves
+    }
+
+    if (p == null){
+      $('#bcFill').style.width = '0%';
+      $('#bcText').textContent = '— curve data unavailable';
+    } else {
+      const pct100 = Math.min(100, Math.round(p*100));
+      $('#bcFill').style.width = pct100 + '%';
+      $('#bcText').textContent = pct100 + '% TO GRADUATION';
+      if (p >= 0.6) $('#bcFill').classList.add('about-to-grad');
+    }
+
+    // Detail tiles — tokens remaining + MON required to graduate (from Lens.availableBuyTokens)
+    if (lens && lens.tokensLeft != null && lens.monRequired != null){
+      $('#bcStats').style.display = 'grid';
+      const tokensLeft = Number(lens.tokensLeft) / 1e18;
+      const monLeft    = Number(lens.monRequired) / 1e18;
+      $('#bcTokensLeft').textContent = fmt(tokensLeft, 1);
+      $('#bcMonLeft').textContent    = fmt(monLeft, 1) + ' MON';
+    }
+  }
+
+  // chart — works for pre-grad AND graduated now that nad.fun's /trade/chart
+  // is the source. Pre-grad tokens with 0 swaps will get the empty-state
+  // fallback from loadBars; everything else gets candles.
+  initNativeChart();
+
+  // Bonding curve plot — shown only for pre-grad tokens (hides itself for graduated)
+  renderCurvePlot(t);
+
+  // contract row
+  $('#caCopy').textContent = '📋 ' + ADDR.slice(0,8) + '…' + ADDR.slice(-6);
+  const explorer = (window.ChogiConfig||{}).EXPLORER || 'https://monadexplorer.com';
+  $('#lExplorer').href = `${explorer}/address/${ADDR}`;
+  $('#lChart').href    = `https://dexscreener.com/monad/${ADDR}`;
+  $('#lNad').href      = `https://nad.fun/tokens/${ADDR}`;
+  if (ti.twitter) { const a = $('#lTwitter');  a.style.display='inline-flex'; a.href = ti.twitter;  }
+  if (ti.telegram){ const a = $('#lTelegram'); a.style.display='inline-flex'; a.href = ti.telegram; }
+  if (ti.website) { const a = $('#lWebsite');  a.style.display='inline-flex'; a.href = ti.website;  }
+
+  // swap initial state
+  refreshSwapUI();
+  renderPresets();
+  if (PRE_AMOUNT){ $('#amtInput').value = PRE_AMOUNT; scheduleQuote(); }
+
+  $('#loadState').style.display = 'none';
+  $('#tokenContent').style.display = '';
+}
+
+// ── SWAP UI ─────────────────────────────────
+function refreshSwapUI(){
+  const isBuy = STATE.side === 'buy';
+  // tab actives
+  document.querySelectorAll('.swap-tabs button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.side === STATE.side);
+  });
+  // label + token symbol
+  $('#amtLabel').textContent = isBuy ? 'YOU SPEND' : 'YOU SELL';
+  $('#amtToken').textContent = isBuy ? 'MON' : ('$'+STATE.symbol);
+  // execute button color/text
+  const btn = $('#executeBtn');
+  btn.classList.remove('sell-mode','connect-mode');
+  if (!STATE.account){
+    btn.textContent = '⚡ CONNECT WALLET';
+    btn.classList.add('connect-mode');
+  } else if (isBuy){
+    btn.textContent = '⚡ BUY $' + STATE.symbol;
+  } else {
+    btn.textContent = '💰 SELL $' + STATE.symbol;
+    btn.classList.add('sell-mode');
+  }
+  // balance display
+  if (STATE.account){
+    const b = isBuy
+      ? tokAmt(STATE.balance.native.toString(), 18)
+      : tokAmt(STATE.balance.token.toString(),  STATE.decimals);
+    const sym = isBuy ? 'MON' : '$'+STATE.symbol;
+    $('#amtBalance').textContent = 'balance: ' + fmt(b, 4) + ' ' + sym;
+  } else {
+    $('#amtBalance').textContent = 'connect wallet';
+  }
+}
+
+function renderPresets(){
+  const isBuy = STATE.side === 'buy';
+  const wrap = $('#presets');
+  const opts = isBuy ? ['0.1','0.5','1','5','MAX'] : ['25%','50%','75%','100%','MAX'];
+  wrap.innerHTML = opts.map(o => `<button data-preset="${o}">${o}${isBuy && o !== 'MAX' ? ' MON' : ''}</button>`).join('');
+  wrap.querySelectorAll('button').forEach(b=>{
+    b.onclick = ()=>{
+      const v = b.dataset.preset;
+      const isBuy = STATE.side === 'buy';
+      let amt;
+      if (v === 'MAX'){
+        if (!STATE.account){ alert('Connect wallet first.'); return; }
+        if (isBuy){
+          // leave 0.005 MON for gas
+          const bal = STATE.balance.native;
+          const gasRes = 5000000000000000n;
+          amt = bal > gasRes ? bal - gasRes : 0n;
+          $('#amtInput').value = fmt(tokAmt(amt.toString(),18), 6);
+        } else {
+          amt = STATE.balance.token;
+          $('#amtInput').value = fmt(tokAmt(amt.toString(), STATE.decimals), 6);
+        }
+      } else if (v.endsWith('%')){
+        if (!STATE.account){ alert('Connect wallet first.'); return; }
+        const pct = parseFloat(v) / 100;
+        const bal = isBuy ? STATE.balance.native : STATE.balance.token;
+        const dec = isBuy ? 18 : STATE.decimals;
+        const amtBig = (bal * BigInt(Math.round(pct * 10000))) / 10000n;
+        $('#amtInput').value = fmt(tokAmt(amtBig.toString(), dec), 6);
+      } else {
+        $('#amtInput').value = v;
+      }
+      scheduleQuote();
+    };
+  });
+}
+
+function scheduleQuote(){
+  clearTimeout(STATE.quoteTimer);
+  STATE.quoteTimer = setTimeout(doQuote, 250);
+}
+
+async function doQuote(){
+  const raw = $('#amtInput').value;
+  const num = +raw;
+  if (!raw || isNaN(num) || num <= 0){
+    $('#quoteOut').textContent = '—';
+    $('#quoteUsd').textContent = '';
+    STATE.quote = null;
+    return;
+  }
+  if (!STATE.account){
+    $('#quoteOut').textContent = 'connect to quote';
+    $('#quoteUsd').textContent = '';
+    return;
+  }
+  try{
+    const isBuy = STATE.side === 'buy';
+    const slpBps = Math.round(STATE.slippage * 100);
+    const q = await ChogiTrade.quoteRoute({
+      from: isBuy ? ChogiTrade.NATIVE_ZERO : ADDR,
+      to:   isBuy ? ADDR : ChogiTrade.NATIVE_ZERO,
+      amount: String(num),
+      sender: STATE.account,
+      slippageBps: slpBps,
+    });
+    STATE.quote = q;
+    const out = parseFloat(q.output_formatted) || 0;
+    const sym = isBuy ? '$'+STATE.symbol : 'MON';
+    $('#quoteOut').textContent = fmt(out, 6) + ' ' + sym;
+    // route info — show which path was used (Monorail or nad.fun fallback)
+    const r0 = (q.routes && q.routes[0] && q.routes[0][0]) || null;
+    const proto = r0 && r0.splits && r0.splits[0] && r0.splits[0].protocol;
+    const sourceTag = q._source === 'nadfun' ? '🚀 nad.fun curve' : (proto ? `via ${proto}` : '');
+    const impact = parseFloat(q.compound_impact || 0) * 100;
+    // Impact warning only on truly massive trades (≥$25 + ≥30% impact).
+    // Monorail's compound_impact is gas-dominated and unreliable for most
+    // sizes — slippage tolerance is the real safety net.
+    const mi = STATE.token.market_info || {};
+    const px = +mi.price_usd || 0;
+    const tradeValueUsd = isBuy ? (parseFloat(num) * 0.04) : (parseFloat(num) * (px || 0));
+    const showImpactWarn = tradeValueUsd >= 25 && impact >= 30;
+    let extra = '';
+    if (sourceTag) extra += ` · ${sourceTag}`;
+    if (showImpactWarn) extra += ` · ⚠ massive trade · ${impact.toFixed(1)}% impact`;
+    // USD estimate
+    if (isBuy && px) extra = ' ≈ $' + fmt(out * px, 2) + extra;
+    else if (!isBuy && (mi.native_price || 0)) extra = ' ≈ $' + fmt(out * mi.native_price, 2) + extra;
+    $('#quoteUsd').textContent = extra;
+
+    // ── Burn flywheel: show the protocol fee that routes to MONWOLF buyback ──
+    const fees = q.fees || {};
+    const feeAmt = parseFloat(fees.fee_share_amount_formatted || fees.protocol_amount_formatted || 0);
+    const burnEl = $('#burnFlywheel');
+    if (feeAmt > 0 && q._source === 'monorail'){
+      $('#burnAmt').textContent = fmt(feeAmt, 6);
+      $('#burnSym').textContent = sym.replace('$','');
+      burnEl.style.display = '';
+    } else {
+      burnEl.style.display = 'none';
+    }
+
+    STATE.notOnNadfun = false;
+    clearStatus();
+  }catch(e){
+    console.warn('quote failed', e);
+    STATE.quote = null;
+    $('#quoteOut').textContent = 'unavailable';
+    $('#quoteUsd').textContent = '';
+    $('#burnFlywheel').style.display = 'none';
+    const msg = ChogiTrade.explainRevert(e);
+    setStatus('error', `⚠ ${msg}`);
+  }
+}
+
+// ── SLIPPAGE ─────────────────────────────────
+function bindSlippage(){
+  const slider = $('#slpSlider');
+  const display = $('#slpDisplay');
+  slider.addEventListener('input', ()=>{
+    STATE.slippage = parseFloat(slider.value);
+    display.textContent = STATE.slippage.toFixed(1) + '%';
+    document.querySelectorAll('.swap-settings .preset-chips button').forEach(b=>{
+      b.classList.toggle('active', parseFloat(b.dataset.slp) === STATE.slippage);
+    });
+  });
+  document.querySelectorAll('.swap-settings .preset-chips button').forEach(b=>{
+    b.onclick = ()=>{
+      STATE.slippage = parseFloat(b.dataset.slp);
+      slider.value = STATE.slippage;
+      display.textContent = STATE.slippage.toFixed(1) + '%';
+      document.querySelectorAll('.swap-settings .preset-chips button').forEach(x=>x.classList.toggle('active', x===b));
+    };
+  });
+}
+
+// ── TX STATUS UI ─────────────────────────────
+function setStatus(state, html){
+  const el = $('#txStatus');
+  el.className = 'tx-status show ' + state;
+  el.innerHTML = html;
+}
+function clearStatus(){ $('#txStatus').className = 'tx-status'; }
+
+// ── WALLET ───────────────────────────────────
+async function refreshBalances(){
+  if (!STATE.account) return;
+  try{
+    STATE.balance.native = await ChogiTrade.nativeBalance(STATE.account);
+    STATE.balance.token  = await ChogiTrade.tokenBalance(ADDR, STATE.account);
+    refreshSwapUI();
+  }catch(e){ console.warn('balance fetch failed', e); }
+}
+
+async function connectClicked(){
+  // Mobile browsers (Safari/Chrome) don't have window.ethereum unless
+  // the site is opened inside a wallet's in-app browser. Show the
+  // wallet-picker modal with deep-links into MetaMask/Rabby/Phantom/Trust.
+  if (!window.ethereum){
+    if (window.ChogiWallet && typeof window.ChogiWallet.requireWallet === 'function'){
+      window.ChogiWallet.requireWallet();
+      return;
+    }
+  }
+  try{
+    const acc = await ChogiTrade.connect();
+    STATE.account = acc;
+    const pill = $('#walletPill');
+    pill.classList.add('on');
+    pill.textContent = acc.slice(0,6) + '…' + acc.slice(-4);
+    refreshSwapUI();
+    refreshBalances();
+  }catch(e){
+    setStatus('error', `❌ ${e.message || 'Connect failed'}`);
+  }
+}
+
+// ── EXECUTE ──────────────────────────────────
+async function execute(){
+  if (!STATE.account){ return connectClicked(); }
+  const raw = $('#amtInput').value;
+  const num = +raw;
+  if (!raw || isNaN(num) || num <= 0){ alert('Enter an amount.'); return; }
+  if (STATE.busy) return;
+  STATE.busy = true;
+  const btn = $('#executeBtn');
+  const origText = btn.textContent;
+  btn.disabled = true;
+
+  try{
+    const isBuy = STATE.side === 'buy';
+    const slpBps = Math.round(STATE.slippage * 100);
+    const amountHuman = String(num);
+
+    if (isBuy){
+      // balance check
+      const dec = 18;
+      const amountInWei = (function(){
+        const [w='0', f=''] = amountHuman.split('.');
+        const fPad = (f + '0'.repeat(dec)).slice(0, dec);
+        return BigInt(w) * (10n**BigInt(dec)) + BigInt(fPad || 0);
+      })();
+      const need = amountInWei + 5000000000000000n;  // + 0.005 MON gas buffer
+      if (STATE.balance.native < need){
+        throw new Error('Not enough MON for this trade + gas');
+      }
+      btn.textContent = 'QUOTING…';
+      setStatus('pending', '⌛ getting best route from Monorail aggregator…');
+      const r = await ChogiTrade.executeBuy({
+        token: ADDR,
+        amountHuman,
+        slippageBps: slpBps,
+        account: STATE.account,
+      });
+      const route = (r.quote.routes && r.quote.routes[0] && r.quote.routes[0][0] && r.quote.routes[0][0].splits[0]) || null;
+      const via = route ? ` via ${route.protocol}` : '';
+      setStatus('pending', `🔄 buy${via}: <a href="${ChogiTrade.EXPLORER}/tx/${r.txHash}" target="_blank">${r.txHash.slice(0,10)}…</a><br>waiting for confirmation…`);
+      btn.textContent = 'CONFIRMING…';
+      const rec = await ChogiTrade.waitReceipt(r.txHash, 120000);
+      if (!rec){
+        setStatus('error', `⏰ Tx not confirmed in 2min. Check <a href="${ChogiTrade.EXPLORER}/tx/${r.txHash}" target="_blank">explorer</a>.`);
+      } else if (rec.status === '0x1'){
+        setStatus('success', `✅ Bought $${STATE.symbol}${via}! <a href="${ChogiTrade.EXPLORER}/tx/${r.txHash}" target="_blank">view tx ↗</a>`);
+        $('#amtInput').value = '';
+        scheduleQuote();
+        refreshBalances();
+      } else {
+        setStatus('error', `❌ Tx reverted. <a href="${ChogiTrade.EXPLORER}/tx/${r.txHash}" target="_blank">view tx ↗</a>`);
+      }
+    } else {
+      // sell — token amount check
+      const dec = STATE.decimals;
+      const amountInWei = (function(){
+        const [w='0', f=''] = amountHuman.split('.');
+        const fPad = (f + '0'.repeat(dec)).slice(0, dec);
+        return BigInt(w) * (10n**BigInt(dec)) + BigInt(fPad || 0);
+      })();
+      if (STATE.balance.token < amountInWei){ throw new Error('Not enough $'+STATE.symbol+' to sell'); }
+      btn.textContent = 'QUOTING…';
+      setStatus('pending', '⌛ getting best route from Monorail aggregator…');
+      const r = await ChogiTrade.executeSell({
+        token: ADDR,
+        amountHuman,
+        slippageBps: slpBps,
+        account: STATE.account,
+        onApproveStarted: ()=> setStatus('pending', '✍ approving $'+STATE.symbol+' for router… sign in wallet'),
+        onApproveConfirmed: tx => setStatus('pending', `✅ approval confirmed. now selling… sign sell tx`),
+      });
+      const route = (r.quote.routes && r.quote.routes[0] && r.quote.routes[0][0] && r.quote.routes[0][0].splits[0]) || null;
+      const via = route ? ` via ${route.protocol}` : '';
+      setStatus('pending', `🔄 sell${via}: <a href="${ChogiTrade.EXPLORER}/tx/${r.txHash}" target="_blank">${r.txHash.slice(0,10)}…</a><br>waiting for confirmation…`);
+      btn.textContent = 'CONFIRMING…';
+      const rec = await ChogiTrade.waitReceipt(r.txHash, 120000);
+      if (!rec){
+        setStatus('error', `⏰ Tx not confirmed in 2min. Check <a href="${ChogiTrade.EXPLORER}/tx/${r.txHash}" target="_blank">explorer</a>.`);
+      } else if (rec.status === '0x1'){
+        setStatus('success', `✅ Sold $${STATE.symbol}${via}! <a href="${ChogiTrade.EXPLORER}/tx/${r.txHash}" target="_blank">view tx ↗</a>`);
+        $('#amtInput').value = '';
+        scheduleQuote();
+        refreshBalances();
+      } else {
+        setStatus('error', `❌ Tx reverted. <a href="${ChogiTrade.EXPLORER}/tx/${r.txHash}" target="_blank">view tx ↗</a>`);
+      }
+    }
+  }catch(e){
+    const msg = ChogiTrade.explainRevert(e);
+    setStatus('error', `❌ ${msg}`);
+  } finally {
+    STATE.busy = false;
+    btn.disabled = false;
+    btn.textContent = origText;
+    refreshSwapUI();
+  }
+}
+
+// ── WIRING ───────────────────────────────────
+function bindUI(){
+  // tabs
+  document.querySelectorAll('.swap-tabs button').forEach(b=>{
+    b.onclick = ()=>{
+      STATE.side = b.dataset.side;
+      $('#amtInput').value = '';
+      refreshSwapUI();
+      renderPresets();
+      scheduleQuote();
+    };
+  });
+  // amount input
+  $('#amtInput').addEventListener('input', scheduleQuote);
+  // CA copy
+  $('#caCopy').onclick = async (e)=>{
+    e.stopPropagation();
+    try{
+      await navigator.clipboard.writeText(ADDR);
+      const b = $('#caCopy');
+      const orig = b.textContent;
+      b.classList.add('copied');
+      b.textContent = '✓ COPIED';
+      setTimeout(()=>{ b.classList.remove('copied'); b.textContent = orig; }, 1200);
+    }catch(err){ prompt('Address:', ADDR); }
+  };
+  // balance shortcut
+  $('#amtBalance').onclick = ()=>{
+    if (!STATE.account){ connectClicked(); return; }
+    const isBuy = STATE.side === 'buy';
+    const dec = isBuy ? 18 : STATE.decimals;
+    const bal = isBuy ? STATE.balance.native : STATE.balance.token;
+    const num = tokAmt(bal.toString(), dec);
+    // leave gas buffer if buy
+    const v = isBuy ? Math.max(0, num - 0.005) : num;
+    $('#amtInput').value = fmt(v, 6);
+    scheduleQuote();
+  };
+  // wallet pill
+  $('#walletPill').onclick = connectClicked;
+  // execute
+  $('#executeBtn').onclick = execute;
+  // slippage
+  bindSlippage();
+}
+
+// ── NATIVE CANDLESTICK CHART (Monorail TV UDF + Lightweight Charts) ─
+const CHART = {
+  resolution: '60',  // 1, 5, 15, 30, 60, 240, 1D, 7D
+  chart: null,
+  series: null,
+  symbol: null,
+  refreshTimer: null,
+};
+
+// Lookback windows (in seconds) tuned per resolution so we get ~150 bars
+const LOOKBACK = {
+  '1':    150 * 60,           // 150 minutes
+  '5':    150 * 5 * 60,       // 12.5 hours
+  '15':   150 * 15 * 60,      // 37.5 hours
+  '30':   150 * 30 * 60,      // 75 hours
+  '60':   150 * 3600,         // 6.25 days
+  '240':  150 * 4 * 3600,     // 25 days
+  '1D':   150 * 86400,        // 150 days
+  '7D':   150 * 7 * 86400,    // ~3 years
+};
+
+function fmtPrice(p){
+  if (p == null || isNaN(p)) return '—';
+  const x = +p;
+  if (x === 0) return '0';
+  if (Math.abs(x) >= 1) return x.toFixed(4);
+  if (Math.abs(x) >= 0.0001) return x.toFixed(6);
+  return x.toExponential(2);
+}
+
+function initNativeChart(){
+  if (!window.LightweightCharts){
+    $('#chartCanvas').innerHTML = '<div class="chart-fallback">📈 Chart library failed to load. Refresh the page.</div>';
+    return;
+  }
+  // Monorail TV symbol format: "fromAddress/toAddress"
+  CHART.symbol = `${ADDR}/0x0000000000000000000000000000000000000000`;
+
+  // Reveal toolbar + source line
+  $('#chartToolbar').style.display = '';
+  $('#chartSource').style.display  = '';
+  $('#chartCanvas').innerHTML = '';
+
+  // CRITICAL: defer createChart to the next animation frame so the
+  // container has measurable layout width. Calling createChart while
+  // container.clientWidth === 0 (which happens when init runs before
+  // first paint) locks the chart at 0×N forever — the auditor caught
+  // this on graduated tokens where the chart area was entirely black.
+  requestAnimationFrame(() => buildChart());
+}
+
+function buildChart(){
+  const container = $('#chartCanvas');
+  if (!container) return;
+  // If somehow we're still 0-width, try once more after another frame.
+  // Cap retries so we don't loop forever on a hidden container.
+  if (container.clientWidth === 0){
+    CHART._retries = (CHART._retries || 0) + 1;
+    if (CHART._retries < 6){
+      requestAnimationFrame(() => buildChart());
+      return;
+    }
+    // gave up — show fallback rather than silent empty box
+    container.innerHTML = `<div class="chart-fallback">📊 Chart container couldn't measure layout. Try refreshing the page.</div>`;
+    console.warn('[chart] container.clientWidth=0 after 6 retries — giving up');
+    return;
+  }
+  CHART._retries = 0;
+
+  try{
+    CHART.chart = LightweightCharts.createChart(container, {
+      width: container.clientWidth,
+      height: 480,
+      layout: {
+        background: { type: 'solid', color: '#0a0118' },
+        textColor: '#9a8bb3',
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: 10,
+      },
+      grid: {
+        vertLines: { color: 'rgba(255,20,147,0.06)' },
+        horzLines: { color: 'rgba(255,20,147,0.06)' },
+      },
+      rightPriceScale: {
+        borderColor: 'rgba(255,20,147,0.18)',
+        scaleMargins: { top: 0.08, bottom: 0.08 },
+      },
+      timeScale: {
+        borderColor: 'rgba(255,20,147,0.18)',
+        timeVisible: true,
+        secondsVisible: false,
+      },
+      crosshair: {
+        mode: LightweightCharts.CrosshairMode.Normal,
+        vertLine: { color: '#FF1493', width: 1, style: 3, labelBackgroundColor: '#FF1493' },
+        horzLine: { color: '#FF1493', width: 1, style: 3, labelBackgroundColor: '#FF1493' },
+      },
+    });
+
+    // Keep chart in sync with container size — handles viewport resize,
+    // orientation change, devtools open/close, anything that affects layout.
+    if ('ResizeObserver' in window){
+      CHART.resizeObserver = new ResizeObserver(entries => {
+        const w = entries[0]?.contentRect?.width;
+        if (w > 0 && CHART.chart) CHART.chart.applyOptions({ width: w });
+      });
+      CHART.resizeObserver.observe(container);
+    } else {
+      window.addEventListener('resize', ()=>{
+        if (CHART.chart) CHART.chart.applyOptions({ width: container.clientWidth });
+      });
+    }
+
+    CHART.series = CHART.chart.addCandlestickSeries({
+      upColor:   '#22d36f',
+      downColor: '#ff4d6d',
+      borderUpColor:   '#22d36f',
+      borderDownColor: '#ff4d6d',
+      wickUpColor:   '#22d36f',
+      wickDownColor: '#ff4d6d',
+      priceFormat: { type: 'price', precision: 8, minMove: 0.00000001 },
+    });
+  }catch(err){
+    console.warn('[chart] createChart failed:', err);
+    container.innerHTML = `<div class="chart-fallback">📊 Chart failed to initialize.<br><span style="font-size:10px;opacity:.6;">${(err && err.message)||'unknown error'}</span></div>`;
+    return;
+  }
+
+  // hover stats
+  CHART.chart.subscribeCrosshairMove(p => {
+    if (!p || !p.time || !p.seriesData) { $('#chartStats').innerHTML = ''; return; }
+    const d = p.seriesData.get(CHART.series);
+    if (!d) return;
+    const pct = d.open ? ((d.close - d.open) / d.open) * 100 : 0;
+    const cls = pct >= 0 ? 'up' : 'down';
+    $('#chartStats').innerHTML = `
+      <span class="stat">O <b>${fmtPrice(d.open)}</b></span>
+      <span class="stat">H <b>${fmtPrice(d.high)}</b></span>
+      <span class="stat">L <b>${fmtPrice(d.low)}</b></span>
+      <span class="stat">C <b>${fmtPrice(d.close)}</b></span>
+      <span class="stat">Δ <b class="${cls}">${pct>=0?'+':''}${pct.toFixed(2)}%</b></span>`;
+  });
+
+  // wire resolution pills
+  document.querySelectorAll('.chart-pill').forEach(p=>{
+    p.onclick = ()=>{
+      CHART.resolution = p.dataset.res;
+      document.querySelectorAll('.chart-pill').forEach(x=>x.classList.toggle('active', x===p));
+      loadBars(true);
+    };
+  });
+
+  // initial load + auto-refresh
+  loadBars(true);
+  clearInterval(CHART.refreshTimer);
+  CHART.refreshTimer = setInterval(()=>loadBars(false), 15000);
+}
+
+async function loadBars(reset){
+  if (!CHART.series) return;
+  const now = Math.floor(Date.now() / 1000);
+  const lookback = LOOKBACK[CHART.resolution] || (150 * 3600);
+  const from = now - lookback;
+  // nad.fun /trade/chart returns the same {t,o,h,l,c,s} shape as Monorail TV
+  // but works for BOTH pre-grad curve trades AND post-grad DEX swaps. The
+  // 's' status field reports 'ok' / 'no_data'. Routed through /api/nad proxy.
+  const url = `${NADFUN_API}/trade/chart/${ADDR}?resolution=${CHART.resolution}&from=${from}&to=${now}&countback=500`;
+  try{
+    const r = await fetch(url);
+    const j = await r.json();
+    if (j.s !== 'ok' || !j.t || !j.t.length){
+      // Empty / no_data — visible message instead of silent empty chart.
+      if (reset){
+        const container = $('#chartCanvas');
+        console.warn('[chart] no_data from nad.fun:', ADDR, j.s);
+        if (container && !container.querySelector('.chart-fallback')){
+          container.innerHTML = `<div class="chart-fallback">📊 No chart history yet — this token hasn't seen enough trades.<br><span style="font-size:10px;opacity:.6;">${j.s || 'empty response'}</span><br><br><a href="https://nad.fun/token/${ADDR}" target="_blank" rel="noopener">View on nad.fun ↗</a></div>`;
+          CHART.chart = null;
+          CHART.series = null;
+        }
+      }
+      return;
+    }
+    const bars = j.t.map((t, i) => ({
+      time:  Number(t),
+      open:  Number(j.o[i]),
+      high:  Number(j.h[i]),
+      low:   Number(j.l[i]),
+      close: Number(j.c[i]),
+    })).filter(b => !isNaN(b.close));
+
+    // Lightweight-charts renders a single-bar series as a comically wide
+    // colored block that takes over the canvas. For pre-grad tokens with
+    // 1-2 trades total, it looks broken. Hide the chart and point to the
+    // bonding curve plot below, which renders meaningfully at any trade count.
+    if (bars.length < 3 && reset){
+      const container = $('#chartCanvas');
+      if (container){
+        container.innerHTML = `
+          <div class="chart-fallback" style="padding:50px 28px;text-align:center;">
+            <div style="font-size:38px;margin-bottom:12px;">🌀</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;margin-bottom:8px;">
+              ${bars.length === 0 ? 'No trades yet' : bars.length + ' trade' + (bars.length === 1 ? '' : 's') + ' so far'}
+            </div>
+            <div style="font-size:13px;color:var(--mute);line-height:1.6;max-width:360px;margin:0 auto;">
+              Candles need a few more swaps before they're informative.
+              The <b style="color:var(--pink);">bonding curve plot below</b> shows price-vs-supply at any trade count.
+            </div>
+          </div>`;
+        CHART.chart = null;
+        CHART.series = null;
+      }
+      $('#chartToolbar').style.display = 'none';
+      return;
+    }
+
+    if (reset){
+      CHART.series.setData(bars);
+      CHART.chart.timeScale().fitContent();
+    } else {
+      // append only new bars
+      const last = bars[bars.length - 1];
+      if (last) CHART.series.update(last);
+    }
+    // refresh stats with the latest bar
+    const last = bars[bars.length - 1];
+    if (last){
+      const first = bars[0];
+      const pct = first.open ? ((last.close - first.open) / first.open) * 100 : 0;
+      const cls = pct >= 0 ? 'up' : 'down';
+      $('#chartStats').innerHTML = `
+        <span class="stat">${CHART.resolution === '1D' || CHART.resolution === '7D' ? 'PERIOD' : 'PERIOD'} <b class="${cls}">${pct>=0?'+':''}${pct.toFixed(2)}%</b></span>
+        <span class="stat">LAST <b>${fmtPrice(last.close)} MON</b></span>`;
+    }
+  }catch(e){
+    console.warn('chart load failed', e);
+  }
+}
+(async function init(){
+  bindUI();
+  const t = await loadToken();
+  renderToken(t);
+  // try to read token decimals/symbol from chain if needed
+  try{
+    const info = await ChogiTrade.tokenInfo(ADDR);
+    if (info && info.decimals){
+      STATE.decimals = info.decimals;
+      if (!STATE.token.token_info.symbol || STATE.token.token_info.symbol === '?'){
+        STATE.symbol = info.symbol;
+        $('#heroSymbol').textContent = '$' + info.symbol;
+      }
+    }
+  }catch(e){ console.warn('on-chain token info read failed', e); }
+
+  // auto-connect if previously authorized
+  if (window.ethereum){
+    try{
+      const accs = await window.ethereum.request({method:'eth_accounts'});
+      if (accs && accs[0]){
+        STATE.account = accs[0];
+        const pill = $('#walletPill');
+        pill.classList.add('on');
+        pill.textContent = accs[0].slice(0,6)+'…'+accs[0].slice(-4);
+        refreshSwapUI();
+        refreshBalances();
+      }
+    }catch(e){}
+    window.ethereum.on && window.ethereum.on('accountsChanged', accs=>{
+      STATE.account = accs && accs[0] || null;
+      const pill = $('#walletPill');
+      if (STATE.account){
+        pill.classList.add('on');
+        pill.textContent = STATE.account.slice(0,6)+'…'+STATE.account.slice(-4);
+        refreshBalances();
+      } else {
+        pill.classList.remove('on');
+        pill.textContent = '⚡ CONNECT';
+      }
+      refreshSwapUI();
+    });
+  }
+
+  // refresh balances periodically when connected
+  setInterval(()=>{ if (STATE.account) refreshBalances(); }, 20000);
+})();
+</script>
+</body>
+</html>

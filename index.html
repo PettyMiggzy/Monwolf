@@ -626,6 +626,49 @@ nav{position:sticky;top:34px;z-index:80;
 .wcam-credit a{color:var(--text-2);}.wcam-credit a:hover{color:var(--gold);}
 
 /* ============================================================
+   SOCIALS · primary follow row (X + Telegram) + video media grid
+   ============================================================ */
+.socials-row{max-width:760px;margin:0 auto 36px;display:grid;
+  grid-template-columns:repeat(2,1fr);gap:14px;}
+.social-pill{display:flex;align-items:center;gap:14px;padding:18px 22px;
+  border-radius:var(--r-xl);text-decoration:none;color:inherit;
+  border:1px solid var(--border);background:var(--surface);
+  transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease,background .25s ease;
+  position:relative;overflow:hidden;}
+.social-pill::before{content:'';position:absolute;inset:0;opacity:0;
+  transition:opacity .25s ease;pointer-events:none;}
+.social-pill:hover{transform:translateY(-3px);border-color:var(--gold);
+  box-shadow:0 18px 40px -10px rgba(212,175,55,.25);}
+.social-pill:hover::before{opacity:.12;}
+.social-pill.x::before{background:linear-gradient(135deg,#000 0%,#1d1d1d 100%);}
+.social-pill.tg::before{background:linear-gradient(135deg,#0088cc 0%,#00b6e6 100%);}
+.social-icon{width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bungee',cursive;font-size:20px;font-weight:400;
+  border:1px solid var(--border-hi);background:rgba(10,6,18,.4);
+  position:relative;z-index:1;}
+.social-pill.x .social-icon{color:#fff;border-color:rgba(255,255,255,.3);}
+.social-pill.tg .social-icon{color:#29b6f6;border-color:rgba(41,182,246,.5);
+  font-size:22px;}
+.social-label{display:flex;flex-direction:column;gap:2px;position:relative;z-index:1;}
+.social-name{font-family:'Bungee',cursive;font-size:14px;letter-spacing:1.2px;
+  color:var(--text);}
+.social-handle{font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.06em;color:var(--text-3);}
+.social-pill:hover .social-handle{color:var(--text-2);}
+.social-arrow{margin-left:auto;font-family:'JetBrains Mono',monospace;
+  color:var(--text-3);font-size:18px;position:relative;z-index:1;
+  transition:transform .25s ease,color .25s ease;}
+.social-pill:hover .social-arrow{color:var(--gold);transform:translateX(4px);}
+@media (max-width:600px){
+  .socials-row{grid-template-columns:1fr;gap:10px;margin-bottom:24px;}
+  .social-pill{padding:14px 18px;gap:12px;}
+  .social-icon{width:36px;height:36px;font-size:18px;}
+  .social-name{font-size:12px;}
+  .social-handle{font-size:10px;}
+}
+
+/* ============================================================
    WOLF MEDIA · social video thumbnails (YouTube / IG / TikTok)
    ============================================================ */
 .wmedia-grid{max-width:1000px;margin:0 auto;display:grid;
@@ -910,6 +953,7 @@ footer{padding:80px 24px 40px;border-top:1px solid var(--border);
       <a href="/hub.html" class="nav-link hide-sm">Hub</a>
       <a href="/memes.html" class="nav-link">Memes</a>
       <a href="/arcade.html" class="nav-link hide-sm">Arcade</a>
+      <a href="#socials" class="nav-link">Socials</a>
       <span class="wallet-chip" id="walletChip">
         <span class="dot"></span>
         <span id="walletText">Connect</span>
@@ -1328,14 +1372,36 @@ footer{padding:80px 24px 40px;border-top:1px solid var(--border);
   </div>
 </section>
 
-<!-- WOLF MEDIA -->
-<section class="section">
+<!-- SOCIALS -->
+<section class="section" id="socials">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">// In the Wild · Social</span>
-      <h2 class="display h1">SEEN ON <span class="grad">THE FEED</span></h2>
-      <p>Latest hits from the pack across the internet.</p>
+      <span class="eyebrow">// Join the Pack</span>
+      <h2 class="display h1">SOCIALS</h2>
+      <p>Follow the pack. New drops, memes, and chaos posted across every platform.</p>
     </div>
+
+    <!-- Primary follow row (X + Telegram) -->
+    <div class="socials-row reveal">
+      <a class="social-pill x" href="https://x.com/MonWolfMonad" target="_blank" rel="noopener" aria-label="Follow on X">
+        <span class="social-icon">𝕏</span>
+        <span class="social-label">
+          <span class="social-name">Twitter / X</span>
+          <span class="social-handle">@MonWolfMonad</span>
+        </span>
+        <span class="social-arrow" aria-hidden="true">→</span>
+      </a>
+      <a class="social-pill tg" href="https://t.me/MonWolfMonad" target="_blank" rel="noopener" aria-label="Join Telegram">
+        <span class="social-icon">✈</span>
+        <span class="social-label">
+          <span class="social-name">Telegram</span>
+          <span class="social-handle">@MonWolfMonad</span>
+        </span>
+        <span class="social-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <!-- Video media grid -->
     <div class="wmedia-grid reveal">
       <!-- YouTube Shorts -->
       <a class="wmedia-card" href="https://youtube.com/shorts/-XI-VCwvjfc" target="_blank" rel="noopener" aria-label="Watch on YouTube Shorts">

@@ -1547,7 +1547,8 @@ $('actionBtn').onclick = async function(){
       if (current < needed){
         this.innerHTML = '<span class="spin"></span>APPROVING…';
         setStatus('buyStatus', 'info', 'Approving ' + STATE.inTok.sym + ' for the swap…');
-        const approveData = tokenIface.encodeFunctionData('approve', [spender, (2n**256n - 1n)]);
+        // Exact-amount approval (not MaxUint256) — unlimited approvals trigger MetaMask/Blockaid spending-cap warnings.
+        const approveData = tokenIface.encodeFunctionData('approve', [spender, amountInWei]);
         const approveParams = { to: STATE.inTok.addr, data: approveData, value: '0x0' };
         const aHash = STATE.signerType === 'mm' ? await sendTxMM(approveParams) : await sendTxLocal(approveParams);
         setStatus('buyStatus', 'info', 'Approval submitted: <a href="' + EXPLORER + '/tx/' + aHash + '" target="_blank">view tx</a> · waiting for confirmation…');
